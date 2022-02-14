@@ -13,10 +13,6 @@ class MetricTest(FairTest):
     author = 'https://orcid.org/0000-0002-1501-1082'
     metric_version = '0.1.0'
 
-    # TODO: implement metadata extraction with:
-    # Apache Tika for PDF/pptx
-    # Kellog's Distiller? http://rdf.greggkellogg.net/distiller
-    # https://github.com/FAIRMetrics/Metrics/blob/master/MetricsEvaluatorCode/Ruby/metrictests/fair_metrics_utilities.rb
 
     def evaluate(self):
         # Check if URL resolve and if redirection
@@ -28,41 +24,15 @@ class MetricTest(FairTest):
             self.info("Request was redirected to " + r.url + '. Adding as alternative URI')
             self.data['alternative_uris'].append(r.url)
         
-        self.info('Checking if Signposting links can be found in the resource URI headers at ' + self.subject)
-        found_signposting = False
-        if 'link' in r.headers.keys():
-            signposting_links = r.headers['link']
-            found_signposting = True
-        if 'Link' in r.headers.keys():
-            signposting_links = r.headers['Link']
-            found_signposting = True
-        if found_signposting:
-            self.bonus('Found Signposting links: ')
-            self.bonus('Signposting links found: ' + str(signposting_links))
-            self.data['signposting'] = str(signposting_links)
-            # Parse each part into a named link
-            # for link in signposting_links:
-            #     link_split = link.split(';')
-            #     import re
-            #     namespace_search = re.search('http:\/\/bio2rdf\.org\/(.*)_resource:bio2rdf\.dataset\.(.*)\.R[0-9]*', link_split[0], re.IGNORECASE)
-            #     if namespace_search:
-            #         graph_namespace = namespace_search.group(1)
-            #         sparql_query = sparql_query.replace('?_graph_namespace', graph_namespace)
-            #     url = link_split[0][/<(.*)>/,1]
-            #     name = link_split[1][/rel="(.*)"/,1].to_sym
-
-        else:
-            self.info('Could not find Signposting links')
-
 
         self.info('Checking if machine readable data (e.g. RDF, JSON-LD) can be retrieved using content-negotiation at ' + self.subject)
-        g = self.getRDF(self.subject, use_harvester=True)
+        g = self.getRDF(self.subject, use_harvester=False)
         if len(g) == 0:
             self.failure('No RDF found at the subject URL provided.')
-            return self.response()
         else:
             self.success(f'RDF metadata containing {len(g)} triples found at the subject URL provided.')
-            return self.response()
+        
+        return self.response()
 
 
         # found_content_negotiation = False

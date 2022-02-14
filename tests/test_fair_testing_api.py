@@ -7,18 +7,19 @@ app = FairTestAPI(metrics_folder_path='example/metrics')
 endpoint = TestClient(app)
 
 eval_list = [
-    # a1-access-protocol
+    ## a1-access-protocol
     {
         'metric_id': 'a1-access-protocol',
         'subject': 'https://raw.githubusercontent.com/ejp-rd-vp/resource-metadata-schema/master/data/example-rdf/turtle/patientRegistry.ttl',
         'score': 1,
     },
+    ## FAIR Data Point failing occasionally
     # {
     #     'metric_id': 'a1-access-protocol',
     #     'subject': 'https://w3id.org/ejp-rd/fairdatapoints/wp13/dataset/c5414323-eab1-483f-a883-77951f246972',
     #     'score': 1,
     # },
-    # f1-unique-persistent-id
+    ## f1-unique-persistent-id
     {
         'metric_id': 'f1-unique-persistent-id',
         'subject': 'https://raw.githubusercontent.com/ejp-rd-vp/resource-metadata-schema/master/data/example-rdf/turtle/patientRegistry.ttl',
@@ -29,10 +30,30 @@ eval_list = [
     #     'subject': 'https://w3id.org/ejp-rd/fairdatapoints/wp13/dataset/c5414323-eab1-483f-a883-77951f246972',
     #     'score': 1,
     # },
-    # f2-machine-readable-metadata
+    ## f2-machine-readable-metadata
     {
         'metric_id': 'f2-machine-readable-metadata',
         'subject': 'https://doi.org/10.1594/PANGAEA.908011',
+        'score': 1,
+    },
+    {
+        'metric_id': 'f2-machine-readable-metadata',
+        'subject': 'https://doi.org/10.34894/DR3I2A',
+        'score': 1,
+    },
+    {
+        'metric_id': 'f2-machine-readable-metadata',
+        'subject': 'https://doi.org/10.25504/FAIRsharing.jptb1m',
+        'score': 1,
+    },
+    {
+        'metric_id': 'f2-machine-readable-metadata',
+        'subject': 'https://purl.org/fairdatapoint/app/distribution/54a43c3e-8a6f-4a75-95c0-a2cb1e8c74ab',
+        'score': 1,
+    },
+    {
+        'metric_id': 'f2-machine-readable-metadata',
+        'subject': 'https://doi.org/10.5281/zenodo.5541440',
         'score': 1,
     },
     # {
@@ -71,6 +92,7 @@ eval_list = [
         'score': 1,
     },
 ]
+
 
 
 def test_get_yaml():

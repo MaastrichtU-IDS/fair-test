@@ -1,4 +1,4 @@
-# Example FAIR testing API
+# Example FAIR test API
 
 A FAIR metrics tests service supporting the specifications used by the [FAIRMetrics working group](https://github.com/FAIRMetrics/Metrics).
 
@@ -15,7 +15,7 @@ pip install -r requirements.txt
 2. Run the server on http://localhost:8000
 
 ```bash
-uvicorn main:app --reload --app-dir app
+uvicorn main:app --reload
 ```
 
 ## Or run with docker 🐳

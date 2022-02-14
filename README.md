@@ -4,19 +4,17 @@
 
 [![Run tests](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/run-tests.yml/badge.svg)](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/run-tests.yml) [![Publish to PyPI](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/publish-package.yml/badge.svg)](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/publish-package.yml) [![CodeQL](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/codeql-analysis.yml) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=MaastrichtU-IDS_fair-test&metric=coverage)](https://sonarcloud.io/dashboard?id=MaastrichtU-IDS_fair-test)
 
-`fair-test` is a library to build and deploy FAIR metrics tests APIs supporting the specifications used by the [FAIRMetrics working group](https://github.com/FAIRMetrics/Metrics), in Python.
+`fair-test` is a library to build and deploy FAIR metrics tests APIs supporting the specifications used by the [FAIRMetrics working group](https://github.com/FAIRMetrics/Metrics).
 
-It aims to enable python developers to easily write and deploy FAIR metric tests functions that can be queried by multiple FAIR evaluations services, such as [FAIR enough](https://fair-enough.semanticscience.org/) and the [FAIRsharing FAIR Evaluator](https://fairsharing.github.io/FAIR-Evaluator-FrontEnd/)
+It aims to enable python developers to easily write, and deploy FAIR metric tests functions that can be queried by multiple FAIR evaluations services, such as [FAIR enough](https://fair-enough.semanticscience.org/) and the [FAIRsharing FAIR Evaluator](https://fairsharing.github.io/FAIR-Evaluator-FrontEnd/)
 
 > Feel free to create an [issue](/issues), or send a pull request if you are facing issues or would like to see a feature implemented.
 
-## 🧑‍🏫 How it works
+## ℹ️ How it works
 
 The user defines and registers custom FAIR metrics tests in separated files in a specific folder (the `metrics` folder by default), and start the API.
 
-The endpoint is CORS enabled by default.
-
-Built with [RDFLib](https://github.com/RDFLib/rdflib) and [FastAPI](https://fastapi.tiangolo.com/). Tested for Python 3.7, 3.8 and 3.9
+Built with [FastAPI](https://fastapi.tiangolo.com/), [pydantic](https://pydantic-docs.helpmanual.io/) and [RDFLib](https://github.com/RDFLib/rdflib). Tested for Python 3.7, 3.8 and 3.9
 
 ## 📥 Install the package
 
@@ -28,11 +26,11 @@ pip install fair-test
 
 ## 🐍 Build a FAIR metrics test API
 
-Checkout the [`example`](https://github.com/MaastrichtU-IDS/fair-test/tree/main/example) folder for a complete working app example to get started, including a docker deployment. A good way to create a new FAIR testing API is to copy this `example` folder, and start from it.
+Checkout the [`example`](https://github.com/MaastrichtU-IDS/fair-test/tree/main/example) folder for a complete working app example to get started, including a docker deployment. If you want to start from a project with everything ready to deploy in production we recommend you to fork the [fair-enough-metrics repository](https://github.com/MaastrichtU-IDS/fair-enough-metrics).
 
 ### 📝 Define the API
 
-Create a `main.py` file to declare the API:
+Create a `main.py` file to declare the API, you can provide a different folder than `metrics` here, the folder path is relative to where you start the API (the root of the repository):
 
 ```python
 from fair_test import FairTestAPI, settings
@@ -41,6 +39,7 @@ app = FairTestAPI(
     title='FAIR Metrics tests API',
     metrics_folder_path='metrics',
     description="""FAIR Metrics tests API""",
+    cors_enabled=True,
     license_info = {
         "name": "MIT license",
         "url": "https://opensource.org/licenses/MIT"
@@ -48,7 +47,7 @@ app = FairTestAPI(
 )
 ```
 
-Create a `.env` file to provide informations used for the API, such as contact and host URL, e.g.:
+Create a `.env` file to provide informations used for the API, such as contact details and the host URL (note that you don't need to change it for localhost in development), e.g.:
 
 ```bash
 HOST="metrics.api.fair-enough.semanticscience.org"
@@ -56,12 +55,12 @@ BASE_URI="https://metrics.api.fair-enough.semanticscience.org"
 CONTACT_URL="https://github.com/MaastrichtU-IDS/fair-enough-metrics"
 CONTACT_NAME="Vincent Emonet"
 CONTACT_EMAIL="vincent.emonet@gmail.com"
-CONTACT_ORCID="0000-0002-1501-1082"
+CONTACT_ORCID="0000-0000-0000-0000"
 ORG_NAME="Institute of Data Science at Maastricht University"
 DEFAULT_SUBJECT="https://doi.org/10.1594/PANGAEA.908011"
 ```
 
-### 📝 Define a FAIR metrics test
+### 🎯 Define a FAIR metrics test
 
 Create a `metrics/a1_my_test.py` file in your project folder with your custom metrics test:
 
@@ -89,10 +88,11 @@ class MetricTest(FairTest):
 
 ### 🦄 Deploy the API
 
-You can then run the metrics tests API on http://localhost:8000/sparql with `uvicorn`, e.g. with the code provided in the `example` folder:
+You can then run the metrics tests API on http://localhost:8000 with `uvicorn`, e.g. with the code provided in the `example` folder:
 
 ```bash
 cd example
+pip install -r requirements.txt
 uvicorn main:app --reload
 ```
 
@@ -135,7 +135,7 @@ pytest -s
 
 ## 📂 Projects using fair-test
 
-Here are some projects using `fair-test` to deploy FAIR testing services:
+Here are some projects using `fair-test` to deploy FAIR test services:
 
 * https://github.com/MaastrichtU-IDS/fair-enough-metrics
   * A generic  FAIR metrics tests service developed at the Institute of Data Science at Maastricht University.

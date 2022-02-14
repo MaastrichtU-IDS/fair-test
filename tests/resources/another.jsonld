@@ -1,9 +1,0 @@
-[
-    {
-        "@id":"http://another/s",
-        "http://another/p": [
-            {"@id":"http://another/o"}
-        ]
-    },
-    {"@id":"http://another/o"}
-]

@@ -33,7 +33,7 @@ class FairTest(BaseModel):
     id: Optional[str] # URL of the test results
     title: str
     description: str
-    author: str = 'https://orcid.org/0000-0002-1501-1082'
+    author: str = settings.CONTACT_ORCID
     data: Optional[dict]
     default_subject: str = settings.DEFAULT_SUBJECT
     
@@ -276,7 +276,7 @@ class FairTest(BaseModel):
               "name": settings.CONTACT_NAME,
               "x-role": "responsible developer",
               "email": settings.CONTACT_EMAIL,
-              "x-id": settings.CONTACT_ORCID
+              "x-id": self.author,
             }
           },
           "host": settings.HOST,

@@ -3,7 +3,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    version='0.0.1',
+    version='0.0.2',
     name='fair-test',
     license='MIT License',
     description='A library to build and deploy FAIR metrics tests in Python, using RDFLib and FastAPI.',
@@ -12,14 +12,8 @@ setup(
     url='https://github.com/MaastrichtU-IDS/fair-test',
     packages=find_packages(),
     include_package_data=True,
-    # packages=find_packages(include=['rdflib_endpoint']),
     # package_dir={'rdflib_endpoint': 'rdflib_endpoint'},
-    # package_data={'': ['tests/resources/*', 'rdflib_endpoint/yasgui.html']},
-    # entry_points={
-    #     'console_scripts': [
-    #         'fair-test=rdflib_endpoint.__main__:cli',
-    #     ],
-    # },
+    # package_data={'fair_test': ['fair_test/*.html']},
 
     python_requires='>=3.7.0',
     long_description=open('README.md').read(),
