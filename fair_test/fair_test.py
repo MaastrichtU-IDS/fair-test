@@ -134,9 +134,10 @@ class FairTest(BaseModel):
             # curl -X POST -d '{"subject": "https://doi.org/10.1594/PANGAEA.908011"}' https://fair-tests.137.120.31.101.nip.io/tests/harvester
             harvester_url = 'https://fair-tests.137.120.31.101.nip.io/tests/harvester'
             res = requests.post(harvester_url,
-                data={"subject": url},
+                json={"subject": url},
                 # headers={"Accept": "application/ld+json"}
             )
+            print(res.text)
             return self.parseRDF(res.text, 'text/turtle', msg='FAIR evaluator harvester RDF')
 
         self.info(f'Checking if Signposting links can be found in the resource URI headers at {url}')

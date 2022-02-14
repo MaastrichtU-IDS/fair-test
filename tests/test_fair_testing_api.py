@@ -45,6 +45,31 @@ eval_list = [
         'subject': 'http://example.com',
         'score': 0,
     },
+    {
+        'metric_id': 'f3-id-in-metadata',
+        'subject': 'https://doi.org/10.1594/PANGAEA.908011',
+        'score': 1,
+    },
+    {
+        'metric_id': 'f4-searchable',
+        'subject': 'https://doi.org/10.1594/PANGAEA.908011',
+        'score': 1,
+    },
+    {
+        'metric_id': 'i1-knowledge-representation',
+        'subject': 'https://doi.org/10.1594/PANGAEA.908011',
+        'score': 1,
+    },
+    {
+        'metric_id': 'i2-fair-vocabularies',
+        'subject': 'https://doi.org/10.1594/PANGAEA.908011',
+        'score': 1,
+    },
+    {
+        'metric_id': 'r1-accessible-license',
+        'subject': 'https://doi.org/10.1594/PANGAEA.908011',
+        'score': 1,
+    },
 ]
 
 

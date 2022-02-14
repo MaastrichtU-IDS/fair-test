@@ -89,7 +89,7 @@ class MetricTest(FairTest):
 
 ### 🦄 Deploy the API
 
-You can then run the metrics tests API on http://localhost:8000/sparql with `uvicorn`
+You can then run the metrics tests API on http://localhost:8000/sparql with `uvicorn`, e.g. with the code provided in the `example` folder:
 
 ```bash
 cd example

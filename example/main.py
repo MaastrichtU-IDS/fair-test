@@ -1,4 +1,4 @@
-from fair_test import FairTestAPI, settings
+from fair_test import FairTestAPI
 
 
 app = FairTestAPI(
@@ -12,11 +12,5 @@ app = FairTestAPI(
     license_info = {
         "name": "MIT license",
         "url": "https://opensource.org/licenses/MIT"
-    },
-    contact = {
-        "name": settings.CONTACT_NAME,
-        "email": settings.CONTACT_EMAIL,
-        "url": settings.CONTACT_URL,
-        "x-id": settings.CONTACT_ORCID,
     },
 )

@@ -56,7 +56,7 @@ class MetricTest(FairTest):
 
 
         self.info('Checking if machine readable data (e.g. RDF, JSON-LD) can be retrieved using content-negotiation at ' + self.subject)
-        g = self.getRDF(self.subject)
+        g = self.getRDF(self.subject, use_harvester=True)
         if len(g) == 0:
             self.failure('No RDF found at the subject URL provided.')
             return self.response()
