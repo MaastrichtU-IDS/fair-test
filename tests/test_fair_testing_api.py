@@ -2,6 +2,7 @@ from fastapi.testclient import TestClient
 from fair_test import FairTestAPI
 import yaml
 
+
 app = FairTestAPI(metrics_folder_path='example/metrics')
 
 endpoint = TestClient(app)

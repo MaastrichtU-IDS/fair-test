@@ -1,18 +1,8 @@
-from fastapi import FastAPI, Request, Response, Query
+from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
-from starlette.responses import FileResponse 
-from typing import Optional
-from fastapi import APIRouter
+# from starlette.responses import FileResponse 
 import os
-import importlib
-import pathlib
-
-import pkg_resources
-import logging
-import re
-from urllib import parse
-# import os
 from fair_test.config import settings
 
 
@@ -66,53 +56,6 @@ class FairTestAPI(FastAPI):
                 allow_headers=["*"],
             )
 
-        api_responses={
-            200: {
-                "description": "SPARQL query results",
-                "content": {
-                    "application/sparql-results+json": {
-                        "results": {"bindings": []}, 'head': {'vars': []}
-                    },
-                    "application/json": {
-                        "results": {"bindings": []}, 'head': {'vars': []}
-                    },
-                    "text/csv": {
-                        "example": "s,p,o"
-                    },
-                    "application/sparql-results+csv": {
-                        "example": "s,p,o"
-                    },
-                    "text/turtle": {
-                        "example": "service description"
-                    },
-                    "application/sparql-results+xml": {
-                        "example": "<root></root>"
-                    },
-                    "application/xml": {
-                        "example": "<root></root>"
-                    },
-                    # "application/rdf+xml": {
-                    #     "example": '<?xml version="1.0" encoding="UTF-8"?> <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:RDF>'
-                    # },
-                },
-            },
-            400:{
-                "description": "Bad Request",
-            },
-            403:{
-                "description": "Forbidden",
-            }, 
-            422:{
-                "description": "Unprocessable Entity",
-            },
-        }
-
-        mimetype={
-            'turtle': 'text/turtle',
-            'xml_results': 'application/sparql-results+xml'
-        }
-
-        # metrics_folder = metrics_folder_path.split('/')[-1]
         metrics_module = metrics_folder_path.replace('/', '.')
 
         # metrics_full_path = f'{str(pathlib.Path(__file__).parent.resolve())}/{metrics_folder_path}'
@@ -129,7 +72,6 @@ class FairTestAPI(FastAPI):
                     else:
                         assess_name_list.append(filename[:-3])
 
-        assess_list = []
         # Then import each metric test listed in the metrics folder
         for assess_name in assess_name_list:
             assess_module = assess_name.replace('/', '.')

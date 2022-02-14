@@ -1,4 +1,3 @@
-from xmlrpc.client import Boolean
 from pydantic import BaseModel
 from fastapi import HTTPException
 from fastapi.responses import JSONResponse, PlainTextResponse
@@ -7,16 +6,15 @@ import datetime
 import urllib.parse
 import json
 import requests
-from rdflib import Graph, ConjunctiveGraph, URIRef
+from rdflib import ConjunctiveGraph
 import html
 import yaml
 import extruct
 from fair_test.config import settings
-# Plugin and serializer required to parse jsonld with rdflib
 from pyld import jsonld
-import os
+# pyld required to parse jsonld with rdflib
 
-# DEFAULT_SUBJECT = os.getenv('DEFAULT_SUBJECT', 'https://doi.org/10.1594/PANGAEA.908011')
+
 class TestInput(BaseModel):
     subject: str = settings.DEFAULT_SUBJECT
 
@@ -26,7 +24,7 @@ class FairTest(BaseModel):
     comment: List = []
     score: int = 0
     score_bonus: int = 0
-    date: str = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S+00:00")
+    date: str = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S+01:00")
     metric_version: str  = '0.1.0'
     metric_path: str
     applies_to_principle: str
@@ -98,6 +96,7 @@ class FairTest(BaseModel):
 
     # Logging utilities
     def log(self, log_msg: str, prefix: str = None):
+        # Add timestamp?
         # log_msg = '[' + str(datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")) + '] ' + log_msg 
         if prefix:
             log_msg = prefix + ' ' + log_msg
@@ -129,10 +128,14 @@ class FairTest(BaseModel):
     # Get RDF from an URL (returns RDFLib Graph)
     # Use signposting links to find links to download metadata from (rel=alternate)
     # https://datatracker.ietf.org/doc/html/draft-nottingham-http-link-header-10#section-6.2.2
-    def getRDF(self, url: str, use_harvester: bool = False):
+    def getRDF(self, 
+            url: str, 
+            use_harvester: bool = False, 
+            harvester_url: str = 'https://fair-tests.137.120.31.101.nip.io/tests/harvester',
+    ):
         if use_harvester == True:
+            # Check the harvester response:
             # curl -X POST -d '{"subject": "https://doi.org/10.1594/PANGAEA.908011"}' https://fair-tests.137.120.31.101.nip.io/tests/harvester
-            harvester_url = 'https://fair-tests.137.120.31.101.nip.io/tests/harvester'
             res = requests.post(harvester_url,
                 json={"subject": url},
                 # headers={"Accept": "application/ld+json"}
@@ -160,6 +163,7 @@ class FairTest(BaseModel):
         if found_signposting:
             self.info(f'Found Signposting links: {str(signposting_links)}')
             # self.data['signposting'] = str(signposting_links)
+            # TODO: parse signposting links, get alternate and meta?
             # return self.getRDF(str(signposting_links))
         else:
             self.warn('Could not find Signposting links')
@@ -196,7 +200,6 @@ class FairTest(BaseModel):
             if not html_text:
                 get_uri = requests.get(url, headers={'Accept': 'text/html'})
                 html_text = html.unescape(get_uri.text)
-            # found_metadata_extruct = False
             try:
                 extructed = extruct.extract(html_text.encode('utf8'))
                 self.data['extruct'] = extructed

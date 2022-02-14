@@ -1,4 +1,4 @@
-# ☑️ FAIR testing API
+# ☑️ FAIR test
 
 [![Version](https://img.shields.io/pypi/v/fair-test)](https://pypi.org/project/fair-test) [![Python versions](https://img.shields.io/pypi/pyversions/fair-test)](https://pypi.org/project/fair-test)
 
@@ -6,7 +6,7 @@
 
 `fair-test` is a library to build and deploy FAIR metrics tests APIs supporting the specifications used by the [FAIRMetrics working group](https://github.com/FAIRMetrics/Metrics).
 
-It aims to enable python developers to easily write, and deploy FAIR metric tests functions that can be queried by multiple FAIR evaluations services, such as [FAIR enough](https://fair-enough.semanticscience.org/) and the [FAIRsharing FAIR Evaluator](https://fairsharing.github.io/FAIR-Evaluator-FrontEnd/)
+It aims to enable python developers to easily write, and deploy FAIR metric tests functions that can be queried by various FAIR evaluations services, such as [FAIR enough](https://fair-enough.semanticscience.org/) and the [FAIRsharing FAIR Evaluator](https://fairsharing.github.io/FAIR-Evaluator-FrontEnd/)
 
 > Feel free to create an [issue](/issues), or send a pull request if you are facing issues or would like to see a feature implemented.
 
@@ -26,14 +26,16 @@ pip install fair-test
 
 ## 🐍 Build a FAIR metrics test API
 
-Checkout the [`example`](https://github.com/MaastrichtU-IDS/fair-test/tree/main/example) folder for a complete working app example to get started, including a docker deployment. If you want to start from a project with everything ready to deploy in production we recommend you to fork the [fair-enough-metrics repository](https://github.com/MaastrichtU-IDS/fair-enough-metrics).
+Checkout the [`example`](https://github.com/MaastrichtU-IDS/fair-test/tree/main/example) folder for a complete working app example to get started, including a docker deployment.
+
+If you want to start from a project with everything ready to deploy in production we recommend you to fork the [fair-enough-metrics repository](https://github.com/MaastrichtU-IDS/fair-enough-metrics).
 
 ### 📝 Define the API
 
 Create a `main.py` file to declare the API, you can provide a different folder than `metrics` here, the folder path is relative to where you start the API (the root of the repository):
 
 ```python
-from fair_test import FairTestAPI, settings
+from fair_test import FairTestAPI
 
 app = FairTestAPI(
     title='FAIR Metrics tests API',
@@ -62,10 +64,10 @@ DEFAULT_SUBJECT="https://doi.org/10.1594/PANGAEA.908011"
 
 ### 🎯 Define a FAIR metrics test
 
-Create a `metrics/a1_my_test.py` file in your project folder with your custom metrics test:
+Create a `a1_my_test.py` file in the `metrics` folder with your test:
 
 ````python
-from api.metrics_test import FairTest
+from fair_test import FairTest
 
 class MetricTest(FairTest):
     metric_path = 'a1-check-something'
@@ -77,14 +79,15 @@ class MetricTest(FairTest):
 
     def evaluate(self):
         self.info(f'Checking something for {self.subject}')
-        g = self.getRDF(self.subject)
+        g = self.getRDF(self.subject, use_harvester=False)
         if len(g) > 0:
             self.success(f'{len(g)} triples found, test sucessful')
         else:
             self.failure('No triples found, test failed')
-
         return self.response()
 ````
+
+> A few common operations are available on the `self` object, such as logging or retrieving RDF metadata from a URL. 
 
 ### 🦄 Deploy the API
 
@@ -102,7 +105,7 @@ uvicorn main:app --reload
 
 ### 📥 Install for development
 
-Clone and install locally for development:
+Clone the repository and install the dependencies locally for development:
 
 ```bash
 git clone https://github.com/MaastrichtU-IDS/fair-test
@@ -110,7 +113,7 @@ cd fair-test
 pip install -e .
 ```
 
-You can use a virtual environment to avoid conflicts:
+You can try to use a virtual environment to avoid conflicts, if you face issues:
 
 ```bash
 # Create the virtual environment folder in your workspace
@@ -119,9 +122,9 @@ python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-### ✅️ Run the tests
+### ✔️ Run the tests
 
-Install additional dependencies for testing:
+Install `pytest` for testing:
 
 ```bash
 pip install pytest
