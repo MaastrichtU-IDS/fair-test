@@ -1,0 +1,1 @@
+fair-test@git+https://github.com/MaastrichtU-IDS/fair-test@main
