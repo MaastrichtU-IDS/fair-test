@@ -10,36 +10,36 @@ eval_list = [
     # a1-access-protocol
     {
         'metric_id': 'a1-access-protocol',
-        'subject': 'https://w3id.org/ejp-rd/fairdatapoints/wp13/dataset/c5414323-eab1-483f-a883-77951f246972',
-        'score': 1,
-    },
-    {
-        'metric_id': 'a1-access-protocol',
         'subject': 'https://raw.githubusercontent.com/ejp-rd-vp/resource-metadata-schema/master/data/example-rdf/turtle/patientRegistry.ttl',
         'score': 1,
     },
+    # {
+    #     'metric_id': 'a1-access-protocol',
+    #     'subject': 'https://w3id.org/ejp-rd/fairdatapoints/wp13/dataset/c5414323-eab1-483f-a883-77951f246972',
+    #     'score': 1,
+    # },
     # f1-unique-persistent-id
     {
         'metric_id': 'f1-unique-persistent-id',
         'subject': 'https://raw.githubusercontent.com/ejp-rd-vp/resource-metadata-schema/master/data/example-rdf/turtle/patientRegistry.ttl',
         'score': 0,
     },
-    {
-        'metric_id': 'f1-unique-persistent-id',
-        'subject': 'https://w3id.org/ejp-rd/fairdatapoints/wp13/dataset/c5414323-eab1-483f-a883-77951f246972',
-        'score': 1,
-    },
+    # {
+    #     'metric_id': 'f1-unique-persistent-id',
+    #     'subject': 'https://w3id.org/ejp-rd/fairdatapoints/wp13/dataset/c5414323-eab1-483f-a883-77951f246972',
+    #     'score': 1,
+    # },
     # f2-machine-readable-metadata
     {
         'metric_id': 'f2-machine-readable-metadata',
         'subject': 'https://doi.org/10.1594/PANGAEA.908011',
         'score': 1,
     },
-    {
-        'metric_id': 'f2-machine-readable-metadata',
-        'subject': 'https://w3id.org/ejp-rd/fairdatapoints/wp13/dataset/c5414323-eab1-483f-a883-77951f246972',
-        'score': 1,
-    },
+    # {
+    #     'metric_id': 'f2-machine-readable-metadata',
+    #     'subject': 'https://w3id.org/ejp-rd/fairdatapoints/wp13/dataset/c5414323-eab1-483f-a883-77951f246972',
+    #     'score': 1,
+    # },
     {
         'metric_id': 'f2-machine-readable-metadata',
         'subject': 'http://example.com',
