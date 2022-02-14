@@ -14,8 +14,9 @@ import extruct
 from fair_test.config import settings
 # Plugin and serializer required to parse jsonld with rdflib
 from pyld import jsonld
+import os
 
-
+# DEFAULT_SUBJECT = os.getenv('DEFAULT_SUBJECT', 'https://doi.org/10.1594/PANGAEA.908011')
 class TestInput(BaseModel):
     subject: str = settings.DEFAULT_SUBJECT
 
@@ -35,6 +36,7 @@ class FairTest(BaseModel):
     author: str = 'https://orcid.org/0000-0002-1501-1082'
     data: Optional[dict]
     default_subject: str = settings.DEFAULT_SUBJECT
+    
 
     def __init__(self) -> None:
         super().__init__()
@@ -257,7 +259,7 @@ class FairTest(BaseModel):
 
 
     # https://github.com/LUMC-BioSemantics/RD-FAIRmetrics/blob/main/docs/yaml/RD-R1.yml
-    # Function used for the GET YAML call for each Metric Test
+    # Function used for the GET YAML call for infos about each Metric Test
     def openapi_yaml(self):
         metric_info = {
           "swagger": "2.0",

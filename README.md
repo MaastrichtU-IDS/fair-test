@@ -45,13 +45,20 @@ app = FairTestAPI(
         "name": "MIT license",
         "url": "https://opensource.org/licenses/MIT"
     },
-    contact = {
-        "name": settings.CONTACT_NAME,
-        "email": settings.CONTACT_EMAIL,
-        "url": settings.CONTACT_URL,
-        "x-id": settings.CONTACT_ORCID,
-    },
 )
+```
+
+Create a `.env` file to provide informations used for the API, such as contact and host URL, e.g.:
+
+```bash
+HOST="metrics.api.fair-enough.semanticscience.org"
+BASE_URI="https://metrics.api.fair-enough.semanticscience.org"
+CONTACT_URL="https://github.com/MaastrichtU-IDS/fair-enough-metrics"
+CONTACT_NAME="Vincent Emonet"
+CONTACT_EMAIL="vincent.emonet@gmail.com"
+CONTACT_ORCID="0000-0002-1501-1082"
+ORG_NAME="Institute of Data Science at Maastricht University"
+DEFAULT_SUBJECT="https://doi.org/10.1594/PANGAEA.908011"
 ```
 
 ### 📝 Define a FAIR metrics test

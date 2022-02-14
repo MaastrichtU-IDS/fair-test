@@ -13,6 +13,7 @@ import logging
 import re
 from urllib import parse
 # import os
+from fair_test.config import settings
 
 
 class FairTestAPI(FastAPI):
@@ -23,11 +24,21 @@ class FairTestAPI(FastAPI):
     def __init__(self,
             *args,
             title: str = "SPARQL endpoint for RDFLib graph", 
-            description="A SPARQL endpoint to serve machine learning models, or any other logic implemented in Python. \n[Source code](https://github.com/MaastrichtU-IDS/fair-test)",
+            description="FAIR Metrics tests API for online resources. Follows the specifications described by the [FAIRMetrics](https://github.com/FAIRMetrics/Metrics) working group. \n[Source code](https://github.com/MaastrichtU-IDS/fair-test)",
             version="0.1.0",
             cors_enabled=True,
             public_url='https://metrics.api.fair-enough.semanticscience.org/sparql',
             metrics_folder_path='metrics', 
+            contact = {
+                "name": settings.CONTACT_NAME,
+                "email": settings.CONTACT_EMAIL,
+                "url": settings.CONTACT_URL,
+                "x-id": settings.CONTACT_ORCID,
+            },
+            license_info = {
+                "name": "MIT license",
+                "url": "https://opensource.org/licenses/MIT"
+            },
             **kwargs
         ) -> None:
         """
@@ -43,6 +54,7 @@ class FairTestAPI(FastAPI):
         # Instantiate FastAPI
         super().__init__(
             title=title, description=description, version=version, 
+            contact=contact, license_info=license_info,
         )
 
         if cors_enabled:
