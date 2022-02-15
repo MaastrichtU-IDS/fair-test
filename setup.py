@@ -3,10 +3,10 @@
 from setuptools import setup, find_packages
 
 setup(
-    version='0.0.2',
+    version='0.0.3',
     name='fair-test',
     license='MIT License',
-    description='A library to build and deploy FAIR metrics tests in Python, using RDFLib and FastAPI.',
+    description='A library to build and deploy FAIR metrics tests APIs that can be used by FAIR evaluators, using FastAPI, pydantic, and RDFLib.',
     author='Vincent Emonet',
     author_email='vincent.emonet@gmail.com',
     url='https://github.com/MaastrichtU-IDS/fair-test',
