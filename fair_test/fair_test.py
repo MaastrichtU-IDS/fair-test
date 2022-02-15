@@ -38,7 +38,7 @@ class FairTest(BaseModel):
 
     def __init__(self) -> None:
         super().__init__()
-        self.id = f"{settings.BASE_URI}/metrics/{self.metric_path}#{urllib.parse.quote(str(self.subject))}/result-{self.date}"
+        self.id = f"{settings.HOST_URL}/metrics/{self.metric_path}#{urllib.parse.quote(str(self.subject))}/result-{self.date}"
         self.data = {
             'alternative_uris': [self.subject]
         }
@@ -270,7 +270,7 @@ class FairTest(BaseModel):
           "info": {
             "version": f"{str(self.metric_version)}",
             "title": self.title,
-            "x-tests_metric": f"{settings.BASE_URI}/tests/{self.metric_path}",
+            "x-tests_metric": f"{settings.HOST_URL}/tests/{self.metric_path}",
             "description": self.description,
             "x-applies_to_principle": self.applies_to_principle,
             "contact": {

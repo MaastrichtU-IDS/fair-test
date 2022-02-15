@@ -54,8 +54,7 @@ app = FairTestAPI(
 Create a `.env` file to provide informations used for the API, such as contact details and the host URL (note that you don't need to change it for localhost in development), e.g.:
 
 ```bash
-HOST="metrics.api.fair-enough.semanticscience.org"
-BASE_URI="https://metrics.api.fair-enough.semanticscience.org"
+HOST_URL="https://metrics.api.fair-enough.semanticscience.org"
 CONTACT_URL="https://github.com/MaastrichtU-IDS/fair-enough-metrics"
 CONTACT_NAME="Vincent Emonet"
 CONTACT_EMAIL="vincent.emonet@gmail.com"
@@ -89,11 +88,11 @@ class MetricTest(FairTest):
         return self.response()
 ````
 
-> A few common operations are available on the `self` object, such as logging or retrieving RDF metadata from a URL. 
+> ℹ️ A few common operations are available on the `self` object, such as logging or retrieving RDF metadata from a URL. 
 
 ### 🦄 Deploy the API
 
-You can then run the metrics tests API on http://localhost:8000 with `uvicorn`, e.g. with the code provided in the `example` folder:
+You can then run the metrics tests API on http://localhost:8000 using `uvicorn`, e.g. with the code provided in the `example` folder:
 
 ```bash
 cd example
@@ -127,11 +126,12 @@ source .venv/bin/activate
 
 ### ✔️ Run the tests
 
-Install `pytest` for testing:
+<details><summary>Install `pytest` for testing</summary>
 
 ```bash
 pip install pytest
 ```
+</details>
 
 Run the tests locally (from the root folder) and display prints:
 

@@ -3,10 +3,11 @@ from pydantic import BaseSettings
 
 # Settings of the API
 class Settings(BaseSettings):
-    HOST: str = "metrics.api.fair-enough.semanticscience.org"
-    BASE_URI: str = "https://metrics.api.fair-enough.semanticscience.org"
+    HOST_URL: str = "https://metrics.api.fair-enough.semanticscience.org"
+    HOST: str = HOST_URL.replace('https://', '').replace('http://', '')
+    # HOST: str = "metrics.api.fair-enough.semanticscience.org"
     # HOST: str = "w3id.org/fair-enough/metrics"
-    # BASE_URI: str = "https://w3id.org/fair-enough/metrics"
+    # HOST_URL: str = "https://w3id.org/fair-enough/metrics"
     CONTACT_URL: str = 'https://github.com/MaastrichtU-IDS/fair-enough-metrics'
     CONTACT_NAME: str = 'Vincent Emonet'
     CONTACT_EMAIL: str = 'vincent.emonet@gmail.com'
