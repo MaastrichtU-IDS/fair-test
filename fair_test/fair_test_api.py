@@ -103,7 +103,7 @@ class FairTestAPI(FastAPI):
                     },
                     tags=[metric.applies_to_principle]
                 )
-            except Exception as e:
+            except Exception:
                 print('❌ No API defined for ' + metric.metric_path)
 
         @self.get("/", include_in_schema=False)

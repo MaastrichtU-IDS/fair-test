@@ -188,10 +188,10 @@ class FairTest(BaseModel):
                     # If return JSON-LD
                     self.data['json-ld'] = r.json()
                     return self.parseRDF(r.json(), contentType, msg='content negotiation RDF')
-                except:
+                except Exception:
                     # If returns RDF, such as turtle
                     return self.parseRDF(r.text, contentType, msg='content negotiation RDF')
-            except Exception as e:
+            except Exception:
                 self.warn(f'Could not find metadata with content-negotiation when asking for: {mime_type}')
                 # Error: e.args[0]
 
