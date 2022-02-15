@@ -58,15 +58,12 @@ class FairTestAPI(FastAPI):
 
         metrics_module = metrics_folder_path.replace('/', '.')
 
-        # metrics_full_path = f'{str(pathlib.Path(__file__).parent.resolve())}/{metrics_folder_path}'
-        metrics_full_path = f'{metrics_folder_path}'
-
         # First get the metrics tests filepath
         assess_name_list = []
-        for path, subdirs, files in os.walk(metrics_full_path):
+        for path, subdirs, files in os.walk(metrics_folder_path):
             for filename in files:
                 if not path.endswith('__pycache__') and not filename.endswith('__init__.py'):
-                    filepath = path.replace(metrics_full_path, '')
+                    filepath = path.replace(metrics_folder_path, '')
                     if filepath:
                         assess_name_list.append(filepath[1:] + '/' + filename[:-3])
                     else:

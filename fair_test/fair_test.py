@@ -126,7 +126,7 @@ class FairTest(BaseModel):
 
 
     # Get RDF from an URL (returns RDFLib Graph)
-    # Use signposting links to find links to download metadata from (rel=alternate)
+    # TODO: Use signposting links to find links to download metadata from (rel=alternate)
     # https://datatracker.ietf.org/doc/html/draft-nottingham-http-link-header-10#section-6.2.2
     def getRDF(self, 
             url: str, 
@@ -221,7 +221,7 @@ class FairTest(BaseModel):
 
         return ConjunctiveGraph()
 
-
+    # Parse any json or string to a RDFLib Graph
     def parseRDF(self, rdf_data, mime_type: str = None, msg: str = ''):
         # https://rdflib.readthedocs.io/en/stable/plugin_parsers.html
         # rdflib_formats = ['turtle', 'json-ld', 'xml', 'ntriples', 'nquads', 'trig', 'n3']
@@ -255,7 +255,7 @@ class FairTest(BaseModel):
         return self.evaluate()
 
 
-    # Function used for the GET YAML call for each Metric Test
+    # Function used for the POST subject call for each Metric Test
     def evaluate(self):
         return JSONResponse({
             'errorMessage': 'Not implemented'
