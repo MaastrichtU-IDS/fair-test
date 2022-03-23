@@ -128,14 +128,14 @@ source .venv/bin/activate
 
 ### ✔️ Run the tests
 
-<details><summary>Install `pytest` for testing</summary>
+<details><summary>Install <code>pytest</code> for testing</summary>
 
 ```bash
 pip install pytest
 ```
 </details>
 
-Run the tests locally (from the root folder) and display prints:
+Run the tests locally (from the root folder) with prints displayed:
 
 ```bash
 pytest -s

@@ -141,7 +141,7 @@ class FairTest(BaseModel):
                 # headers={"Accept": "application/ld+json"}
             )
             print(res.text)
-            return self.parseRDF(res.text, 'text/turtle', msg='FAIR evaluator harvester RDF')
+            return self.parseRDF(res.text, 'text/turtle', log_msg='FAIR evaluator harvester RDF')
 
         self.info(f'Checking if Signposting links can be found in the resource URI headers at {url}')
         # https://github.com/FAIRMetrics/Metrics/blob/master/MetricsEvaluatorCode/Ruby/metrictests/fair_metrics_utilities.rb#L355
@@ -176,21 +176,21 @@ class FairTest(BaseModel):
             try:
                 r = requests.get(url, headers={'accept': mime_type})
                 r.raise_for_status()  # Raises a HTTPError if the status is 4xx, 5xxx
-                contentType = r.headers['Content-Type'].replace(' ', '').replace(';charset=utf-8', '')
+                content_type = r.headers['Content-Type'].replace(' ', '').replace(';charset=utf-8', '')
                 # If return text/plain we parse as turtle
-                contentType = contentType.replace('text/plain', 'text/turtle')
-                self.info(f'Found some metadata in {contentType} when asking for {mime_type}')
-                if contentType.startswith('text/html'):
+                content_type = content_type.replace('text/plain', 'text/turtle')
+                self.info(f'Found some metadata in {content_type} when asking for {mime_type}')
+                if content_type.startswith('text/html'):
                     # If HTML we check later with extruct
                     html_text = r.text
                     continue
                 try:
                     # If return JSON-LD
                     self.data['json-ld'] = r.json()
-                    return self.parseRDF(r.json(), contentType, msg='content negotiation RDF')
+                    return self.parseRDF(r.json(), content_type, log_msg='content negotiation RDF')
                 except Exception:
                     # If returns RDF, such as turtle
-                    return self.parseRDF(r.text, contentType, msg='content negotiation RDF')
+                    return self.parseRDF(r.text, content_type, log_msg='content negotiation RDF')
             except Exception:
                 self.warn(f'Could not find metadata with content-negotiation when asking for: {mime_type}')
                 # Error: e.args[0]
@@ -205,7 +205,7 @@ class FairTest(BaseModel):
                 self.data['extruct'] = extructed
                 self.log(f"INFO: found metadata with extruct in the formats: {', '.join(extructed.keys())}")
                 if extructed['json-ld']:
-                    return self.parseRDF(extructed['json-ld'], 'json-ld', msg='HTML embedded RDF')
+                    return self.parseRDF(extructed['json-ld'], 'json-ld', log_msg='HTML embedded RDF')
                 # Check extruct results:
                 # for format in extructed.keys():
                 #     if extructed[format]:
@@ -222,7 +222,7 @@ class FairTest(BaseModel):
         return ConjunctiveGraph()
 
     # Parse any json or string to a RDFLib Graph
-    def parseRDF(self, rdf_data, mime_type: str = None, msg: str = ''):
+    def parseRDF(self, rdf_data, mime_type: str = None, log_msg: str = ''):
         # https://rdflib.readthedocs.io/en/stable/plugin_parsers.html
         # rdflib_formats = ['turtle', 'json-ld', 'xml', 'ntriples', 'nquads', 'trig', 'n3']
         # We need to make this ugly fix because regular content negotiation dont work with schema.org
@@ -241,9 +241,9 @@ class FairTest(BaseModel):
         g = ConjunctiveGraph()
         try:
             g.parse(data=rdf_data, format=mime_type)
-            self.info(f'{str(len(g))} triples parsed. Metadata from {mime_type} {msg} parsed with RDFLib parser {mime_type}')
+            self.info(f'{str(len(g))} triples parsed. Metadata from {mime_type} {log_msg} parsed with RDFLib parser {mime_type}')
         except Exception as e:
-            self.warn('Could not parse ' + mime_type + ' metadata from ' + msg + ' with RDFLib parser ' + mime_type + ' ' + str(e))
+            self.warn('Could not parse ' + mime_type + ' metadata from ' + log_msg + ' with RDFLib parser ' + mime_type + ' ' + str(e))
 
         return g
 

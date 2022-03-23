@@ -69,7 +69,7 @@ class MetricTest(FairTest):
         #     self.success('Found metadata in ' + ', '.join(self.data['content_negotiation'].keys()) + ' format using content-negotiation')
         #     # Parse RDF metadata from content negotiation
         #     for mime_type, rdf_data in self.data['content_negotiation'].items():
-        #         g = self.parseRDF(rdf_data, mime_type, msg='content negotiation RDF')
+        #         g = self.parseRDF(rdf_data, mime_type, log_msg='content negotiation RDF')
         #         break # Only parse the first RDF metadata file entry
         # else:
         #     self.warn('Could not find metadata using content-negotiation, checking metadata embedded in HTML with extruct')
