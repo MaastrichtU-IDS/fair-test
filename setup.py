@@ -6,7 +6,7 @@ setup(
     version='0.0.3',
     name='fair-test',
     license='MIT License',
-    description='A library to build and deploy FAIR metrics tests APIs that can be used by FAIR evaluators, using FastAPI, pydantic, and RDFLib.',
+    description='A library to build and deploy FAIR metrics tests APIs that can be used by FAIR evaluators, using FastAPI, and RDFLib.',
     author='Vincent Emonet',
     author_email='vincent.emonet@gmail.com',
     url='https://github.com/MaastrichtU-IDS/fair-test',

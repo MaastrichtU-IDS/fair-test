@@ -12,7 +12,7 @@ import yaml
 import extruct
 from fair_test.config import settings
 from pyld import jsonld
-# pyld required to parse jsonld with rdflib
+# pyld is required to parse jsonld with rdflib
 
 
 class TestInput(BaseModel):

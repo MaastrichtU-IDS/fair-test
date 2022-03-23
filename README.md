@@ -16,7 +16,7 @@ FAIR metrics tests are evaluations taking a subject URL as input, executing a ba
 
 The user defines and registers custom FAIR metrics tests in separated files in a specific folder (the `metrics` folder by default), and start the API.
 
-Built with [FastAPI](https://fastapi.tiangolo.com/), [pydantic](https://pydantic-docs.helpmanual.io/) and [RDFLib](https://github.com/RDFLib/rdflib). Tested for Python 3.7, 3.8 and 3.9
+Built with [FastAPI](https://fastapi.tiangolo.com/), and [RDFLib](https://github.com/RDFLib/rdflib). Tested for Python 3.7, 3.8 and 3.9
 
 ## 📥 Install the package
 
@@ -30,7 +30,9 @@ pip install fair-test
 
 Checkout the [`example`](https://github.com/MaastrichtU-IDS/fair-test/tree/main/example) folder for a complete working app example to get started, including a docker deployment.
 
-If you want to start from a project with everything ready to deploy in production we recommend you to fork the [fair-enough-metrics repository](https://github.com/MaastrichtU-IDS/fair-enough-metrics).
+If you want to start from a project with everything ready to deploy in production we recommend you to fork the [fair-enough-metrics repository](https://github.com/MaastrichtU-IDS/fair-enough-metrics). 
+
+ℹ️ You are welcome to submit a pull request to propose to add your tests to the FAIR enough metrics API in production: https://metrics.api.fair-enough.semanticscience.org
 
 ### 📝 Define the API
 

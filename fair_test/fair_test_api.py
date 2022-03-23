@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
-# from starlette.responses import FileResponse 
 import os
 from fair_test.config import settings
 
