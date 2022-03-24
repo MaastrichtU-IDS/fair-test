@@ -6,7 +6,8 @@ import datetime
 import urllib.parse
 import json
 import requests
-from rdflib import ConjunctiveGraph
+from rdflib import ConjunctiveGraph, URIRef, RDF
+from rdflib.namespace import FOAF
 import html
 import yaml
 import extruct
@@ -33,6 +34,7 @@ class FairTest(BaseModel):
     description: str
     author: str = settings.CONTACT_ORCID
     data: Optional[dict]
+    tests: Optional[dict]
     default_subject: str = settings.DEFAULT_SUBJECT
     
 
@@ -246,6 +248,26 @@ class FairTest(BaseModel):
             self.warn('Could not parse ' + mime_type + ' metadata from ' + log_msg + ' with RDFLib parser ' + mime_type + ' ' + str(e))
 
         return g
+
+
+    def getProps(g, preds, subj = None):
+        props = {}
+        for pred in preds:
+            # Add the http/https counterpart for each predicate
+            if pred.startswith('http://'):
+                pred.replace('http://', 'https://')
+            elif pred.startswith('https://'):
+                pred.replace('https://', 'http://')
+            preds.append(pred)
+
+        for pred in preds:
+            if subj:
+                subj = URIRef(str(subj))
+            for s, p, o in g.triples((subj, URIRef(pred), None)):
+                if not pred in props.keys():
+                    props[pred] = []
+                props[pred].append(o)
+        return props
 
 
     def doEvaluate(self, input: TestInput):

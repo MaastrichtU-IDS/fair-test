@@ -58,15 +58,7 @@ class FairTestAPI(FastAPI):
         metrics_module = metrics_folder_path.replace('/', '.')
 
         # First get the metrics tests filepath
-        assess_name_list = []
-        for path, subdirs, files in os.walk(metrics_folder_path):
-            for filename in files:
-                if not path.endswith('__pycache__') and not filename.endswith('__init__.py'):
-                    filepath = path.replace(metrics_folder_path, '')
-                    if filepath:
-                        assess_name_list.append(filepath[1:] + '/' + filename[:-3])
-                    else:
-                        assess_name_list.append(filename[:-3])
+        assess_name_list = self.get_metrics_tests_filepaths()
 
         # Then import each metric test listed in the metrics folder
         for assess_name in assess_name_list:
@@ -102,7 +94,40 @@ class FairTestAPI(FastAPI):
             except Exception:
                 print('❌ No API defined for ' + metric.metric_path)
 
+
         @self.get("/", include_in_schema=False)
         def redirect_root_to_docs():
             """Redirect the route / to /docs"""
             return RedirectResponse(url='/docs')
+
+
+    def get_metrics_tests_filepaths(self):
+        assess_name_list = []
+        for path, subdirs, files in os.walk(self.metrics_folder_path):
+            for filename in files:
+                if not path.endswith('__pycache__') and not filename.endswith('__init__.py'):
+                    filepath = path.replace(self.metrics_folder_path, '')
+                    if filepath:
+                        assess_name_list.append(filepath[1:] + '/' + filename[:-3])
+                    else:
+                        assess_name_list.append(filename[:-3])
+        return assess_name_list
+
+
+    def get_metrics_tests_tests(self):
+        metrics_module = self.metrics_folder_path.replace('/', '.')
+        metrics_paths = self.get_metrics_tests_filepaths()
+        tests_tests = []
+        for metrics_name in metrics_paths:
+            assess_module = metrics_name.replace('/', '.')
+            import importlib
+            MetricTest = getattr(importlib.import_module(f'{metrics_module}.{assess_module}'), "MetricTest")
+
+            metric = MetricTest()
+            for subj, score in metric.tests.items:
+                tests_tests.append({
+                    'subject': subj,
+                    'score': score,
+                    'metric_id': metric.metric_path
+                })
+        return tests_tests
