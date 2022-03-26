@@ -1,8 +1,20 @@
 site_name: FAIR test library
 site_description: ☑️ A library to build and deploy FAIR metrics tests APIs that can be registered to existing FAIR evaluation services supporting the FAIRMetrics specifications.
 repo_url: https://github.com/MaastrichtU-IDS/fair-test
+
 theme:
   name: "material"
+  palette:
+    - media: "(prefers-color-scheme: light)" 
+      scheme: default
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)" 
+      scheme: slate
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
 
 nav:
   - About: index.md
@@ -34,3 +46,6 @@ markdown_extensions:
   - pymdownx.details
   - attr_list
   - admonition
+
+extra_css:
+  - custom.css

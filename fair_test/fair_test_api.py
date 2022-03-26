@@ -149,6 +149,24 @@ class FairTestAPI(FastAPI):
 
 
     def run_tests(self, test_endpoint):
+        """
+        Run tests for each metric test. URLs to test and expected scores are defined with the `test_test` attribute.
+        Use this in a test file to automatically test all metrics tests, for example:
+
+        ```python title='tests/test_metrics.py'
+        from fastapi.testclient import TestClient
+        from fair_test import FairTestAPI
+
+        app = FairTestAPI(metrics_folder_path='metrics')
+        endpoint = TestClient(app)
+
+        def test_api():
+            app.run_tests(endpoint)
+        ```
+
+        Parameters:
+            test_endpoint (TestClient): FastAPI TestClient of the app to test
+        """
         eval_list = self.get_metrics_tests_tests()
 
         # Test POST metrics evaluation request

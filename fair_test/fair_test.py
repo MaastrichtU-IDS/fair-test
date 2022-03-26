@@ -159,7 +159,17 @@ class FairTest(BaseModel):
             use_harvester: bool = False, 
             harvester_url: str = 'https://fair-tests.137.120.31.101.nip.io/tests/harvester',
     ):
-        # Retrieve RDF from an URL
+        """
+        Retrieve RDF from an URL.
+
+        Parameters:
+            url (str): URL to retrieve RDF from
+            use_harvester (bool, optional): Use an external harvester to retrieve the RDF instead of the built-in python harvester 
+            harvester_url (str, optional): URL of the RDF harvester used
+
+        Returns:
+            g (Graph): A RDFLib Graph with the RDF found at the given URL
+        """
         if use_harvester == True:
             # Check the harvester response:
             # curl -X POST -d '{"subject": "https://doi.org/10.1594/PANGAEA.908011"}' https://fair-tests.137.120.31.101.nip.io/tests/harvester
@@ -248,8 +258,19 @@ class FairTest(BaseModel):
 
         return ConjunctiveGraph()
 
-    # Parse any json or string to a RDFLib Graph
+
     def parseRDF(self, rdf_data, mime_type: str = None, log_msg: str = ''):
+        """
+        Parse any string or JSON-like object to a RDFLib Graph
+
+        Parameters:
+            rdf_data (str): Text or object to convert to RDF
+            mime_type (str, optional): Mime type of the data to convert
+            log_msg (str, optional): Text to use when logging about the parsing process (help debugging)
+
+        Returns:
+            g (Graph): A RDFLib Graph
+        """
         # https://rdflib.readthedocs.io/en/stable/plugin_parsers.html
         # rdflib_formats = ['turtle', 'json-ld', 'xml', 'ntriples', 'nquads', 'trig', 'n3']
         # We need to make this ugly fix because regular content negotiation dont work with schema.org

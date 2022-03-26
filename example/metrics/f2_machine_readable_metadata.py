@@ -36,9 +36,9 @@ class MetricTest(FairTest):
 
     test_test={
         'https://doi.org/10.1594/PANGAEA.908011': 1,
-        'https://doi.org/10.34894/DR3I2A': 1,
         'https://doi.org/10.25504/FAIRsharing.jptb1m': 1,
         'https://purl.org/fairdatapoint/app/distribution/54a43c3e-8a6f-4a75-95c0-a2cb1e8c74ab': 1,
+        # 'https://doi.org/10.34894/DR3I2A': 1,
         # 'https://doi.org/10.5281/zenodo.5541440': 1,
         'http://example.com': 0,
     }

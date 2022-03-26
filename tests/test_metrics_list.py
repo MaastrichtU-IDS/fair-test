@@ -40,11 +40,6 @@ eval_list = [
     },
     {
         'metric_id': 'f2-machine-readable-metadata',
-        'subject': 'https://doi.org/10.34894/DR3I2A',
-        'score': 1,
-    },
-    {
-        'metric_id': 'f2-machine-readable-metadata',
         'subject': 'https://doi.org/10.25504/FAIRsharing.jptb1m',
         'score': 1,
     },
@@ -62,6 +57,11 @@ eval_list = [
     # {
     #     'metric_id': 'f2-machine-readable-metadata',
     #     'subject': 'https://w3id.org/ejp-rd/fairdatapoints/wp13/dataset/c5414323-eab1-483f-a883-77951f246972',
+    #     'score': 1,
+    # },
+    # {
+    #     'metric_id': 'f2-machine-readable-metadata',
+    #     'subject': 'https://doi.org/10.34894/DR3I2A',
     #     'score': 1,
     # },
     {
