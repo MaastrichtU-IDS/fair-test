@@ -31,12 +31,12 @@ Resolve the licenses IRI"""
             license_uris = [DCTERMS.license, URIRef('https://schema.org/license')]
             test_subjects = [None, self.subject, self.subject.replace('http://', 'https://').replace('https://', 'http://')]
             # Get license from RDF metadata
-            data_res = self.getProps(license_uris, test_subjects)
+            self.info(f'Check LICENSE PROPS {license_uris}')
+            data_res = self.getProps(g, license_uris, test_subjects)
             # Added for testing:
-            data_res = self.getProps(license_uris)
-            data_res = self.getProps('https://schema.org/license')
-            if len(data_res.keys() < 1):
-                self.failure("Could not find data for the metadata. Searched for the following predicates: " + ', '.join(data_props))
+            data_res = self.getProps(g, license_uris)
+            if len(list(data_res.keys())) < 1:
+                self.failure("Could not find data for the metadata. Searched for the following predicates: " + ', '.join(license_uris))
 
             for license_pred, license_uri in data_res.items():
                 self.log(f'Found license with {license_pred} predicate: {str(license_uri)}')
@@ -44,7 +44,7 @@ Resolve the licenses IRI"""
                 found_license = True
 
         if found_license:
-            self.success('Found license in metadata: ' + str(license))
+            self.success('Found license in metadata')
         else:
             self.failure('Could not find license information in metadata')
 

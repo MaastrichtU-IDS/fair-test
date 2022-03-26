@@ -95,7 +95,13 @@ return self.response()
 
 ## 🦄 Deploy the API
 
-You can then run the metrics tests API on http://localhost:8000 using `uvicorn`. For example you can get started with the code provided in the  [`example`](https://github.com/MaastrichtU-IDS/fair-test/tree/main/example){:target="_blank"}  folder, go to this folder and install the requirements:
+You can then run the metrics tests API using `uvicorn`.
+
+!!! example "Example"
+
+	For example you can get started with the code provided in the  [`example` folder](https://github.com/MaastrichtU-IDS/fair-test/tree/main/example){:target="_blank"}, check the `example/README.md` for more options, such as deploying it with docker.
+
+Go to the FAIR metrics API folder, and install the requirements:
 
 ```bash
 cd example
@@ -108,9 +114,6 @@ Start the API on [http://localhost:8000](http://localhost:8000){:target="_blank"
 uvicorn main:app --reload
 ```
 
-!!! example "Example"
-
-    Checkout in the `example/README.md` file for more details, such as deploying it with docker.
 
 !!! hint "Publish on your server"
 
@@ -118,5 +121,5 @@ uvicorn main:app --reload
 
 !!! success "Publish to the FAIR Enough metrics API"
 
-	You are welcome to fork, create your test, and submit a pull request to propose adding your tests to the FAIR enough metrics API available at [https://metrics.api.fair-enough.semanticscience.org](https://metrics.api.fair-enough.semanticscience.org){:target="_blank"}
+	You are welcome to fork, create your test, and submit a pull request to propose adding your tests to the [FAIR enough metrics API repository](https://github.com/MaastrichtU-IDS/fair-enough-metrics){:target="_blank"}, it will be made available at [https://metrics.api.fair-enough.semanticscience.org](https://metrics.api.fair-enough.semanticscience.org){:target="_blank"}
 

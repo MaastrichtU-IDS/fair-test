@@ -24,9 +24,9 @@ theme:
 nav:
   - About: index.md
   - Usage: usage.md
-  - Classes reference:
-      - FAIR test: fair-test.md
-      - FAIR test API: fair-test-api.md
+  - Code reference:
+      - FairTest: fair-test.md
+      - FairTestAPI: fair-test-api.md
   - Development: development.md
   - Issues: https://github.com/MaastrichtU-IDS/fair-test/issues
 

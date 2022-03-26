@@ -96,8 +96,10 @@ class FairTest(BaseModel):
             # Check the harvester response:
             # curl -X POST -d '{"subject": "https://doi.org/10.1594/PANGAEA.908011"}' https://fair-tests.137.120.31.101.nip.io/tests/harvester
             try:
+                self.info(f'Using Harvester at {harvester_url} to retrieve RDF metadata at {url}')
                 res = requests.post(harvester_url,
                     json={"subject": url},
+                    timeout=5,
                     # headers={"Accept": "application/ld+json"}
                 )
                 return self.parseRDF(res.text, 'text/turtle', log_msg='FAIR evaluator harvester RDF')
@@ -220,27 +222,36 @@ class FairTest(BaseModel):
         return g
 
 
-    def getProps(g, preds, subj = None):
+    def getProps(self, g, preds, subj = None):
         props = {}
+        self.info(f"Checking values for properties before adding counterpart: {preds}")
+        check_preds = []
         for pred in preds:
             # Add the http/https counterpart for each predicate
-            if pred.startswith('http://'):
-                pred.replace('http://', 'https://')
-            elif pred.startswith('https://'):
-                pred.replace('https://', 'http://')
-            preds.append(pred)
+            if str(pred).startswith('http://'):
+                check_preds.append(URIRef(str(pred)))
+                check_preds.append(URIRef(str(pred).replace('http://', 'https://')))
+            elif str(pred).startswith('https://'):
+                check_preds.append(URIRef(str(pred)))
+                check_preds.append(URIRef(str(pred).replace('https://', 'http://')))
 
-        for pred in preds:
+        self.info(f"Checking values for properties: {preds}")
+        if subj:
+            self.info(f"Checking values for subjects URIs: {str(subj)}")
+
+        for pred in check_preds:
             if isinstance(subj, list):
-                test_subjs = [URIRef(s) for s in subj] 
+                test_subjs = [URIRef(str(s)) for s in subj] 
             elif subj:
                 test_subjs = [URIRef(str(subj))]
             else:
                 test_subjs = [None]
-            for s, p, o in g.triples((test_subjs, URIRef(pred), None)):
-                if not pred in props.keys():
-                    props[pred] = []
-                props[pred].append(o)
+            print(test_subjs)
+            for test_subj in test_subjs:
+                for s, p, o in g.triples((test_subj, URIRef(pred), None)):
+                    if not pred in props.keys():
+                        props[pred] = []
+                    props[pred].append(o)
         return props
 
 
