@@ -25,8 +25,8 @@ nav:
   - About: index.md
   - Usage: usage.md
   - Code reference:
-      - FairTest: fair-test.md
-      - FairTestAPI: fair-test-api.md
+      - FairTest: FairTest.md
+      - FairTestAPI: FairTestAPI.md
   - Development: development.md
   - Issues: https://github.com/MaastrichtU-IDS/fair-test/issues
 

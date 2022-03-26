@@ -99,7 +99,7 @@ class FairTest(BaseModel):
                 self.info(f'Using Harvester at {harvester_url} to retrieve RDF metadata at {url}')
                 res = requests.post(harvester_url,
                     json={"subject": url},
-                    timeout=5,
+                    timeout=60,
                     # headers={"Accept": "application/ld+json"}
                 )
                 return self.parseRDF(res.text, 'text/turtle', log_msg='FAIR evaluator harvester RDF')

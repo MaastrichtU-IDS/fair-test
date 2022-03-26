@@ -149,7 +149,7 @@ class FairTestAPI(FastAPI):
 
     def run_tests(self, test_endpoint):
         """
-        Run tests for each metric test. URLs to test and expected scores are defined with the `test_test` attribute.
+        Run pytest tests for each metric test. URLs to test and expected scores are defined with the `test_test` attribute.
         Use this in a test file to automatically test all metrics tests, for example:
 
         ```python title='tests/test_metrics.py'

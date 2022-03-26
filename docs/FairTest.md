@@ -1,3 +1,3 @@
-# FAIR test
+# FairTest
 
 ::: fair_test.FairTest

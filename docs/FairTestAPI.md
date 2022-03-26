@@ -1,3 +1,3 @@
-# FAIR test API
+# FairTestAPI
 
 ::: fair_test.FairTestAPI
