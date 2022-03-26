@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 import os
+import yaml
 from fair_test.config import settings
 
 
@@ -72,6 +73,7 @@ class FairTestAPI(FastAPI):
 
         # First get the metrics tests filepath
         assess_name_list = self.get_metrics_tests_filepaths()
+        print(assess_name_list)
 
         # Then import each metric test listed in the metrics folder
         for assess_name in assess_name_list:
@@ -130,17 +132,62 @@ class FairTestAPI(FastAPI):
     def get_metrics_tests_tests(self):
         metrics_module = self.metrics_folder_path.replace('/', '.')
         metrics_paths = self.get_metrics_tests_filepaths()
-        tests_tests = []
+        test_tests = []
         for metrics_name in metrics_paths:
             assess_module = metrics_name.replace('/', '.')
             import importlib
             MetricTest = getattr(importlib.import_module(f'{metrics_module}.{assess_module}'), "MetricTest")
 
             metric = MetricTest()
-            for subj, score in metric.tests.items:
-                tests_tests.append({
+            for subj, score in metric.test_test.items():
+                test_tests.append({
                     'subject': subj,
                     'score': score,
                     'metric_id': metric.metric_path
                 })
-        return tests_tests
+        return test_tests
+
+
+    def run_tests(self, test_endpoint):
+        eval_list = self.get_metrics_tests_tests()
+
+        # Test POST metrics evaluation request
+        for eval in eval_list:
+            r = test_endpoint.post(f"/tests/{eval['metric_id']}",
+                json={ 'subject': eval['subject'] },
+                headers={"Accept": "application/json"}
+            )
+            print(f"Test posting subject <{eval['subject']}> to {eval['metric_id']} (expect {eval['score']})")
+            assert r.status_code == 200
+            res = r.json()
+            # Check score:
+            assert res[0]['http://semanticscience.org/resource/SIO_000300'][0]['@value'] == eval['score']
+
+        # Test get YAML
+        metrics_id_to_test = set()
+        for eval in eval_list:
+            metrics_id_to_test.add(eval['metric_id'])
+        for metric_id in list(metrics_id_to_test):
+            r = test_endpoint.get(f"/tests/{metric_id}")
+            # print(r.text)
+            assert r.status_code == 200
+            api_yaml = yaml.load(r.text, Loader=yaml.FullLoader)
+            assert api_yaml['info']['title']
+            assert api_yaml['info']['x-applies_to_principle']
+            assert api_yaml['info']['x-tests_metric']
+
+        
+        # test bad request
+        response = test_endpoint.post(f'/tests/a1-access-protocol', 
+            json={'subject': ''},
+            headers={'accept': 'application/json'})
+        assert response.status_code == 422
+
+        # test 404
+        response = test_endpoint.get(f'/dont-exist', 
+            headers={'accept': 'application/json'})
+        assert response.status_code == 404
+
+        # test redirect
+        response = test_endpoint.get('/')
+        assert response.status_code == 200

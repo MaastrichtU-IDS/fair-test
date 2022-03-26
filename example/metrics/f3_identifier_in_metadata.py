@@ -34,8 +34,8 @@ If found, retrieve informations about this resource (title, description, date cr
                 self.info('The subject resource URI ' + self.subject + ' is a DOI')
 
 
-        # g = self.getRDF(self.subject)
-        g = self.getRDF(self.subject, use_harvester=True)
+        g = self.getRDF(self.subject, use_harvester=False)
+        # g = self.getRDF(self.subject, use_harvester=True)
         if len(g) == 0:
             self.failure('No RDF found at the subject URL provided.')
             return self.response()
@@ -89,3 +89,6 @@ If found, retrieve informations about this resource (title, description, date cr
 
         return self.response()
 
+    test_test={
+        'https://doi.org/10.1594/PANGAEA.908011': 1,
+    }

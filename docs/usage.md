@@ -2,7 +2,7 @@ This page explains how to create a FAIR metrics test API with `fair-test`.
 
 ## 📥 Install the package
 
-Install the package from [PyPI](https://pypi.org/project/fair-test/):
+Install the package from [PyPI](https://pypi.org/project/fair-test/){:target="_blank"}:
 
 ```bash
 pip install fair-test
@@ -72,6 +72,7 @@ class MetricTest(FairTest):
 self.info('Something happened')
 self.warn('Something bad happened')
 self.failure('The test failed')
+self.success('The test succeeded')
 ```
 
 * Retrieve RDF from a URL (returns a RDFLib Graph): 
@@ -96,14 +97,16 @@ pip install -r requirements.txt
 uvicorn main:app --reload
 ```
 
-> Checkout in the `example/README.md` for more details, such as deploying it with docker.
+!!! info "Example details"
+
+    Checkout in the `example/README.md` file for more details, such as deploying it with docker.
 
 ## More examples
 
-Checkout the [`example`](https://github.com/MaastrichtU-IDS/fair-test/tree/main/example) folder for a complete working app example to get started, including a docker deployment.
+Checkout the [`example`](https://github.com/MaastrichtU-IDS/fair-test/tree/main/example){:target="_blank"} folder for a complete working app example to get started, including a docker deployment.
 
-If you want to start from a project with everything ready to deploy in production we recommend you to fork the [fair-enough-metrics repository](https://github.com/MaastrichtU-IDS/fair-enough-metrics). 
+If you want to start from a project with everything ready to deploy in production we recommend you to fork the [fair-enough-metrics repository](https://github.com/MaastrichtU-IDS/fair-enough-metrics){:target="_blank"}. 
 
 
-ℹ️ You are welcome to submit a pull request to propose to add your tests to the FAIR enough metrics API in production: [https://metrics.api.fair-enough.semanticscience.org](https://metrics.api.fair-enough.semanticscience.org)
+ℹ️ You are welcome to submit a pull request to propose to add your tests to the FAIR enough metrics API in production: [https://metrics.api.fair-enough.semanticscience.org](https://metrics.api.fair-enough.semanticscience.org){:target="_blank"}
 

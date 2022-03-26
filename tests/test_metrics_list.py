@@ -2,6 +2,7 @@ from fastapi.testclient import TestClient
 from fair_test import FairTestAPI
 import yaml
 
+# Test the API using a list of subjects and expected score
 
 app = FairTestAPI(metrics_folder_path='example/metrics')
 
@@ -52,11 +53,12 @@ eval_list = [
         'subject': 'https://purl.org/fairdatapoint/app/distribution/54a43c3e-8a6f-4a75-95c0-a2cb1e8c74ab',
         'score': 1,
     },
-    {
-        'metric_id': 'f2-machine-readable-metadata',
-        'subject': 'https://doi.org/10.5281/zenodo.5541440',
-        'score': 1,
-    },
+    # Zenodo down sometimes
+    # {
+    #     'metric_id': 'f2-machine-readable-metadata',
+    #     'subject': 'https://doi.org/10.5281/zenodo.5541440',
+    #     'score': 1,
+    # },
     # {
     #     'metric_id': 'f2-machine-readable-metadata',
     #     'subject': 'https://w3id.org/ejp-rd/fairdatapoints/wp13/dataset/c5414323-eab1-483f-a883-77951f246972',
@@ -96,6 +98,20 @@ eval_list = [
 
 
 
+def test_api():
+    for eval in eval_list:
+        r = endpoint.post(f"/tests/{eval['metric_id']}",
+            json={ 'subject': eval['subject'] },
+            headers={"Accept": "application/json"}
+        )
+        print(f"Test posting subject <{eval['subject']}> to {eval['metric_id']} (expect {eval['score']})")
+        assert r.status_code == 200
+        res = r.json()
+        # Check score:
+        assert res[0]['http://semanticscience.org/resource/SIO_000300'][0]['@value'] == eval['score']
+
+
+
 def test_get_yaml():
     metrics_id_to_test = set()
     for eval in eval_list:
@@ -109,18 +125,6 @@ def test_get_yaml():
         assert api_yaml['info']['x-applies_to_principle']
         assert api_yaml['info']['x-tests_metric']
 
-
-def test_post_eval():
-    for eval in eval_list:
-        r = endpoint.post(f"/tests/{eval['metric_id']}",
-            json={ 'subject': eval['subject'] },
-            headers={"Accept": "application/json"}
-        )
-        print(f"Test posting subject <{eval['subject']}> to {eval['metric_id']} (expect {eval['score']})")
-        assert r.status_code == 200
-        res = r.json()
-        # Check score:
-        assert res[0]['http://semanticscience.org/resource/SIO_000300'][0]['@value'] == eval['score']
 
 
 def test_bad_request():

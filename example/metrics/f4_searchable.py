@@ -88,3 +88,6 @@ class MetricTest(FairTest):
         # else:
         #     self.failure('No resource title found, cannot search in google')
 
+    test_test={
+        'https://doi.org/10.1594/PANGAEA.908011': 1,
+    }

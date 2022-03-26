@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from fastapi import HTTPException
 from fastapi.responses import JSONResponse, PlainTextResponse
-from typing import Optional, List
+from typing import Optional, List, Any
 import datetime
 import urllib.parse
 import json
@@ -16,7 +16,7 @@ from pyld import jsonld
 # pyld is required to parse jsonld with rdflib
 
 
-class TestInput(BaseModel):
+class MetricInput(BaseModel):
     subject: str = settings.DEFAULT_SUBJECT
 
 
@@ -58,8 +58,8 @@ class FairTest(BaseModel):
     description: str
     author: str = settings.CONTACT_ORCID
     data: Optional[dict]
-    tests: Optional[dict]
     default_subject: str = settings.DEFAULT_SUBJECT
+    test_test = {}
     
 
     def __init__(self) -> None:
@@ -295,7 +295,7 @@ class FairTest(BaseModel):
         return props
 
 
-    def doEvaluate(self, input: TestInput):
+    def doEvaluate(self, input: MetricInput):
         if input.subject == '':
             raise HTTPException(status_code=422, detail=f"Provide a subject URL to evaluate")
         self.subject = input.subject

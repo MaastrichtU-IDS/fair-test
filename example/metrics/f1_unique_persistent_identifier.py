@@ -56,3 +56,9 @@ class MetricTest(FairTest):
             self.data['alternative_uris'].append(self.subject.lower())
 
         return self.response()
+
+    test_test={
+        'https://raw.githubusercontent.com/ejp-rd-vp/resource-metadata-schema/master/data/example-rdf/turtle/patientRegistry.ttl': 0,
+        # FAIR Data Point failing occasionally
+        # 'https://w3id.org/ejp-rd/fairdatapoints/wp13/dataset/c5414323-eab1-483f-a883-77951f246972': 1,
+    }

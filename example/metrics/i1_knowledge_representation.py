@@ -38,3 +38,6 @@ class MetricTest(FairTest):
 
         return self.response()
 
+    test_test={
+        'https://doi.org/10.1594/PANGAEA.908011': 1,
+    }

@@ -1,14 +1,17 @@
 site_name: FAIR test library
+site_description: ☑️ A library to build and deploy FAIR metrics tests APIs that can be registered to existing FAIR evaluation services supporting the FAIRMetrics specifications.
+repo_url: https://github.com/MaastrichtU-IDS/fair-test
 theme:
   name: "material"
 
 nav:
   - About: index.md
   - Usage: usage.md
-  - Code Reference:
+  - Classes reference:
       - FAIR test: fair-test.md
       - FAIR test API: fair-test-api.md
   - Development: development.md
+  - Issues: https://github.com/MaastrichtU-IDS/fair-test/issues
 
 plugins:
 - search
@@ -28,3 +31,6 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
+  - pymdownx.details
+  - attr_list
+  - admonition
