@@ -60,10 +60,10 @@ Install the dependencies to generate documentation:
 pip install -r docs/requirements.txt
 ```
 
-Start the docs on [http://localhost:8000](http://localhost:8000){:target="_blank"}
+Start the docs on [http://localhost:8001](http://localhost:8001){:target="_blank"}
 
 ```bash
-mkdocs serve
+mkdocs serve -a localhost:8001
 ```
 
 ### 🏷️ Publish a new release

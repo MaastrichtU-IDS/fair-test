@@ -11,7 +11,7 @@ class FairTestAPI(FastAPI):
     Class to deploy a FAIR tests API, create API calls for each FairTest defined
     in the metrics folder.
 
-    ```python
+    ```python title="main.py"
     from fair_test import FairTestAPI
     
     app = FairTestAPI(

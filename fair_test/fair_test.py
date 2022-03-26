@@ -24,7 +24,7 @@ class FairTest(BaseModel):
     """
     Class to define a FAIR metrics test, create an API call in the FairTest API.
 
-    ```python
+    ```python title="metrics/a1-test-something.py"
     from fair_test import FairTest
     
     class MetricTest(FairTest):
@@ -74,84 +74,6 @@ class FairTest(BaseModel):
         arbitrary_types_allowed = True
 
 
-    def response(self) -> list:
-        return JSONResponse(self.toJsonld())
-
-
-    def toJsonld(self) -> list:
-        # To see the object used by the original FAIR metrics:
-        # curl -L -X 'POST' -d '{"subject": ""}' 'https://w3id.org/FAIR_Tests/tests/gen2_unique_identifier'
-        return [
-            {
-                "@id": self.id,
-                "@type": [
-                    "http://fairmetrics.org/resources/metric_evaluation_result"
-                ],
-                "http://purl.obolibrary.org/obo/date": [
-                    {
-                        "@value": self.date,
-                        "@type": "http://www.w3.org/2001/XMLSchema#date"
-                    }
-                ],
-                "http://schema.org/softwareVersion": [
-                {
-                    "@value": self.metric_version,
-                    "@type": "http://www.w3.org/2001/XMLSchema#float"
-                }
-                ],
-                "http://schema.org/comment": [
-                    {
-                    "@value": '\n\n'.join(self.comment),
-                    "@language": "en"
-                    }
-                ],
-                "http://semanticscience.org/resource/SIO_000332": [
-                    {
-                    "@value": str(self.subject),
-                    "@language": "en"
-                    }
-                ],
-                "http://semanticscience.org/resource/SIO_000300": [
-                    {
-                    "@value": float(self.score),
-                    "@type": "http://www.w3.org/2001/XMLSchema#float"
-                    }
-                ]
-            }
-        ]
-
-    # Logging utilities
-    def log(self, log_msg: str, prefix: str = None):
-        # Add timestamp?
-        # log_msg = '[' + str(datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")) + '] ' + log_msg 
-        if prefix:
-            log_msg = prefix + ' ' + log_msg
-        self.comment.append(log_msg)
-        print(log_msg)
-
-    def warn(self, log_msg: str):
-        self.log(log_msg, 'WARN:')
-    
-    def info(self, log_msg: str):
-        self.log(log_msg, 'INFO:')
-
-    def failure(self, log_msg: str):
-        self.score = 0
-        self.log(log_msg, 'FAILURE:')
-
-    def success(self, log_msg: str):
-        if self.score >= 1:
-            self.bonus(log_msg)
-        else:
-            self.score += 1
-            self.log(log_msg, 'SUCCESS:')
-
-    def bonus(self, log_msg: str):
-        self.score_bonus += 1
-        self.log(log_msg, 'SUCCESS:')
-
-
-    # Get RDF from an URL (returns RDFLib Graph)
     # TODO: Use signposting links to find links to download metadata from (rel=alternate)
     # https://datatracker.ietf.org/doc/html/draft-nottingham-http-link-header-10#section-6.2.2
     def getRDF(self, 
@@ -266,7 +188,7 @@ class FairTest(BaseModel):
         Parse any string or JSON-like object to a RDFLib Graph
 
         Parameters:
-            rdf_data (str): Text or object to convert to RDF
+            rdf_data (str|object): Text or object to convert to RDF
             mime_type (str, optional): Mime type of the data to convert
             log_msg (str, optional): Text to use when logging about the parsing process (help debugging)
 
@@ -309,13 +231,119 @@ class FairTest(BaseModel):
             preds.append(pred)
 
         for pred in preds:
-            if subj:
-                subj = URIRef(str(subj))
-            for s, p, o in g.triples((subj, URIRef(pred), None)):
+            if isinstance(subj, list):
+                test_subjs = [URIRef(s) for s in subj] 
+            elif subj:
+                test_subjs = [URIRef(str(subj))]
+            else:
+                test_subjs = [None]
+            for s, p, o in g.triples((test_subjs, URIRef(pred), None)):
                 if not pred in props.keys():
                     props[pred] = []
                 props[pred].append(o)
         return props
+
+
+
+    def response(self) -> list:
+        return JSONResponse(self.toJsonld())
+
+
+    def toJsonld(self) -> list:
+        # To see the object used by the original FAIR metrics:
+        # curl -L -X 'POST' -d '{"subject": ""}' 'https://w3id.org/FAIR_Tests/tests/gen2_unique_identifier'
+        return [
+            {
+                "@id": self.id,
+                "@type": [
+                    "http://fairmetrics.org/resources/metric_evaluation_result"
+                ],
+                "http://purl.obolibrary.org/obo/date": [
+                    {
+                        "@value": self.date,
+                        "@type": "http://www.w3.org/2001/XMLSchema#date"
+                    }
+                ],
+                "http://schema.org/softwareVersion": [
+                {
+                    "@value": self.metric_version,
+                    "@type": "http://www.w3.org/2001/XMLSchema#float"
+                }
+                ],
+                "http://schema.org/comment": [
+                    {
+                    "@value": '\n\n'.join(self.comment),
+                    "@language": "en"
+                    }
+                ],
+                "http://semanticscience.org/resource/SIO_000332": [
+                    {
+                    "@value": str(self.subject),
+                    "@language": "en"
+                    }
+                ],
+                "http://semanticscience.org/resource/SIO_000300": [
+                    {
+                    "@value": float(self.score),
+                    "@type": "http://www.w3.org/2001/XMLSchema#float"
+                    }
+                ]
+            }
+        ]
+
+    # Logging utilities
+    def log(self, log_msg: str, prefix: str = None):
+        # Add timestamp?
+        # log_msg = '[' + str(datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")) + '] ' + log_msg 
+        if prefix:
+            log_msg = prefix + ' ' + log_msg
+        self.comment.append(log_msg)
+        print(log_msg)
+
+    def warn(self, log_msg: str):
+        """
+        Log a warning related to the FAIR test execution (add to the comments of the test)
+
+        Parameters:
+            log_msg (str): Message to log
+        """
+        self.log(log_msg, 'WARN:')
+    
+    def info(self, log_msg: str):
+        """
+        Log an info message related to the FAIR test execution (add to the comments of the test)
+
+        Parameters:
+            log_msg (str): Message to log
+        """
+        self.log(log_msg, 'INFO:')
+
+    def failure(self, log_msg: str):
+        """
+        Log a failure message related to the FAIR test execution (add to the comments of the test and set score to 0)
+
+        Parameters:
+            log_msg (str): Message to log
+        """
+        self.score = 0
+        self.log(log_msg, 'FAILURE:')
+
+    def success(self, log_msg: str):
+        """
+        Log a success message related to the FAIR test execution (add to the comments of the test and set score to 1)
+
+        Parameters:
+            log_msg (str): Message to log
+        """
+        if self.score >= 1:
+            self.bonus(log_msg)
+        else:
+            self.score += 1
+            self.log(log_msg, 'SUCCESS:')
+
+    def bonus(self, log_msg: str):
+        self.score_bonus += 1
+        self.log(log_msg, 'BONUS:')
 
 
     def doEvaluate(self, input: MetricInput):

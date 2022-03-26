@@ -42,16 +42,16 @@ DEFAULT_SUBJECT="https://doi.org/10.1594/PANGAEA.908011"
 
 ## 🎯 Define a FAIR metrics test
 
-Create a `a1_my_test.py` file in the `metrics` folder with your test:
+Create a `a1_test_something.py` file in the `metrics` folder with your test:
 
 ````python title="metrics/test_a1.py"
 from fair_test import FairTest
 
 class MetricTest(FairTest):
-    metric_path = 'a1-check-something'
+    metric_path = 'a1-test-something'
     applies_to_principle = 'A1'
-    title = 'Check something'
-    description = """Test something"""
+    title = 'Test something'
+    description = """Check something"""
     author = 'https://orcid.org/0000-0000-0000-0000'
     metric_version = '0.1.0'
 
@@ -87,26 +87,36 @@ g = self.getRDF(self.subject)
 g = self.parseRDF(text)
 ```
 
+* Return the metric test results:
+
+```python
+return self.response()
+```
+
 ## 🦄 Deploy the API
 
-You can then run the metrics tests API on http://localhost:8000 using `uvicorn`, e.g. with the code provided in the `example` folder:
+You can then run the metrics tests API on http://localhost:8000 using `uvicorn`. For example you can get started with the code provided in the  [`example`](https://github.com/MaastrichtU-IDS/fair-test/tree/main/example){:target="_blank"}  folder, go to this folder and install the requirements:
 
 ```bash
 cd example
 pip install -r requirements.txt
+```
+
+Start the API on [http://localhost:8000](http://localhost:8000){:target="_blank"}:
+
+```bash
 uvicorn main:app --reload
 ```
 
-!!! info "Example details"
+!!! example "Example"
 
     Checkout in the `example/README.md` file for more details, such as deploying it with docker.
 
-## More examples
+!!! hint "Publish on your server"
 
-Checkout the [`example`](https://github.com/MaastrichtU-IDS/fair-test/tree/main/example){:target="_blank"} folder for a complete working app example to get started, including a docker deployment.
+	If you want to start from a project with everything ready to deploy in production we recommend you to fork the [fair-enough-metrics repository](https://github.com/MaastrichtU-IDS/fair-enough-metrics){:target="_blank"}. 
 
-If you want to start from a project with everything ready to deploy in production we recommend you to fork the [fair-enough-metrics repository](https://github.com/MaastrichtU-IDS/fair-enough-metrics){:target="_blank"}. 
+!!! success "Publish to the FAIR Enough metrics API"
 
-
-ℹ️ You are welcome to submit a pull request to propose to add your tests to the FAIR enough metrics API in production: [https://metrics.api.fair-enough.semanticscience.org](https://metrics.api.fair-enough.semanticscience.org){:target="_blank"}
+	You are welcome to fork, create your test, and submit a pull request to propose adding your tests to the FAIR enough metrics API available at [https://metrics.api.fair-enough.semanticscience.org](https://metrics.api.fair-enough.semanticscience.org){:target="_blank"}
 
