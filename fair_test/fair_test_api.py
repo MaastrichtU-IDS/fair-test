@@ -7,7 +7,23 @@ from fair_test.config import settings
 
 class FairTestAPI(FastAPI):
     """
-    Class to deploy a SPARQL endpoint using a RDFLib Graph
+    Class to deploy a FAIR tests API, create API calls for each FairTest defined
+    in the metrics folder.
+
+    ```python
+    from fair_test import FairTestAPI
+    
+    app = FairTestAPI(
+        title='FAIR enough metrics tests API',
+        metrics_folder_path='metrics',
+        
+        description="FAIR Metrics tests API for resources related to research. Follows the specifications described by the [FAIRMetrics](https://github.com/FAIRMetrics/Metrics) working group.",
+        license_info = {
+            "name": "MIT license",
+            "url": "https://opensource.org/licenses/MIT"
+        },
+    )
+    ```
     """
 
     def __init__(self,
@@ -30,10 +46,7 @@ class FairTestAPI(FastAPI):
             },
             **kwargs
         ) -> None:
-        """
-        Constructor of the FAIR testing API, create API calls for each FairTest defined
-        in the metrics folder
-        """
+        # Constructor of the FAIR testing API, create API calls for each FairTest defined in the metrics folder
         self.title=title
         self.description=description
         self.version=version
@@ -97,7 +110,7 @@ class FairTestAPI(FastAPI):
 
         @self.get("/", include_in_schema=False)
         def redirect_root_to_docs():
-            """Redirect the route / to /docs"""
+            # Redirect the route / to /docs
             return RedirectResponse(url='/docs')
 
 

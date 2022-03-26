@@ -1,0 +1,10 @@
+version: "3"
+services:
+  docs:
+    build: .
+    ports:
+      - 8000:8000
+    volumes:
+      - ./mkdocs.yml:/app/mkdocs.yml
+      - ./fair_test:/app/fair_test
+      - ./docs:/app/docs

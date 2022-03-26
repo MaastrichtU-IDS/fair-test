@@ -21,6 +21,30 @@ class TestInput(BaseModel):
 
 
 class FairTest(BaseModel):
+    """
+    Class to define a FAIR metrics test, create an API call in the FairTest API.
+
+    ```python
+    from fair_test import FairTest
+    
+    class MetricTest(FairTest):
+        metric_path = 'a1-check-something'
+        applies_to_principle = 'A1'
+        title = 'Check something'
+        description = "Test something"
+        author = 'https://orcid.org/0000-0000-0000-0000'
+        metric_version = '0.1.0'
+
+        def evaluate(self):
+            self.info(f'Checking something for {self.subject}')
+            g = self.getRDF(self.subject, use_harvester=False)
+            if len(g) > 0:
+                self.success(f'{len(g)} triples found, test sucessful')
+            else:
+                self.failure('No triples found, test failed')
+            return self.response()
+    ```
+    """
     subject: Optional[str]
     comment: List = []
     score: int = 0
@@ -135,6 +159,7 @@ class FairTest(BaseModel):
             use_harvester: bool = False, 
             harvester_url: str = 'https://fair-tests.137.120.31.101.nip.io/tests/harvester',
     ):
+        # Retrieve RDF from an URL
         if use_harvester == True:
             # Check the harvester response:
             # curl -X POST -d '{"subject": "https://doi.org/10.1594/PANGAEA.908011"}' https://fair-tests.137.120.31.101.nip.io/tests/harvester

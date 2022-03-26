@@ -90,7 +90,26 @@ class MetricTest(FairTest):
         return self.response()
 ````
 
-> ℹ️ A few common operations are available on the `self` object, such as logging or retrieving RDF metadata from a URL. 
+ℹ️ A few common operations are available on the `self` object:
+
+* Logging operations: 
+```python
+self.info('Something happened')
+self.warn('Something bad happened')
+self.failure('The test failed')
+```
+
+* Retrieve RDF from a URL (returns a RDFLib Graph): 
+
+```python
+g = self.getRDF(self.subject)
+```
+
+* Parse a string to RDF:
+
+```bash
+g = self.parseRDF(text)
+```
 
 ### 🦄 Deploy the API
 
@@ -139,6 +158,18 @@ Run the tests locally (from the root folder) with prints displayed:
 
 ```bash
 pytest -s
+```
+
+### Generate docs
+
+```bash
+pip install "jinja2==3.0.3" "mkdocstrings[python]" "mkdocs-material"
+```
+
+Start the docs on http
+
+```bash
+mkdocs serve
 ```
 
 ## 📂 Projects using fair-test

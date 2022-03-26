@@ -1,0 +1,30 @@
+site_name: FAIR test library
+theme:
+  name: "material"
+
+nav:
+  - About: index.md
+  - Usage: usage.md
+  - Code Reference:
+      - FAIR test: fair-test.md
+      - FAIR test API: fair-test-api.md
+  - Development: development.md
+
+plugins:
+- search
+- mkdocstrings:
+    default_handler: python
+    handlers:
+      python:
+        rendering:
+          show_source: true
+    # custom_templates: templates
+    watch:
+      - fair_test
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
