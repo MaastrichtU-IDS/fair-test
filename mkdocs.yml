@@ -4,6 +4,7 @@ site_author: Vincent Emonet
 site_url: https://maastrichtu-ids.github.io/fair-test
 repo_name: MaastrichtU-IDS/fair-test
 repo_url: https://github.com/MaastrichtU-IDS/fair-test
+edit_uri: "edit/main/docs/"
 copyright: Copyright &copy; 2022 Vincent Emonet
 
 theme:
@@ -59,7 +60,7 @@ nav:
   - Code reference:
       - "<span><i class='fa-solid fa-vial-circle-check'></i>&nbsp;&nbsp;FairTest</span>": FairTest.md
       - "<span><i class='fa-solid fa-flask-vial'></i>&nbsp;&nbsp;FairTestAPI</span>": FairTestAPI.md
-  - "<p>Issues&nbsp;&nbsp;<i class='fa-solid fa-arrow-up-right-from-square'></i></p>": https://github.com/MaastrichtU-IDS/fair-test/issues" target="_blank
+  - "<span>Issues&nbsp;&nbsp;<i class='fa-solid fa-arrow-up-right-from-square'></i></span>": https://github.com/MaastrichtU-IDS/fair-test/issues" target="_blank
 
 plugins:
 - search
