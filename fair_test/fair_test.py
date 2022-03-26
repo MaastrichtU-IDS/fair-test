@@ -173,12 +173,14 @@ class FairTest(BaseModel):
         if use_harvester == True:
             # Check the harvester response:
             # curl -X POST -d '{"subject": "https://doi.org/10.1594/PANGAEA.908011"}' https://fair-tests.137.120.31.101.nip.io/tests/harvester
-            res = requests.post(harvester_url,
-                json={"subject": url},
-                # headers={"Accept": "application/ld+json"}
-            )
-            print(res.text)
-            return self.parseRDF(res.text, 'text/turtle', log_msg='FAIR evaluator harvester RDF')
+            try:
+                res = requests.post(harvester_url,
+                    json={"subject": url},
+                    # headers={"Accept": "application/ld+json"}
+                )
+                return self.parseRDF(res.text, 'text/turtle', log_msg='FAIR evaluator harvester RDF')
+            except Exception as e:
+                self.warn(f'Failed to reach the Harvester at {harvester_url}, using the built-in python harvester')
 
         self.info(f'Checking if Signposting links can be found in the resource URI headers at {url}')
         # https://github.com/FAIRMetrics/Metrics/blob/master/MetricsEvaluatorCode/Ruby/metrictests/fair_metrics_utilities.rb#L355

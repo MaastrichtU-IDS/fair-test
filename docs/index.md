@@ -8,14 +8,11 @@ FAIR metrics tests are evaluations taking a subject URL as input, executing a ba
 
 !!! info "Report issues"
 
-    Feel free to create an [issue](https://github.com/MaastrichtU-IDS/fair-test/issues){:target="_blank"} on GitHub, or send a pull request if you are facing issues or would like to see a feature implemented.
+    Feel free to create [issues on GitHub](https://github.com/MaastrichtU-IDS/fair-test/issues){:target="_blank"}, if you are facing problems, or would like to see a feature implemented. Pull requests are also welcomed!
 
 ## ℹ️ How it works
 
-The user defines and registers custom FAIR metrics tests in separated files in a specific folder (the `metrics` folder by default), and start the API.
-
-Built with [FastAPI](https://fastapi.tiangolo.com/){:target="_blank"}, and [RDFLib](https://github.com/RDFLib/rdflib){:target="_blank"}. Tested for Python 3.7, 3.8 and 3.9
-
+The user defines custom FAIR metrics tests in python in a specific folder (the `metrics` folder by default), and starts the API.
 
 ## 📂 Projects using fair-test
 
@@ -23,3 +20,9 @@ Here are some projects using `fair-test` to deploy FAIR test services:
 
 * [https://github.com/MaastrichtU-IDS/fair-enough-metrics](https://github.com/MaastrichtU-IDS/fair-enough-metrics){:target="_blank"}: A generic  FAIR metrics tests service developed at the Institute of Data Science at Maastricht University.
 * [https://github.com/LUMC-BioSemantics/RD-FAIRmetric-F4](https://github.com/LUMC-BioSemantics/RD-FAIRmetric-F4){:target="_blank"}: A FAIR metrics tests service for Rare Disease research.
+
+## 🤝 Credits
+
+Built with [FastAPI](https://fastapi.tiangolo.com/){:target="_blank"}, and [RDFLib](https://github.com/RDFLib/rdflib){:target="_blank"}. Tested for Python 3.7, 3.8 and 3.9
+
+Using the specifications defined by the [FAIR metrics working group](https://github.com/FAIRMetrics/Metrics){:target="_blank"}.

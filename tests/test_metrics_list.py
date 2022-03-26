@@ -3,6 +3,7 @@ from fair_test import FairTestAPI
 import yaml
 
 # Test the API using a list of subjects and expected score
+# TODO: remove? Now using embedded test_test attribute
 
 app = FairTestAPI(metrics_folder_path='example/metrics')
 
@@ -33,21 +34,21 @@ eval_list = [
     #     'score': 1,
     # },
     ## f2-machine-readable-metadata
-    {
-        'metric_id': 'f2-machine-readable-metadata',
-        'subject': 'https://doi.org/10.1594/PANGAEA.908011',
-        'score': 1,
-    },
-    {
-        'metric_id': 'f2-machine-readable-metadata',
-        'subject': 'https://doi.org/10.25504/FAIRsharing.jptb1m',
-        'score': 1,
-    },
-    {
-        'metric_id': 'f2-machine-readable-metadata',
-        'subject': 'https://purl.org/fairdatapoint/app/distribution/54a43c3e-8a6f-4a75-95c0-a2cb1e8c74ab',
-        'score': 1,
-    },
+    # {
+    #     'metric_id': 'f2-machine-readable-metadata',
+    #     'subject': 'https://doi.org/10.1594/PANGAEA.908011',
+    #     'score': 1,
+    # },
+    # {
+    #     'metric_id': 'f2-machine-readable-metadata',
+    #     'subject': 'https://doi.org/10.25504/FAIRsharing.jptb1m',
+    #     'score': 1,
+    # },
+    # {
+    #     'metric_id': 'f2-machine-readable-metadata',
+    #     'subject': 'https://purl.org/fairdatapoint/app/distribution/54a43c3e-8a6f-4a75-95c0-a2cb1e8c74ab',
+    #     'score': 1,
+    # },
     # Zenodo down sometimes
     # {
     #     'metric_id': 'f2-machine-readable-metadata',
@@ -64,36 +65,36 @@ eval_list = [
     #     'subject': 'https://doi.org/10.34894/DR3I2A',
     #     'score': 1,
     # },
-    {
-        'metric_id': 'f2-machine-readable-metadata',
-        'subject': 'http://example.com',
-        'score': 0,
-    },
-    {
-        'metric_id': 'f3-id-in-metadata',
-        'subject': 'https://doi.org/10.1594/PANGAEA.908011',
-        'score': 1,
-    },
-    {
-        'metric_id': 'f4-searchable',
-        'subject': 'https://doi.org/10.1594/PANGAEA.908011',
-        'score': 1,
-    },
-    {
-        'metric_id': 'i1-knowledge-representation',
-        'subject': 'https://doi.org/10.1594/PANGAEA.908011',
-        'score': 1,
-    },
-    {
-        'metric_id': 'i2-fair-vocabularies',
-        'subject': 'https://doi.org/10.1594/PANGAEA.908011',
-        'score': 1,
-    },
-    {
-        'metric_id': 'r1-accessible-license',
-        'subject': 'https://doi.org/10.1594/PANGAEA.908011',
-        'score': 1,
-    },
+    # {
+    #     'metric_id': 'f2-machine-readable-metadata',
+    #     'subject': 'http://example.com',
+    #     'score': 0,
+    # },
+    # {
+    #     'metric_id': 'f3-id-in-metadata',
+    #     'subject': 'https://doi.org/10.1594/PANGAEA.908011',
+    #     'score': 1,
+    # },
+    # {
+    #     'metric_id': 'f4-searchable',
+    #     'subject': 'https://doi.org/10.1594/PANGAEA.908011',
+    #     'score': 1,
+    # },
+    # {
+    #     'metric_id': 'i1-knowledge-representation',
+    #     'subject': 'https://doi.org/10.1594/PANGAEA.908011',
+    #     'score': 1,
+    # },
+    # {
+    #     'metric_id': 'i2-fair-vocabularies',
+    #     'subject': 'https://doi.org/10.1594/PANGAEA.908011',
+    #     'score': 1,
+    # },
+    # {
+    #     'metric_id': 'r1-accessible-license',
+    #     'subject': 'https://doi.org/10.1594/PANGAEA.908011',
+    #     'score': 1,
+    # },
 ]
 
 

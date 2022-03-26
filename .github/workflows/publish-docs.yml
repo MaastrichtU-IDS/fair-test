@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'fair_test/**'
+      - 'docs/**'
+      - 'mkdocs.yml'
+      - '.github/workflows/publish-docs.yml'
 
 jobs:
   build:
@@ -13,7 +18,7 @@ jobs:
       - name: Checkout main
         uses: actions/checkout@v2
 
-      - name: Deploy docs
+      - name: Deploy docs with mkdocs
         uses: mhausenblas/mkdocs-deploy-gh-pages@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

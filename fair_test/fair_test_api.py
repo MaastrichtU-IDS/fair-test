@@ -73,7 +73,6 @@ class FairTestAPI(FastAPI):
 
         # First get the metrics tests filepath
         assess_name_list = self.get_metrics_tests_filepaths()
-        print(assess_name_list)
 
         # Then import each metric test listed in the metrics folder
         for assess_name in assess_name_list:

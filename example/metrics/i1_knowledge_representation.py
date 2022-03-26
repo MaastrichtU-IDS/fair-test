@@ -18,7 +18,8 @@ class MetricTest(FairTest):
 
     def evaluate(self):        
         # https://github.com/vemonet/fuji/blob/master/fuji_server/helper/preprocessor.py#L190
-        g = self.getRDF(self.subject)
+        # g = self.getRDF(self.subject)
+        g = self.getRDF(self.subject, use_harvester=True, harvester_url='http://bad_url_for_test')
         if len(g) > 1:
             self.success('Successfully parsed the RDF metadata retrieved with content negotiation. It contains ' + str(len(g)) + ' triples')
 
