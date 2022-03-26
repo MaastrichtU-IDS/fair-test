@@ -9,7 +9,7 @@ setup(
     description='A library to build and deploy FAIR metrics tests APIs that can be used by FAIR evaluators, using FastAPI, and RDFLib.',
     author='Vincent Emonet',
     author_email='vincent.emonet@gmail.com',
-    url='https://github.com/MaastrichtU-IDS/fair-test',
+    url='https://maastrichtu-ids.github.io/fair-test',
     packages=find_packages(),
     include_package_data=True,
     # package_dir={'rdflib_endpoint': 'rdflib_endpoint'},

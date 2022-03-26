@@ -22,7 +22,8 @@ class MetricInput(BaseModel):
 
 class FairTest(BaseModel):
     """
-    Class to define a FAIR metrics test, create an API call in the FairTest API.
+    Class to define a FAIR metrics test, 
+    API calls will be automatically generated for this test when the FairTestAPI is started.
 
     ```python title="metrics/a1-test-something.py"
     from fair_test import FairTest
