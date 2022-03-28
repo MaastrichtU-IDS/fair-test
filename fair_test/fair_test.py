@@ -75,8 +75,7 @@ class FairTest(BaseModel):
         if input.subject == '':
             raise HTTPException(status_code=422, detail=f"Provide a subject URL to evaluate")
         
-        # TODO: create separate object for each FAIR test evaluation to avoid any conflict? FairTestEvaluation
-        self.warn(f"INPUT SUBJECT: {input.subject}")
+        # TODO: create separate object for each FAIR test evaluation to avoid any conflict? e.g. FairTestEvaluation
         self.subject = input.subject
         self.id = f"{settings.HOST_URL}/metrics/{self.metric_path}#{urllib.parse.quote(str(self.subject))}/result-{self.date}"
         self.comment = []
