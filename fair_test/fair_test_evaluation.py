@@ -22,8 +22,8 @@ from pyld import jsonld
 
 class FairTestEvaluation(BaseModel):
     """
-    Class to define a FAIR metrics test, 
-    API calls will be automatically generated for this test when the FairTestAPI is started.
+    Class to manipulate a FAIR metrics test evaluation. Provides helpers functions to easily retrieve and parse metadata.
+    A new FairTestEvaluation object is create for each new request to one of the FAIR metrics test API call exposed by the API
 
     ```python title="metrics/a1_check_something.py"
     from fair_test import FairTest
