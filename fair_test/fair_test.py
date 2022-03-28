@@ -298,23 +298,30 @@ class FairTest(BaseModel):
             data_uri (str): URI of the data found in the metadata
         """
         data_props = [
-            "http://www.w3.org/ns/ldp#contains", "https://www.w3.org/ns/ldp#contains", 
-            "http://xmlns.com/foaf/0.1/primaryTopic", "https://xmlns.com/foaf/0.1/primaryTopic", 
-            "http://schema.org/about", "https://schema.org/about", 
-            "http://schema.org/mainEntity", "https://schema.org/mainEntity", 
-            "http://schema.org/codeRepository", "https://schema.org/codeRepository",
-            "http://schema.org/distribution", "https://schema.org/distribution", 
-            "http://www.w3.org/ns/dcat#distribution", "https://www.w3.org/ns/dcat#distribution", 
-            "http://semanticscience.org/resource/SIO_000332", "https://semanticscience.org/resource/SIO_000332", 
-            "http://semanticscience.org/resource/is-about", "https://semanticscience.org/resource/is-about", 
-            "http://purl.obolibrary.org/obo/IAO_0000136", "https://purl.obolibrary.org/obo/IAO_0000136"
+            "https://www.w3.org/ns/ldp#contains", 
+            "https://xmlns.com/foaf/0.1/primaryTopic", 
+            "https://schema.org/about", 
+            "https://schema.org/mainEntity", 
+            "https://schema.org/codeRepository",
+            "https://schema.org/distribution", 
+            "https://www.w3.org/ns/dcat#distribution", 
+            "https://semanticscience.org/resource/SIO_000332", 
+            "https://semanticscience.org/resource/is-about", 
+            "https://purl.obolibrary.org/obo/IAO_0000136"
         ]
-        self.info(f"Searching for the data URI using the following predicates: {', '.join(data_props)}")
-        return self.extract_prop(g, preds=data_props, subj=self.data['alternative_uris'])
+        http_props = [p.replace('https://', 'http://') for p in data_props] 
+        self.info(f"Searching for the data URI using the following predicates: {', '.join(data_props + http_props)}")
+        return self.extract_prop(g, preds=data_props + http_props, subj=self.data['alternative_uris'])
 
 
 
     def response(self) -> list:
+        """
+        Function used to generate the FAIR metric test results as JSON-LD, and return this JSON-LD as HTTP response
+
+        Returns:
+            response (JSONResponse): HTTP response containing the test results as JSON-LD
+        """
         return JSONResponse(self.to_jsonld())
 
 
