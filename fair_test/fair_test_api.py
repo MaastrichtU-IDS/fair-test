@@ -205,3 +205,5 @@ class FairTestAPI(FastAPI):
         # test redirect
         response = test_endpoint.get('/')
         assert response.status_code == 200
+
+        print(f"Tested a total of {len(eval_list)} FAIR metrics tests/subjects/score combinations")
