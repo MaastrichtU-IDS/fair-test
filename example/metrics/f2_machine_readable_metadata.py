@@ -50,7 +50,6 @@ class MetricTest(FairTest):
             #         sparql_query = sparql_query.replace('?_graph_namespace', graph_namespace)
             #     url = link_split[0][/<(.*)>/,1]
             #     name = link_split[1][/rel="(.*)"/,1].to_sym
-
         else:
             eval.info('Could not find Signposting links')
 

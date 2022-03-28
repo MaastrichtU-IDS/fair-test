@@ -141,7 +141,7 @@ class FairTestEvaluation(BaseModel):
             # TODO: parse signposting links, get alternate and meta?
             # return self.retrieve_rdf(str(signposting_links))
         else:
-            self.warn('Could not find Signposting links')
+            self.info('Could not find Signposting links')
 
         # We need to do direct content negociation to turtle and json
         # because some URLs dont support standard weighted content negociation
