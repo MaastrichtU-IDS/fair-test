@@ -26,8 +26,8 @@ class FairTestEvaluation(BaseModel):
     A new FairTestEvaluation object is create for each new request to one of the FAIR metrics test API call exposed by the API
 
     ```python title="metrics/a1_check_something.py"
-    from fair_test import FairTest
-    
+    from fair_test import FairTest, FairTestEvaluation
+
     class MetricTest(FairTest):
         metric_path = 'a1-check-something'
         applies_to_principle = 'A1'
@@ -35,15 +35,19 @@ class FairTestEvaluation(BaseModel):
         description = "Test something"
         author = 'https://orcid.org/0000-0000-0000-0000'
         metric_version = '0.1.0'
+        test_test={
+            'http://doi.org/10.1594/PANGAEA.908011': 1,
+            'https://github.com/MaastrichtU-IDS/fair-test': 0,
+        }
 
-        def evaluate(self):
-            self.info(f'Checking something for {self.subject}')
-            g = self.retrieve_rdf(self.subject, use_harvester=False)
+        def evaluate(self, eval: FairTestEvaluation):
+            eval.info(f'Checking something for {self.subject}')
+            g = eval.retrieve_rdf(self.subject, use_harvester=False)
             if len(g) > 0:
-                self.success(f'{len(g)} triples found, test sucessful')
+                eval.success(f'{len(g)} triples found, test sucessful')
             else:
-                self.failure('No triples found, test failed')
-            return self.response()
+                eval.failure('No triples found, test failed')
+            return eval.response()
     ```
     """
     subject: Optional[str]
