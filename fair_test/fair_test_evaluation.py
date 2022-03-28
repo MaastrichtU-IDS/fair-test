@@ -88,6 +88,9 @@ class FairTestEvaluation(BaseModel):
 
     # TODO: Use signposting links to find links to download metadata from (rel=alternate)
     # https://datatracker.ietf.org/doc/html/draft-nottingham-http-link-header-10#section-6.2.2
+    # TODO: implement metadata extraction with more tools? 
+    # e.g. Apache Tika for PDF/pptx? or ruby Kellog's Distiller? http://rdf.greggkellogg.net/distiller
+    # c.f. https://github.com/FAIRMetrics/Metrics/blob/master/MetricsEvaluatorCode/Ruby/metrictests/fair_metrics_utilities.rb
     def retrieve_rdf(self, 
             url: str, 
             use_harvester: bool = False, 
@@ -137,7 +140,7 @@ class FairTestEvaluation(BaseModel):
             found_signposting = True
         if found_signposting:
             self.info(f'Found Signposting links: {str(signposting_links)}')
-            # self.data['signposting'] = str(signposting_links)
+            self.data['signposting'] = str(signposting_links)
             # TODO: parse signposting links, get alternate and meta?
             # return self.retrieve_rdf(str(signposting_links))
         else:
@@ -408,6 +411,6 @@ class FairTestEvaluation(BaseModel):
 
     def bonus(self, log_msg: str):
         self.score_bonus += 1
-        self.log(log_msg, 'BONUS:')
+        self.log(log_msg, 'SUCCESS:')
 
 

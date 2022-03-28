@@ -80,6 +80,12 @@ class FairTest(BaseModel):
         # self.subject = input.subject
         
         return self.evaluate(eval)
+        # try:
+        #     return self.evaluate(eval)
+        # except Exception e:
+        #     return JSONResponse({
+        #         'errorMessage': f'Error while running the evaluation against {input.subject}'
+        #     })
 
 
     # Placeholder that will be overwritten for each Metric Test
