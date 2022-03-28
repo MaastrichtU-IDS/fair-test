@@ -287,7 +287,7 @@ class FairTest(BaseModel):
         return list(values)
 
 
-    def get_data_uri(self, g):
+    def extract_data_uri(self, g):
         """
         Helper to easily retrieve the URI of the data from RDF metadata (RDFLib Graph)
 
