@@ -65,6 +65,12 @@ class MetricTest(FairTest):
             return self.response()
 
 
+    test_test={
+        'http://doi.org/10.1594/PANGAEA.908011': 1,
+        'https://w3id.org/ejp-rd/fairdatapoints/wp13/dataset/c5414323-eab1-483f-a883-77951f246972': 1,
+        'https://github.com/MaastrichtU-IDS/fair-test': 1,
+    }
+
         # found_content_negotiation = False
         # # self.info('Trying (in this order): ' + ', '.join(check_mime_types))
         # for mime_type in check_mime_types:
@@ -134,5 +140,5 @@ class MetricTest(FairTest):
         #     self.warn('Error when running extruct on ' + uri + '. Getting: ' + str(e.args[0]))
 
 
-        return self.response()
+        # return self.response()
 
