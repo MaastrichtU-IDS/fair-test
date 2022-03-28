@@ -54,6 +54,10 @@ class MetricTest(FairTest):
     description = """Test something"""
     author = 'https://orcid.org/0000-0000-0000-0000'
     metric_version = '0.1.0'
+    test_test={
+        'http://doi.org/10.1594/PANGAEA.908011': 1,
+        'https://github.com/MaastrichtU-IDS/fair-test': 0,
+    }
 
     def evaluate(self):
         self.info(f'Checking something for {self.subject}')
