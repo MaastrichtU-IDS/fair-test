@@ -25,7 +25,7 @@ This particular test takes a broad view of what defines a 'knowledge representat
             self.info(f'Successfully found and parsed RDF metadata. It contains {str(len(g))} triples')
 
         # Retrieve URI of the data in the RDF metadata
-        data_res = self.get_data_uri(g)
+        data_res = self.extract_data_uri(g)
         if len(data_res) < 1:
             self.failure("Could not find data URI in the metadata.")
 
