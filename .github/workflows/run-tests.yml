@@ -8,6 +8,7 @@ on:
     - 'requirements.txt'
     - 'fair_test/**'
     - 'tests/**'
+    - 'example/metrics/**'
     - '.github/workflows/run-tests.yml'
 
 jobs:
