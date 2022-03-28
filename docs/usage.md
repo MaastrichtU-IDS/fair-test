@@ -100,6 +100,11 @@ g = self.parse_rdf(text,
 return self.response()
 ```
 
+!!! info "Documentation for all functions"
+
+    You can find the details for all functions available in the [`Code reference`](/fair-test/FairTest) section
+
+
 ## 🦄 Deploy the API
 
 You can then run the metrics tests API using `uvicorn`.
