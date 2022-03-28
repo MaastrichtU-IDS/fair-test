@@ -259,7 +259,6 @@ class FairTest(BaseModel):
             props (object): A hasmap object of the predicates/values found
         """
         values = set()
-        # props = {}
         check_preds = set()
         for pred in preds:
             check_preds.add(URIRef(str(pred)))
@@ -280,15 +279,11 @@ class FairTest(BaseModel):
                 test_subjs = [URIRef(str(subj))]
             else:
                 test_subjs = [None]
-            print(test_subjs)
             for test_subj in test_subjs:
-                for s, p, o in g.triples((test_subj, URIRef(pred), None)):
+                for s, p, o in g.triples((test_subj, pred, None)):
                     self.info(f"Found a value for property {str(pred)} => {str(o)}")
                     values.add(str(o))
-                    # if not pred in props.keys():
-                    #     props[pred] = []
-                    # props[pred].append(o)
-        # return props
+
         return list(values)
 
 
@@ -302,25 +297,20 @@ class FairTest(BaseModel):
         Returns:
             data_uri (str): URI of the data found in the metadata
         """
-        props = {}
         data_props = [
-            "http://www.w3.org/ns/ldp#contains", "http://xmlns.com/foaf/0.1/primaryTopic", 
-            "https://schema.org/about", "https://schema.org/mainEntity", "https://schema.org/codeRepository",
-            "https://schema.org/distribution", "https://www.w3.org/ns/dcat#distribution", 
-            "http://semanticscience.org/resource/SIO_000332", "http://semanticscience.org/resource/is-about", 
-            "https://purl.obolibrary.org/obo/IAO_0000136"
+            "http://www.w3.org/ns/ldp#contains", "https://www.w3.org/ns/ldp#contains", 
+            "http://xmlns.com/foaf/0.1/primaryTopic", "https://xmlns.com/foaf/0.1/primaryTopic", 
+            "http://schema.org/about", "https://schema.org/about", 
+            "http://schema.org/mainEntity", "https://schema.org/mainEntity", 
+            "http://schema.org/codeRepository", "https://schema.org/codeRepository",
+            "http://schema.org/distribution", "https://schema.org/distribution", 
+            "http://www.w3.org/ns/dcat#distribution", "https://www.w3.org/ns/dcat#distribution", 
+            "http://semanticscience.org/resource/SIO_000332", "https://semanticscience.org/resource/SIO_000332", 
+            "http://semanticscience.org/resource/is-about", "https://semanticscience.org/resource/is-about", 
+            "http://purl.obolibrary.org/obo/IAO_0000136", "https://purl.obolibrary.org/obo/IAO_0000136"
         ]
-        # alt_uris = [URIRef(str(s)) for s in self.data['alternative_uris']]
-
-        data_res = self.extract_prop(g, preds=data_props, subj=self.data['alternative_uris'])
-
-        if len(data_res < 1):
-            self.warn("Could not find data for the metadata. Searched for the following predicates: " + ', '.join(data_props))
-            return None
-        else: 
-            self.info(f"Found the following data (predicate and data URI): {' ,'.join(data_res)}")
-            for value in data_res:
-                return value
+        self.info(f"Searching for the data URI using the following predicates: {', '.join(data_props)}")
+        return self.extract_prop(g, preds=data_props, subj=self.data['alternative_uris'])
 
 
 
@@ -367,7 +357,7 @@ class FairTest(BaseModel):
                     "@type": "http://www.w3.org/2001/XMLSchema#float"
                     }
                 ],
-                "metadata": self.data
+                "http://semanticscience.org/resource/metadata": self.data
             }
         ]
 
@@ -378,7 +368,7 @@ class FairTest(BaseModel):
         if prefix:
             log_msg = prefix + ' ' + log_msg
         self.comment.append(log_msg)
-        print(log_msg)
+        # print(log_msg)
 
     def warn(self, log_msg: str):
         """

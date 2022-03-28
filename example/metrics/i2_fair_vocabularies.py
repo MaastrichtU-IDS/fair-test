@@ -30,7 +30,7 @@ Resolve IRIs, check FAIRness of the returned documents."""
 
         # self.info('Checking RDF metadata vocabularies')
         rdflib_ns = [n for n in g.namespace_manager.namespaces()]
-        print('Extracted with RDFLib: ', rdflib_ns)
+        # print('Extracted with RDFLib: ', rdflib_ns)
         # rdflib_ns = [n for n in g.namespaces()]
         # print(rdflib_ns)
         # Checkout the prefixes/namespaces
@@ -44,7 +44,7 @@ Resolve IRIs, check FAIRness of the returned documents."""
                 pattern = re.compile("^.*<(.*?)>")
                 ns = pattern.search(row).group(1)
                 extracted_ns.append(ns)
-        print('Extracted manually: ', extracted_ns)
+        # print('Extracted manually: ', extracted_ns)
         
         validated_ns = set()
         tested_ns = set()
@@ -79,6 +79,7 @@ Resolve IRIs, check FAIRness of the returned documents."""
 
             
         return self.response()
+
 
     test_test={
         'https://doi.org/10.1594/PANGAEA.908011': 1,

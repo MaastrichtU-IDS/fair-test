@@ -168,11 +168,11 @@ class FairTestAPI(FastAPI):
 
         # Test POST metrics evaluation request
         for eval in eval_list:
+            print(f"Test posting subject <{eval['subject']}> to {eval['metric_id']} (expect {eval['score']})")
             r = test_endpoint.post(f"/tests/{eval['metric_id']}",
                 json={ 'subject': eval['subject'] },
                 headers={"Accept": "application/json"}
             )
-            print(f"Test posting subject <{eval['subject']}> to {eval['metric_id']} (expect {eval['score']})")
             assert r.status_code == 200
             res = r.json()
             # Check score:

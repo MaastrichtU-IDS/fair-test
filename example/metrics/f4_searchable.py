@@ -70,23 +70,24 @@ class MetricTest(FairTest):
 
         ## Check google search using the resource title and its alternative URIs
         ## Might be against Google TOS
-        # if 'resource_title' in self.data.keys():
-        #     resource_title = self.data['resource_title']
+        # if 'title' in self.data.keys():
+        #     title = self.data['title']
             
         #     resource_uris = self.data['alternative_uris']
 
-        #     self.info('Running Google search for: ' + resource_title)
-        #     search_results = list(search(resource_title, tld="co.in", num=20, stop=20, pause=1))
+        #     self.info('Running Google search for: ' + title)
+        #     search_results = list(search(title, tld="co.in", num=20, stop=20, pause=1))
         #     print(search_results)
 
         #     found_uris = list(set(resource_uris).intersection(search_results))
         #     # if any(i in resource_uris for i in search_results):
         #     if found_uris:
-        #         self.success('Found the resource URI ' + ', '.join(found_uris) + ' when searching on Google for ' + resource_title)
+        #         self.success('Found the resource URI ' + ', '.join(found_uris) + ' when searching on Google for ' + title)
         #     else:
         #         self.failure('Did not find one of the resource URIs ' + ', '.join(resource_uris) + ' in: '+ ', '.join(search_results))
         # else:
         #     self.failure('No resource title found, cannot search in google')
+
 
     test_test={
         'https://doi.org/10.1594/PANGAEA.908011': 1,

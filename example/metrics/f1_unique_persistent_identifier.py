@@ -57,6 +57,7 @@ class MetricTest(FairTest):
 
         return self.response()
 
+
     test_test={
         'https://raw.githubusercontent.com/ejp-rd-vp/resource-metadata-schema/master/data/example-rdf/turtle/patientRegistry.ttl': 0,
         # FAIR Data Point failing occasionally

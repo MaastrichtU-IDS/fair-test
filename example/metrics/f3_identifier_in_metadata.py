@@ -16,25 +16,24 @@ If found, retrieve informations about this resource (title, description, date cr
 
 
     def evaluate(self):
-        alt_uris = [self.subject, self.subject.lower()]
-        # Add alternative URIs to increase the chances to find the ID
-        if self.subject.startswith('http://'):
-            alt_uris.append(self.subject.replace('http://', 'https://'))
-            alt_uris.append(self.subject.replace('http://', 'https://').lower())
-        elif self.subject.startswith('https://'):
-            alt_uris.append(self.subject.replace('https://', 'http://'))
-            alt_uris.append(self.subject.replace('http://', 'https://').lower())
+        # alt_uris = [self.subject, self.subject.lower()]
+        # # Add alternative URIs to increase the chances to find the ID
+        # if self.subject.startswith('http://'):
+        #     alt_uris.append(self.subject.replace('http://', 'https://'))
+        #     alt_uris.append(self.subject.replace('http://', 'https://').lower())
+        # elif self.subject.startswith('https://'):
+        #     alt_uris.append(self.subject.replace('https://', 'http://'))
+        #     alt_uris.append(self.subject.replace('http://', 'https://').lower())
         
-        # Quick fix to add an alternative URIs for doi.org that is used as identifier in the metadata
-        result = urlparse(self.subject)
-        if result.scheme and result.netloc:
-            if result.netloc == 'doi.org':
-                alt_uris.append(self.subject.replace('https://doi.org/', 'http://dx.doi.org/'))
-                # doi = result.path[1:]
-                self.info('The subject resource URI ' + self.subject + ' is a DOI')
+        # # Quick fix to add an alternative URIs for doi.org that is used as identifier in the metadata
+        # result = urlparse(self.subject)
+        # if result.scheme and result.netloc:
+        #     if result.netloc == 'doi.org':
+        #         alt_uris.append(self.subject.replace('https://doi.org/', 'http://dx.doi.org/'))
+        #         # doi = result.path[1:]
+        #         self.info('The subject resource URI ' + self.subject + ' is a DOI')
 
 
-        # g = self.retrieve_rdf(self.subject, use_harvester=False)
         g = self.retrieve_rdf(self.subject, use_harvester=True)
         if len(g) == 0:
             self.failure('No RDF found at the subject URL provided.')
@@ -45,9 +44,9 @@ If found, retrieve informations about this resource (title, description, date cr
         # FDP specs: https://github.com/FAIRDataTeam/FAIRDataPoint-Spec/blob/master/spec.md
         # Stats for KG: https://www.w3.org/TR/hcls-dataset
 
-        self.info(f"Checking RDF metadata to find links to all the alternative identifiers: <{'>, <'.join(alt_uris)}>")
+        self.info(f"Checking RDF metadata to find links to all the alternative identifiers: <{'>, <'.join(self.data['alternative_uris'])}>")
         found_link = False
-        for alt_uri in alt_uris:
+        for alt_uri in self.data['alternative_uris']:
             uri_ref = URIRef(alt_uri)
             resource_properties = {}
             resource_linked_to = {}
@@ -69,14 +68,25 @@ If found, retrieve informations about this resource (title, description, date cr
             # print(self.data['identifier_in_metadata'])
 
             # Try to extract some metadata from the parsed RDF
-            # title_preds = [ DC.title, DCTERMS.title, RDFS.label, URIRef('http://schema.org/name')]
-            # eval, g = self.extract_property('resource_title', title_preds, eval, g)
+            title_preds = [ DC.title, DCTERMS.title, RDFS.label, URIRef('http://schema.org/name')]
+            titles = self.extract_prop(g, title_preds, self.data['alternative_uris'])
+            if len(titles) > 0:
+                self.log(f"Found titles: {' ,'.join(titles)}")
+                self.data['title'] = titles
 
-            # description_preds = [ DCTERMS.description, URIRef('http://schema.org/description')]
-            # eval, g = self.extract_property('resource_description', description_preds, eval, g)
 
-            # date_created_preds = [ DCTERMS.created, URIRef('http://schema.org/dateCreated'), URIRef('http://schema.org/datePublished')]
-            # eval, g = self.extract_property('date_created', date_created_preds, eval, g)
+            description_preds = [ DCTERMS.description, URIRef('http://schema.org/description')]
+            descriptions = self.extract_prop(g, description_preds, self.data['alternative_uris'])
+            if len(descriptions) > 0:
+                self.log(f"Found descriptions: {' ,'.join(descriptions)}")
+                self.data['description'] = descriptions
+
+            date_created_preds = [ DCTERMS.created, URIRef('http://schema.org/dateCreated'), URIRef('http://schema.org/datePublished')]
+            dates = self.extract_prop(g, date_created_preds, self.data['alternative_uris'])
+            if len(dates) > 0:
+                self.log(f"Found created date: {' ,'.join(dates)}")
+                self.data['created'] = dates
+
 
             if found_link:
                 self.success('Found properties/links for the URI ' + alt_uri + ' in the metadata: ' 
