@@ -54,6 +54,7 @@ theme:
 #   - Issues: https://github.com/MaastrichtU-IDS/fair-test/issues
 
 # https://fontawesome.com/icons/
+# https://squidfunk.github.io/mkdocs-material/reference/icons-emojis/
 nav:
   - Getting started:
     - About: index.md
@@ -62,7 +63,7 @@ nav:
     - Development: development.md
   - Code reference:
       - "<span><i class='fa-solid fa-vial-circle-check'></i>&nbsp;&nbsp;FairTestEvaluation</span>": FairTestEvaluation.md
-      - "<span><i class='fa-solid fa-vial-circle-check'></i>&nbsp;&nbsp;FairTest</span>": FairTest.md
+      - "<span><i class='fa-solid fa-flask'></i>&nbsp;&nbsp;FairTest</span>": FairTest.md
       - "<span><i class='fa-solid fa-flask-vial'></i>&nbsp;&nbsp;FairTestAPI</span>": FairTestAPI.md
   - "<span>Issues&nbsp;&nbsp;<i class='fa-solid fa-arrow-up-right-from-square'></i></span>": https://github.com/MaastrichtU-IDS/fair-test/issues" target="_blank
 
