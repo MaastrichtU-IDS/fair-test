@@ -1,4 +1,4 @@
-from fair_test import FairTest
+from fair_test import FairTest, FairTestEvaluation
 import requests
 import re
 import io
@@ -16,19 +16,19 @@ Resolve IRIs, check FAIRness of the returned documents."""
     metric_version = '0.1.0'
 
 
-    def evaluate(self):        
+    def evaluate(self, eval: FairTestEvaluation):        
         # LOV docs: https://lov.linkeddata.es/dataset/lov/api
         lov_api = 'https://lov.linkeddata.es/dataset/lov/api/v2/vocabulary/list'
         lod_cloudnet = 'https://lod-cloud.net/lod-data.json'
 
-        g = self.retrieve_rdf(self.subject)
+        g = eval.retrieve_rdf(eval.subject)
         if len(g) == 0:
-            self.failure('No RDF found at the subject URL provided.')
-            return self.response()
+            eval.failure('No RDF found at the subject URL provided.')
+            return eval.response()
         else:
-            self.info(f'RDF metadata containing {len(g)} triples found at the subject URL provided.')
+            eval.info(f'RDF metadata containing {len(g)} triples found at the subject URL provided.')
 
-        # self.info('Checking RDF metadata vocabularies')
+        # eval.info('Checking RDF metadata vocabularies')
         rdflib_ns = [n for n in g.namespace_manager.namespaces()]
         # print('Extracted with RDFLib: ', rdflib_ns)
         # rdflib_ns = [n for n in g.namespaces()]
@@ -49,7 +49,7 @@ Resolve IRIs, check FAIRness of the returned documents."""
         validated_ns = set()
         tested_ns = set()
         ignore_ns = []
-        self.info('Check if used vocabularies in Linked Open Vocabularies: ' + lov_api)
+        eval.info('Check if used vocabularies in Linked Open Vocabularies: ' + lov_api)
         lov_list = requests.get(lov_api).json()
         for vocab in lov_list:
             if vocab['nsp'] in ignore_ns:
@@ -69,16 +69,16 @@ Resolve IRIs, check FAIRness of the returned documents."""
                     validated_ns.add(tuple[1])
 
         if len(validated_ns) > 0:
-            self.success('Found vocabularies used by the resource metadata in the Linked Open Vocabularies: ' + ', '.join(validated_ns))
+            eval.success('Found vocabularies used by the resource metadata in the Linked Open Vocabularies: ' + ', '.join(validated_ns))
         else:
-            self.failure('Could not find vocabularies used by the resource metadata in the Linked Open Vocabularies: ' + ', '.join(tested_ns))
+            eval.failure('Could not find vocabularies used by the resource metadata in the Linked Open Vocabularies: ' + ', '.join(tested_ns))
         
         
-        # self.info('Check if used vocabularies in the LOD cloud: ' + lod_cloudnet)
+        # eval.info('Check if used vocabularies in the LOD cloud: ' + lod_cloudnet)
         # https://github.com/vemonet/fuji/blob/master/fuji_server/helper/preprocessor.py#L368
 
             
-        return self.response()
+        return eval.response()
 
 
     test_test={

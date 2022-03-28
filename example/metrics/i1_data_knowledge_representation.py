@@ -1,4 +1,4 @@
-from fair_test import FairTest
+from fair_test import FairTest, FairTestEvaluation
 import json
 import rdflib
 # JSON-LD workaround 
@@ -18,25 +18,25 @@ Any form of ontologically-grounded linked data will pass this test."""
     metric_version = '0.1.0'
 
 
-    def evaluate(self):        
-        g = self.retrieve_rdf(self.subject)
+    def evaluate(self, eval: FairTestEvaluation):        
+        g = eval.retrieve_rdf(eval.subject)
         if len(g) > 1:
-            self.info(f'Successfully found and parsed RDF metadata. It contains {str(len(g))} triples')
+            eval.info(f'Successfully found and parsed RDF metadata. It contains {str(len(g))} triples')
 
         # Retrieve URI of the data in the RDF metadata
-        data_res = self.extract_data_uri(g)
+        data_res = eval.extract_data_uri(g)
         if len(data_res) < 1:
-            self.failure("Could not find data URI in the metadata.")
+            eval.failure("Could not find data URI in the metadata.")
 
         # Check if RDF data can be found at the data URI
         for value in data_res:
-            data_g = self.retrieve_rdf(value)
+            data_g = eval.retrieve_rdf(value)
             if len(data_g) > 1:
-                self.success(f'Successfully retrieved RDF for the data URI: {value}. It contains {str(len(g))} triples')
+                eval.success(f'Successfully retrieved RDF for the data URI: {value}. It contains {str(len(g))} triples')
             else:
-                self.warn(f"Could not find RDF at the data URI: {value}")
+                eval.warn(f"Could not find RDF at the data URI: {value}")
 
-        return self.response()
+        return eval.response()
 
 
     test_test={

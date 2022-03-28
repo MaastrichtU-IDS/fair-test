@@ -1,4 +1,4 @@
-from fair_test import FairTest
+from fair_test import FairTest, FairTestEvaluation
 from rdflib import Literal, RDF, URIRef
 from rdflib.namespace import RDFS, XSD, DC, DCTERMS, VOID, OWL, SKOS, FOAF
 from urllib.parse import urlparse
@@ -15,89 +15,89 @@ If found, retrieve informations about this resource (title, description, date cr
     metric_version = '0.1.0'
 
 
-    def evaluate(self):
-        # alt_uris = [self.subject, self.subject.lower()]
+    def evaluate(self, eval: FairTestEvaluation):
+        # alt_uris = [eval.subject, eval.subject.lower()]
         # # Add alternative URIs to increase the chances to find the ID
-        # if self.subject.startswith('http://'):
-        #     alt_uris.append(self.subject.replace('http://', 'https://'))
-        #     alt_uris.append(self.subject.replace('http://', 'https://').lower())
-        # elif self.subject.startswith('https://'):
-        #     alt_uris.append(self.subject.replace('https://', 'http://'))
-        #     alt_uris.append(self.subject.replace('http://', 'https://').lower())
+        # if eval.subject.startswith('http://'):
+        #     alt_uris.append(eval.subject.replace('http://', 'https://'))
+        #     alt_uris.append(eval.subject.replace('http://', 'https://').lower())
+        # elif eval.subject.startswith('https://'):
+        #     alt_uris.append(eval.subject.replace('https://', 'http://'))
+        #     alt_uris.append(eval.subject.replace('http://', 'https://').lower())
         
         # # Quick fix to add an alternative URIs for doi.org that is used as identifier in the metadata
-        # result = urlparse(self.subject)
+        # result = urlparse(eval.subject)
         # if result.scheme and result.netloc:
         #     if result.netloc == 'doi.org':
-        #         alt_uris.append(self.subject.replace('https://doi.org/', 'http://dx.doi.org/'))
+        #         alt_uris.append(eval.subject.replace('https://doi.org/', 'http://dx.doi.org/'))
         #         # doi = result.path[1:]
-        #         self.info('The subject resource URI ' + self.subject + ' is a DOI')
+        #         eval.info('The subject resource URI ' + eval.subject + ' is a DOI')
 
 
-        g = self.retrieve_rdf(self.subject, use_harvester=True)
+        g = eval.retrieve_rdf(eval.subject, use_harvester=True)
         if len(g) == 0:
-            self.failure('No RDF found at the subject URL provided.')
-            return self.response()
+            eval.failure('No RDF found at the subject URL provided.')
+            return eval.response()
         else:
-            self.info(f'RDF metadata containing {len(g)} triples found at the subject URL provided.')
+            eval.info(f'RDF metadata containing {len(g)} triples found at the subject URL provided.')
 
         # FDP specs: https://github.com/FAIRDataTeam/FAIRDataPoint-Spec/blob/master/spec.md
         # Stats for KG: https://www.w3.org/TR/hcls-dataset
 
-        self.info(f"Checking RDF metadata to find links to all the alternative identifiers: <{'>, <'.join(self.data['alternative_uris'])}>")
+        eval.info(f"Checking RDF metadata to find links to all the alternative identifiers: <{'>, <'.join(eval.data['alternative_uris'])}>")
         found_link = False
-        for alt_uri in self.data['alternative_uris']:
+        for alt_uri in eval.data['alternative_uris']:
             uri_ref = URIRef(alt_uri)
             resource_properties = {}
             resource_linked_to = {}
-            self.data['identifier_in_metadata'] = {}
+            eval.data['identifier_in_metadata'] = {}
             for p, o in g.predicate_objects(uri_ref):
                 found_link = True
                 resource_properties[str(p)] = str(o)
-            self.data['identifier_in_metadata']['properties'] = resource_properties
+            eval.data['identifier_in_metadata']['properties'] = resource_properties
             for s, p in g.subject_predicates(uri_ref):
                 found_link = True
                 resource_linked_to[str(s)] = str(p)
-            self.data['identifier_in_metadata']['linked_to'] = resource_linked_to
+            eval.data['identifier_in_metadata']['linked_to'] = resource_linked_to
 
-            # self.data['identifier_in_metadata'] = {
+            # eval.data['identifier_in_metadata'] = {
             #     'properties': resource_properties,
             #     'linked_to': resource_linked_to,
             # }
             # print('identifier_in_metadata')
-            # print(self.data['identifier_in_metadata'])
+            # print(eval.data['identifier_in_metadata'])
 
             # Try to extract some metadata from the parsed RDF
             title_preds = [ DC.title, DCTERMS.title, RDFS.label, URIRef('http://schema.org/name')]
-            titles = self.extract_prop(g, title_preds, self.data['alternative_uris'])
+            titles = eval.extract_prop(g, title_preds, eval.data['alternative_uris'])
             if len(titles) > 0:
-                self.log(f"Found titles: {' ,'.join(titles)}")
-                self.data['title'] = titles
+                eval.log(f"Found titles: {' ,'.join(titles)}")
+                eval.data['title'] = titles
 
 
             description_preds = [ DCTERMS.description, URIRef('http://schema.org/description')]
-            descriptions = self.extract_prop(g, description_preds, self.data['alternative_uris'])
+            descriptions = eval.extract_prop(g, description_preds, eval.data['alternative_uris'])
             if len(descriptions) > 0:
-                self.log(f"Found descriptions: {' ,'.join(descriptions)}")
-                self.data['description'] = descriptions
+                eval.log(f"Found descriptions: {' ,'.join(descriptions)}")
+                eval.data['description'] = descriptions
 
             date_created_preds = [ DCTERMS.created, URIRef('http://schema.org/dateCreated'), URIRef('http://schema.org/datePublished')]
-            dates = self.extract_prop(g, date_created_preds, self.data['alternative_uris'])
+            dates = eval.extract_prop(g, date_created_preds, eval.data['alternative_uris'])
             if len(dates) > 0:
-                self.log(f"Found created date: {' ,'.join(dates)}")
-                self.data['created'] = dates
+                eval.log(f"Found created date: {' ,'.join(dates)}")
+                eval.data['created'] = dates
 
 
             if found_link:
-                self.success('Found properties/links for the URI ' + alt_uri + ' in the metadata: ' 
-                    + ', '.join(list(self.data['identifier_in_metadata']['properties'].keys()) + list(self.data['identifier_in_metadata']['linked_to'].keys()))
+                eval.success('Found properties/links for the URI ' + alt_uri + ' in the metadata: ' 
+                    + ', '.join(list(eval.data['identifier_in_metadata']['properties'].keys()) + list(eval.data['identifier_in_metadata']['linked_to'].keys()))
                 )
                 break
             else: 
-                self.failure('Could not find links to the resource URI ' + alt_uri + ' in the RDF metadata')
+                eval.failure('Could not find links to the resource URI ' + alt_uri + ' in the RDF metadata')
 
 
-        return self.response()
+        return eval.response()
 
     test_test={
         'https://doi.org/10.1594/PANGAEA.908011': 1,

@@ -1,4 +1,4 @@
-from fair_test import FairTest
+from fair_test import FairTest, FairTestEvaluation
 import json
 import rdflib
 import requests
@@ -19,25 +19,25 @@ This particular test takes a broad view of what defines a 'knowledge representat
     metric_version = '0.1.0'
 
 
-    def evaluate(self):        
+    def evaluate(self, eval: FairTestEvaluation):        
         # https://github.com/vemonet/fuji/blob/master/fuji_server/helper/preprocessor.py#L190
-        g = self.retrieve_rdf(self.subject)
+        g = eval.retrieve_rdf(eval.subject)
         if len(g) > 1:
-            self.success('Successfully parsed the RDF metadata retrieved with content negotiation. It contains ' + str(len(g)) + ' triples')
+            eval.success('Successfully parsed the RDF metadata retrieved with content negotiation. It contains ' + str(len(g)) + ' triples')
         else:
-            self.warn('No RDF metadata found, searching for JSON')
+            eval.warn('No RDF metadata found, searching for JSON')
             try:
-                r = requests.get(self.subject, headers={'accept': 'application/json'})
+                r = requests.get(eval.subject, headers={'accept': 'application/json'})
                 metadata = r.json()
-                self.success('Successfully found and parsed JSON metadata: ' + json.dumps(metadata))
+                eval.success('Successfully found and parsed JSON metadata: ' + json.dumps(metadata))
             except:
-                self.warn('No JSON metadata found, searching for YAML')
+                eval.warn('No JSON metadata found, searching for YAML')
                 try:
-                    r = requests.get(self.subject, headers={'accept': 'application/json'})
+                    r = requests.get(eval.subject, headers={'accept': 'application/json'})
                     metadata = yaml.load(r.text, Loader=yaml.FullLoader)
-                    self.success('Successfully found and parsed YAML metadata: ' + json.dumps(r))
+                    eval.success('Successfully found and parsed YAML metadata: ' + json.dumps(r))
                 except:
-                    self.failure('No YAML metadata found')
+                    eval.failure('No YAML metadata found')
             
-        return self.response()
+        return eval.response()
 

@@ -1,4 +1,4 @@
-from fair_test import FairTest
+from fair_test import FairTest, FairTestEvaluation,  FairTestEvaluation
 from rdflib.namespace import RDFS, XSD, DC, DCTERMS, VOID, OWL, SKOS
 import requests
 
@@ -14,36 +14,36 @@ Find information about authorization in metadata"""
     metric_version = '0.1.0'
 
 
-    def evaluate(self):
-        self.info(f'Access protocol: check resource URI protocol is resolvable for {self.subject}')
+    def evaluate(self, eval: FairTestEvaluation):
+        eval.info(f'Access protocol: check resource URI protocol is resolvable for {eval.subject}')
         try:
-            r = requests.get(self.subject)
+            r = requests.get(eval.subject)
             r.raise_for_status()  # Raises a HTTPError if the status is 4xx, 5xxx
-            self.success('Successfully resolved ' + self.subject)
+            eval.success('Successfully resolved ' + eval.subject)
             if r.history:
-                self.info("Request was redirected to " + r.url + '.')
-                # self.data['alternative_uris'].append(r.url)
+                eval.info("Request was redirected to " + r.url + '.')
+                # eval.data['alternative_uris'].append(r.url)
 
         except Exception as e:
-            self.failure(f'Could not resolve {self.subject}. Getting: {e.args[0]}')
+            eval.failure(f'Could not resolve {eval.subject}. Getting: {e.args[0]}')
 
-        g = self.retrieve_rdf(self.subject)
-        self.info('Authorization: checking for dct:accessRights in metadata')
+        g = eval.retrieve_rdf(eval.subject)
+        eval.info('Authorization: checking for dct:accessRights in metadata')
         found_access_rights = False
         access_rights_preds = [DCTERMS.accessRights]
         for pred in access_rights_preds:
             for s, p, accessRights in g.triples((None,  pred, None)):
-                self.info(f'Found authorization informations with dcterms:accessRights: {str(accessRights)}')
-                # self.data['accessRights'] = str(accessRights)
+                eval.info(f'Found authorization informations with dcterms:accessRights: {str(accessRights)}')
+                # eval.data['accessRights'] = str(accessRights)
                 found_access_rights = True
 
         if found_access_rights:
-            self.bonus(f'Found dcterms:accessRights in metadata: {str(accessRights)}')
+            eval.bonus(f'Found dcterms:accessRights in metadata: {str(accessRights)}')
         else:
-            self.warn('Could not find dcterms:accessRights information in metadata')
-            self.warn(f"Make sure your metadata contains informations about access rights using one of those predicates: {', '.join(access_rights_preds)}")
+            eval.warn('Could not find dcterms:accessRights information in metadata')
+            eval.warn(f"Make sure your metadata contains informations about access rights using one of those predicates: {', '.join(access_rights_preds)}")
 
-        return self.response()
+        return eval.response()
 
 
     tests={

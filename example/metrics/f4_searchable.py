@@ -1,4 +1,4 @@
-from fair_test import FairTest
+from fair_test import FairTest, FairTestEvaluation
 import requests
 from urllib.parse import urlparse
 # from googlesearch import search
@@ -15,54 +15,54 @@ class MetricTest(FairTest):
     author = 'https://orcid.org/0000-0002-1501-1082'
     
 
-    def evaluate(self):
+    def evaluate(self, eval: FairTestEvaluation):
         datacite_endpoint = 'https://api.datacite.org/repositories'
         re3data_endpoint = 'https://re3data.org/api/beta/repositories'
         datacite_dois_api = 'https://api.datacite.org/dois/'
         # metadata_catalog = https://rdamsc.bath.ac.uk/api/m
         # headers = {"Accept": "application/json"}
         doi = None
-        result = urlparse(self.subject)
+        result = urlparse(eval.subject)
         if result.scheme and result.netloc:
             if result.netloc == 'doi.org':
                 doi = result.path[1:]
-                self.success('The subject resource URI ' + self.subject + ' is a DOI')
+                eval.success('The subject resource URI ' + eval.subject + ' is a DOI')
         else:
-            self.warn('Could not validate the given resource URI ' + self.subject + ' is a URL')    
+            eval.warn('Could not validate the given resource URI ' + eval.subject + ' is a URL')    
 
         # If DOI: check for metadata in DataCite API
         try:
             if doi:
-                self.info('Checking DataCite API for metadata about the DOI: ' + doi)
+                eval.info('Checking DataCite API for metadata about the DOI: ' + doi)
                 r = requests.get(datacite_dois_api + doi, timeout=10)
                 datacite_json = r.json()
                 datacite_data = datacite_json['data']['attributes']
                 print(datacite_json['data']['attributes'].keys())
                 # ['id', 'type', 'attributes', 'relationships']
                 if datacite_data:
-                    self.success('Retrieved metadata about ' + doi + ' from DataCite API')
-                    self.data['datacite'] = {}
+                    eval.success('Retrieved metadata about ' + doi + ' from DataCite API')
+                    eval.data['datacite'] = {}
                     print('datacite_data')
                     print(datacite_data.keys())
 
                     if 'titles' in datacite_data.keys():
-                        self.data['datacite']['title'] = datacite_data['titles'][0]['title']
-                        print(self.data['datacite']['title'])
-                        if not 'title' in self.data:
-                            self.data['title'] = self.data['datacite']['title']
+                        eval.data['datacite']['title'] = datacite_data['titles'][0]['title']
+                        print(eval.data['datacite']['title'])
+                        if not 'title' in eval.data:
+                            eval.data['title'] = eval.data['datacite']['title']
 
                     if 'descriptions' in datacite_data.keys():
-                        self.data['datacite']['description'] = datacite_data['descriptions'][0]['description']
+                        eval.data['datacite']['description'] = datacite_data['descriptions'][0]['description']
                     
             else:
-                self.warn('DOI could not be found, skipping search in DataCite API')
+                eval.warn('DOI could not be found, skipping search in DataCite API')
         except Exception as e:
-            self.warn('Search in DataCite API failed: ' + e.args[0])
+            eval.warn('Search in DataCite API failed: ' + e.args[0])
 
-        return self.response() 
+        return eval.response() 
         
 
-        # self.info('Checking RE3data APIs from DataCite API for metadata about ' + uri)
+        # eval.info('Checking RE3data APIs from DataCite API for metadata about ' + uri)
         # p = {'query': 're3data_id:*'}
         # req = requests.get(datacite_endpoint, params=p, headers=headers)
         # print(req.json())
@@ -70,23 +70,23 @@ class MetricTest(FairTest):
 
         ## Check google search using the resource title and its alternative URIs
         ## Might be against Google TOS
-        # if 'title' in self.data.keys():
-        #     title = self.data['title']
+        # if 'title' in eval.data.keys():
+        #     title = eval.data['title']
             
-        #     resource_uris = self.data['alternative_uris']
+        #     resource_uris = eval.data['alternative_uris']
 
-        #     self.info('Running Google search for: ' + title)
+        #     eval.info('Running Google search for: ' + title)
         #     search_results = list(search(title, tld="co.in", num=20, stop=20, pause=1))
         #     print(search_results)
 
         #     found_uris = list(set(resource_uris).intersection(search_results))
         #     # if any(i in resource_uris for i in search_results):
         #     if found_uris:
-        #         self.success('Found the resource URI ' + ', '.join(found_uris) + ' when searching on Google for ' + title)
+        #         eval.success('Found the resource URI ' + ', '.join(found_uris) + ' when searching on Google for ' + title)
         #     else:
-        #         self.failure('Did not find one of the resource URIs ' + ', '.join(resource_uris) + ' in: '+ ', '.join(search_results))
+        #         eval.failure('Did not find one of the resource URIs ' + ', '.join(resource_uris) + ' in: '+ ', '.join(search_results))
         # else:
-        #     self.failure('No resource title found, cannot search in google')
+        #     eval.failure('No resource title found, cannot search in google')
 
 
     test_test={

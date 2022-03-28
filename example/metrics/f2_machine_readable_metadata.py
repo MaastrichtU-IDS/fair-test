@@ -1,4 +1,4 @@
-from fair_test import FairTest
+from fair_test import FairTest, FairTestEvaluation
 import requests
 
 
@@ -18,17 +18,17 @@ class MetricTest(FairTest):
     # Kellog's Distiller? http://rdf.greggkellogg.net/distiller
     # https://github.com/FAIRMetrics/Metrics/blob/master/MetricsEvaluatorCode/Ruby/metrictests/fair_metrics_utilities.rb
 
-    def evaluate(self):
+    def evaluate(self, eval: FairTestEvaluation):
         # Check if URL resolve and if redirection
-        r = requests.head(self.subject)
-        r = requests.get(self.subject)
+        r = requests.head(eval.subject)
+        r = requests.get(eval.subject)
         r.raise_for_status()  # Raises a HTTPError if the status is 4xx, 5xxx
-        self.info('Successfully resolved ' + self.subject)
+        eval.info('Successfully resolved ' + eval.subject)
         if r.history:
-            self.info("Request was redirected to " + r.url + '. Adding as alternative URI')
-            self.data['alternative_uris'].append(r.url)
+            eval.info("Request was redirected to " + r.url + '. Adding as alternative URI')
+            eval.data['alternative_uris'].append(r.url)
         
-        self.info('Checking if Signposting links can be found in the resource URI headers at ' + self.subject)
+        eval.info('Checking if Signposting links can be found in the resource URI headers at ' + eval.subject)
         found_signposting = False
         if 'link' in r.headers.keys():
             signposting_links = r.headers['link']
@@ -37,9 +37,9 @@ class MetricTest(FairTest):
             signposting_links = r.headers['Link']
             found_signposting = True
         if found_signposting:
-            self.bonus('Found Signposting links: ')
-            self.bonus('Signposting links found: ' + str(signposting_links))
-            self.data['signposting'] = str(signposting_links)
+            eval.bonus('Found Signposting links: ')
+            eval.bonus('Signposting links found: ' + str(signposting_links))
+            eval.data['signposting'] = str(signposting_links)
             # Parse each part into a named link
             # for link in signposting_links:
             #     link_split = link.split(';')
@@ -52,17 +52,17 @@ class MetricTest(FairTest):
             #     name = link_split[1][/rel="(.*)"/,1].to_sym
 
         else:
-            self.info('Could not find Signposting links')
+            eval.info('Could not find Signposting links')
 
 
-        self.info('Checking if machine readable data (e.g. RDF, JSON-LD) can be retrieved using content-negotiation at ' + self.subject)
-        g = self.retrieve_rdf(self.subject)
+        eval.info('Checking if machine readable data (e.g. RDF, JSON-LD) can be retrieved using content-negotiation at ' + eval.subject)
+        g = eval.retrieve_rdf(eval.subject)
         if len(g) == 0:
-            self.failure('No RDF found at the subject URL provided.')
-            return self.response()
+            eval.failure('No RDF found at the subject URL provided.')
+            return eval.response()
         else:
-            self.success(f'RDF metadata containing {len(g)} triples found at the subject URL provided.')
-            return self.response()
+            eval.success(f'RDF metadata containing {len(g)} triples found at the subject URL provided.')
+            return eval.response()
 
 
     test_test={
@@ -72,46 +72,46 @@ class MetricTest(FairTest):
     }
 
         # found_content_negotiation = False
-        # # self.info('Trying (in this order): ' + ', '.join(check_mime_types))
+        # # eval.info('Trying (in this order): ' + ', '.join(check_mime_types))
         # for mime_type in check_mime_types:
         #     try:
         #         r = requests.get(uri, headers={'accept': mime_type})
         #         r.raise_for_status()  # Raises a HTTPError if the status is 4xx, 5xxx
-        #         self.log('Found some metadata when asking for ' + mime_type)
-        #         if 'content_negotiation' not in self.data.keys():
-        #             self.data['content_negotiation'] = {}
+        #         eval.log('Found some metadata when asking for ' + mime_type)
+        #         if 'content_negotiation' not in eval.data.keys():
+        #             eval.data['content_negotiation'] = {}
         #         contentType = r.headers['Content-Type'].replace(' ', '').replace(';charset=utf-8', '')
         #         if contentType.startswith('text/html'):
-        #             self.log('Content-Type retrieved is text/html, not a machine-readable format', '⏩️')
+        #             eval.log('Content-Type retrieved is text/html, not a machine-readable format', '⏩️')
         #             continue
 
         #         try:
         #             # If return JSON-LD
-        #             self.data['content_negotiation'][contentType] = r.json()
+        #             eval.data['content_negotiation'][contentType] = r.json()
 
         #             # TODO: use rdflib, instead of this quick fix to get alternative ID from JSON-LD
         #             if 'url' in r.json():
-        #                 self.data['alternative_uris'].append(r.json()['url'])
+        #                 eval.data['alternative_uris'].append(r.json()['url'])
         #                 # url': 'https://doi.pangaea.de/10.1594/PANGAEA.908011
         #         except:
         #             # If returns RDF, such as turtle
-        #             self.data['content_negotiation'][contentType] = r.text
+        #             eval.data['content_negotiation'][contentType] = r.text
         #         found_content_negotiation = True
         #         break
         #     except Exception as e:
-        #         self.warn('Could not find metadata with content-negotiation when asking for: ' + mime_type + '. Getting: ' + e.args[0])
+        #         eval.warn('Could not find metadata with content-negotiation when asking for: ' + mime_type + '. Getting: ' + e.args[0])
 
         # if found_content_negotiation:
-        #     self.success('Found metadata in ' + ', '.join(self.data['content_negotiation'].keys()) + ' format using content-negotiation')
+        #     eval.success('Found metadata in ' + ', '.join(eval.data['content_negotiation'].keys()) + ' format using content-negotiation')
         #     # Parse RDF metadata from content negotiation
-        #     for mime_type, rdf_data in self.data['content_negotiation'].items():
-        #         g = self.parse_rdf(rdf_data, mime_type, log_msg='content negotiation RDF')
+        #     for mime_type, rdf_data in eval.data['content_negotiation'].items():
+        #         g = eval.parse_rdf(rdf_data, mime_type, log_msg='content negotiation RDF')
         #         break # Only parse the first RDF metadata file entry
         # else:
-        #     self.warn('Could not find metadata using content-negotiation, checking metadata embedded in HTML with extruct')
+        #     eval.warn('Could not find metadata using content-negotiation, checking metadata embedded in HTML with extruct')
 
 
-        # self.info('Checking for metadata embedded in the HTML page returned by the resource URI ' + uri + ' using extruct')
+        # eval.info('Checking for metadata embedded in the HTML page returned by the resource URI ' + uri + ' using extruct')
         # try:
         #     get_uri = requests.get(uri, headers={'Accept': 'text/html'})
         #     html_text = html.unescape(get_uri.text)
@@ -121,24 +121,24 @@ class MetricTest(FairTest):
         #         # Check extruct results:
         #         for extruct_type in extracted.keys():
         #             if extracted[extruct_type]:
-        #                 if 'extruct' not in self.data.keys():
-        #                     self.data['extruct'] = {}
+        #                 if 'extruct' not in eval.data.keys():
+        #                     eval.data['extruct'] = {}
         #                 if extruct_type == 'dublincore' and extracted[extruct_type] == [{"namespaces": {}, "elements": [], "terms": []}]:
         #                     # Handle case where extruct generate empty dict
         #                     continue
-        #                 self.data['extruct'][extruct_type] = extracted[extruct_type]
+        #                 eval.data['extruct'][extruct_type] = extracted[extruct_type]
         #                 found_metadata_extruct = True
 
         #     except Exception as e:
-        #         self.warn('Error when parsing HTML embedded microdata or JSON from ' + uri + ' using extruct. Getting: ' + str(e.args[0]))
+        #         eval.warn('Error when parsing HTML embedded microdata or JSON from ' + uri + ' using extruct. Getting: ' + str(e.args[0]))
 
         #     if found_metadata_extruct:
-        #         self.success('Found embedded metadata in the resource URI HTML page: ' + ', '.join(self.data['extruct'].keys()))
+        #         eval.success('Found embedded metadata in the resource URI HTML page: ' + ', '.join(eval.data['extruct'].keys()))
         #     else: 
-        #         self.warn('Could not find embedded microdata or JSON in the HTML at ' + uri + ' using extruct')
+        #         eval.warn('Could not find embedded microdata or JSON in the HTML at ' + uri + ' using extruct')
         # except Exception as e:
-        #     self.warn('Error when running extruct on ' + uri + '. Getting: ' + str(e.args[0]))
+        #     eval.warn('Error when running extruct on ' + uri + '. Getting: ' + str(e.args[0]))
 
 
-        # return self.response()
+        # return eval.response()
 
