@@ -130,25 +130,29 @@ class FairTestEvaluation(BaseModel):
         found_signposting = False
         # Check if URL resolve and if redirection
         # r = requests.head(url)
-        r = requests.get(url)
-        r.raise_for_status()  # Raises a HTTPError if the status is 4xx, 5xxx
-        self.info(f'Successfully resolved {url}')
-        if r.history:
-            self.info(f"Request was redirected to {r.url}. Adding as alternative URI: {', '.join(self.data['alternative_uris'])}")
-            self.data['alternative_uris'].append(r.url)
-        if 'link' in r.headers.keys():
-            signposting_links = r.headers['link']
-            found_signposting = True
-        if 'Link' in r.headers.keys():
-            signposting_links = r.headers['Link']
-            found_signposting = True
-        if found_signposting:
-            self.info(f'Found Signposting links: {str(signposting_links)}')
-            self.data['signposting'] = str(signposting_links)
-            # TODO: parse signposting links, get alternate and meta?
-            # return self.retrieve_rdf(str(signposting_links))
-        else:
-            self.info('Could not find Signposting links')
+        try:
+            r = requests.get(url)
+            r.raise_for_status()  # Raises a HTTPError if the status is 4xx, 5xxx
+            self.info(f'Successfully resolved {url}')
+            if r.history:
+                self.info(f"Request was redirected to {r.url}. Adding as alternative URI: {', '.join(self.data['alternative_uris'])}")
+                self.data['alternative_uris'].append(r.url)
+            if 'link' in r.headers.keys():
+                signposting_links = r.headers['link']
+                found_signposting = True
+            if 'Link' in r.headers.keys():
+                signposting_links = r.headers['Link']
+                found_signposting = True
+            if found_signposting:
+                self.info(f'Found Signposting links: {str(signposting_links)}')
+                self.data['signposting'] = str(signposting_links)
+                # TODO: parse signposting links, get alternate and meta?
+                # return self.retrieve_rdf(str(signposting_links))
+            else:
+                self.info('Could not find Signposting links')
+        except Exception:
+            self.warn(f'Could not resolve the URL: {url}')
+            # Error: e.args[0]
 
         # We need to do direct content negociation to turtle and json
         # because some URLs dont support standard weighted content negociation
