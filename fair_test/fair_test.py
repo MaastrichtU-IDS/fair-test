@@ -65,7 +65,6 @@ class FairTest(BaseModel):
 
     def __init__(self) -> None:
         super().__init__()
-        self.id = f"{settings.HOST_URL}/metrics/{self.metric_path}#{urllib.parse.quote(str(self.subject))}/result-{self.date}"
 
 
     class Config:
@@ -75,11 +74,17 @@ class FairTest(BaseModel):
     def do_evaluate(self, input: MetricInput):
         if input.subject == '':
             raise HTTPException(status_code=422, detail=f"Provide a subject URL to evaluate")
+        
+        # TODO: create separate object for each FAIR test evaluation to avoid any conflict? FairTestEvaluation
+        self.warn(f"INPUT SUBJECT: {input.subject}")
         self.subject = input.subject
+        self.id = f"{settings.HOST_URL}/metrics/{self.metric_path}#{urllib.parse.quote(str(self.subject))}/result-{self.date}"
+        self.comment = []
+        self.data = {}
 
         alt_uris = set()
         alt_uris.add(self.subject)
-        # Add HTTPS/HTTPS counterpart
+        # Add HTTPS/HTTPS counterpart as alternative URIs
         if self.subject.startswith('http://'):
             alt_uris.add(self.subject.replace('http://', 'https://'))
         elif self.subject.startswith('https://'):
@@ -133,13 +138,12 @@ class FairTest(BaseModel):
         # https://github.com/FAIRMetrics/Metrics/blob/master/MetricsEvaluatorCode/Ruby/metrictests/fair_metrics_utilities.rb#L355
         found_signposting = False
         # Check if URL resolve and if redirection
-        r = requests.head(url)
+        # r = requests.head(url)
         r = requests.get(url)
         r.raise_for_status()  # Raises a HTTPError if the status is 4xx, 5xxx
         self.info(f'Successfully resolved {url}')
         if r.history:
-            self.info(f"Request was redirected to {r.url}. Adding as alternative URI")
-            self.info(str(self.data['alternative_uris']))
+            self.info(f"Request was redirected to {r.url}. Adding as alternative URI: {', '.join(self.data['alternative_uris'])}")
             self.data['alternative_uris'].append(r.url)
         if 'link' in r.headers.keys():
             signposting_links = r.headers['link']
@@ -256,7 +260,7 @@ class FairTest(BaseModel):
             subj (list, optional): Optionally also limit the results for a list of subjects
 
         Returns:
-            props (object): A hasmap object of the predicates/values found
+            props (list): A list of the values found for the given properties
         """
         values = set()
         check_preds = set()
@@ -295,7 +299,7 @@ class FairTest(BaseModel):
             g (Graph): RDFLib Graph
 
         Returns:
-            data_uri (str): URI of the data found in the metadata
+            data_uri (list): List of URI found for the data in the metadata
         """
         data_props = [
             "https://www.w3.org/ns/ldp#contains", 
