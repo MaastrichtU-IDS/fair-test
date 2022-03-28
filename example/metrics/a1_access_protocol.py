@@ -27,7 +27,7 @@ Find information about authorization in metadata"""
         except Exception as e:
             self.failure(f'Could not resolve {self.subject}. Getting: {e.args[0]}')
 
-        g = self.getRDF(self.subject)
+        g = self.retrieve_rdf(self.subject)
         self.info('Authorization: checking for dct:accessRights in metadata')
         found_access_rights = False
         access_rights_preds = [DCTERMS.accessRights]

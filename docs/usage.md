@@ -42,22 +42,22 @@ DEFAULT_SUBJECT="https://doi.org/10.1594/PANGAEA.908011"
 
 ## 🎯 Define a FAIR metrics test
 
-Create a `a1_test_something.py` file in the `metrics` folder with your test:
+Create a `a1_check_something.py` file in the `metrics` folder with your test:
 
-````python title="metrics/test_a1.py"
+````python title="metrics/a1_check_something.py"
 from fair_test import FairTest
 
 class MetricTest(FairTest):
-    metric_path = 'a1-test-something'
+    metric_path = 'a1-check-something'
     applies_to_principle = 'A1'
-    title = 'Test something'
-    description = """Check something"""
+    title = 'Check something'
+    description = """Test something"""
     author = 'https://orcid.org/0000-0000-0000-0000'
     metric_version = '0.1.0'
 
     def evaluate(self):
         self.info(f'Checking something for {self.subject}')
-        g = self.getRDF(self.subject, use_harvester=False)
+        g = self.retrieve_rdf(self.subject, use_harvester=False)
         if len(g) > 0:
             self.success(f'{len(g)} triples found, test sucessful')
         else:
@@ -78,13 +78,16 @@ self.success('The test succeeded')
 * Retrieve RDF from a URL (returns a RDFLib Graph): 
 
 ```python
-g = self.getRDF(self.subject)
+g = self.retrieve_rdf(self.subject)
 ```
 
 * Parse a string to RDF:
 
 ```python
-g = self.parseRDF(text)
+g = self.parse_rdf(text, 
+    mime_type='text/turtle', 
+    log_msg='RDF from the subject URL'
+)
 ```
 
 * Return the metric test results:
@@ -108,18 +111,10 @@ cd example
 pip install -r requirements.txt
 ```
 
-Start the API on [http://localhost:8000](http://localhost:8000){:target="_blank"}:
+Start the API:
 
 ```bash
 uvicorn main:app --reload
 ```
 
-
-!!! hint "Publish on your server"
-
-	If you want to start from a project with everything ready to deploy in production we recommend you to fork the [fair-enough-metrics repository](https://github.com/MaastrichtU-IDS/fair-enough-metrics){:target="_blank"}. 
-
-!!! success "Publish to the FAIR Enough metrics API"
-
-	You are welcome to fork, create your test, and submit a pull request to propose adding your tests to the [FAIR enough metrics API repository](https://github.com/MaastrichtU-IDS/fair-enough-metrics){:target="_blank"}, it will be made available at [https://metrics.api.fair-enough.semanticscience.org](https://metrics.api.fair-enough.semanticscience.org){:target="_blank"}
-
+You can now access the FAIR Test API on [http://localhost:8000](http://localhost:8000){:target="_blank"} and try to run your test using the `POST` request, or  get its descriptive metadata with the `GET` request.

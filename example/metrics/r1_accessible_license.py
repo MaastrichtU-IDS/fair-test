@@ -17,7 +17,7 @@ Resolve the licenses IRI"""
     def evaluate(self):        
         found_license = False
 
-        g = self.getRDF(self.subject)
+        g = self.retrieve_rdf(self.subject)
         if len(g) == 0:
             self.failure('No RDF found at the subject URL provided.')
             return self.response()
@@ -32,9 +32,9 @@ Resolve the licenses IRI"""
             test_subjects = [None, self.subject, self.subject.replace('http://', 'https://').replace('https://', 'http://')]
             # Get license from RDF metadata
             self.info(f'Check LICENSE PROPS {license_uris}')
-            data_res = self.getProps(g, license_uris, test_subjects)
+            data_res = self.extract_prop(g, license_uris, test_subjects)
             # Added for testing:
-            data_res = self.getProps(g, license_uris)
+            data_res = self.extract_prop(g, license_uris)
             if len(list(data_res.keys())) < 1:
                 self.failure("Could not find data for the metadata. Searched for the following predicates: " + ', '.join(license_uris))
 

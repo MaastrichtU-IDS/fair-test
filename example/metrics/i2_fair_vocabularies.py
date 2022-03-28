@@ -21,7 +21,7 @@ Resolve IRIs, check FAIRness of the returned documents."""
         lov_api = 'https://lov.linkeddata.es/dataset/lov/api/v2/vocabulary/list'
         lod_cloudnet = 'https://lod-cloud.net/lod-data.json'
 
-        g = self.getRDF(self.subject)
+        g = self.retrieve_rdf(self.subject)
         if len(g) == 0:
             self.failure('No RDF found at the subject URL provided.')
             return self.response()

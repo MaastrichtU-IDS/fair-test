@@ -26,7 +26,7 @@ class MetricTest(FairTest):
         
 
         self.info('Checking if machine readable data (e.g. RDF, JSON-LD) can be retrieved using content-negotiation at ' + self.subject)
-        g = self.getRDF(self.subject, use_harvester=False)
+        g = self.retrieve_rdf(self.subject, use_harvester=False)
         if len(g) == 0:
             self.failure('No RDF found at the subject URL provided.')
         else:
@@ -78,7 +78,7 @@ class MetricTest(FairTest):
         #     self.success('Found metadata in ' + ', '.join(self.data['content_negotiation'].keys()) + ' format using content-negotiation')
         #     # Parse RDF metadata from content negotiation
         #     for mime_type, rdf_data in self.data['content_negotiation'].items():
-        #         g = self.parseRDF(rdf_data, mime_type, log_msg='content negotiation RDF')
+        #         g = self.parse_rdf(rdf_data, mime_type, log_msg='content negotiation RDF')
         #         break # Only parse the first RDF metadata file entry
         # else:
         #     self.warn('Could not find metadata using content-negotiation, checking metadata embedded in HTML with extruct')

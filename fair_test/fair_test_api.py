@@ -8,8 +8,8 @@ from fair_test.config import settings
 
 class FairTestAPI(FastAPI):
     """
-    Class to deploy a FAIR tests API, create API calls for each FairTest defined
-    in the metrics folder.
+    Class to deploy a FAIR metrics tests API, it will create API calls for each FairTest defined
+    in the `metrics` folder.
 
     ```python title="main.py"
     from fair_test import FairTestAPI
@@ -29,11 +29,11 @@ class FairTestAPI(FastAPI):
 
     def __init__(self,
             *args,
-            title: str = "SPARQL endpoint for RDFLib graph", 
-            description="FAIR Metrics tests API for online resources. Follows the specifications described by the [FAIRMetrics](https://github.com/FAIRMetrics/Metrics) working group. \n[Source code](https://github.com/MaastrichtU-IDS/fair-test)",
+            title: str = "FAIR Metrics Test API", 
+            description="FAIR Metrics Test API for online resources. Follows the specifications described by the [FAIRMetrics](https://github.com/FAIRMetrics/Metrics) working group. \n[Source code](https://github.com/MaastrichtU-IDS/fair-test)",
             version="0.1.0",
             cors_enabled=True,
-            public_url='https://metrics.api.fair-enough.semanticscience.org/sparql',
+            public_url='https://metrics.api.fair-enough.semanticscience.org',
             metrics_folder_path='metrics', 
             contact = {
                 "name": settings.CONTACT_NAME,
@@ -47,7 +47,6 @@ class FairTestAPI(FastAPI):
             },
             **kwargs
         ) -> None:
-        # Constructor of the FAIR testing API, create API calls for each FairTest defined in the metrics folder
         self.title=title
         self.description=description
         self.version=version
@@ -79,7 +78,6 @@ class FairTestAPI(FastAPI):
             assess_module = assess_name.replace('/', '.')
             import importlib
             MetricTest = getattr(importlib.import_module(f'{metrics_module}.{assess_module}'), "MetricTest")
-
             metric = MetricTest()
 
             try:
@@ -87,7 +85,7 @@ class FairTestAPI(FastAPI):
                 self.add_api_route(
                     path=f"/tests/{metric.metric_path}",
                     methods=["POST"],
-                    endpoint=metric.doEvaluate,
+                    endpoint=metric.do_evaluate,
                     name=metric.title,
                     openapi_extra={
                         'description': metric.description
@@ -149,7 +147,7 @@ class FairTestAPI(FastAPI):
 
     def run_tests(self, test_endpoint):
         """
-        Run pytest tests for each metric test. URLs to test and expected scores are defined with the `test_test` attribute.
+        Run `pytest` tests for each metric test. URLs to test and expected scores are defined with the `test_test` attribute.
         Use this in a test file to automatically test all metrics tests, for example:
 
         ```python title='tests/test_metrics.py'
@@ -186,7 +184,6 @@ class FairTestAPI(FastAPI):
             metrics_id_to_test.add(eval['metric_id'])
         for metric_id in list(metrics_id_to_test):
             r = test_endpoint.get(f"/tests/{metric_id}")
-            # print(r.text)
             assert r.status_code == 200
             api_yaml = yaml.load(r.text, Loader=yaml.FullLoader)
             assert api_yaml['info']['title']

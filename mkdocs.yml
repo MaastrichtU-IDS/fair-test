@@ -1,4 +1,4 @@
-site_name: FAIR Test library
+site_name: FAIR Test APIs
 site_description: ☑️ A library to build and deploy FAIR metrics tests APIs that can be registered to existing FAIR evaluation services supporting the FAIRMetrics specifications.
 site_author: Vincent Emonet
 site_url: https://maastrichtu-ids.github.io/fair-test
@@ -9,8 +9,10 @@ copyright: Copyright &copy; 2022 Vincent Emonet
 
 theme:
   name: "material"
-  logo: assets/logo.png
   favicon: assets/logo.png
+  logo: assets/logo.png
+  # icon:
+  #   logo: material/microscope
   language: en
   palette:
     - media: "(prefers-color-scheme: light)" 
@@ -56,6 +58,7 @@ nav:
   - Getting started:
     - About: index.md
     - Usage: usage.md
+    - Publish: publish.md
     - Development: development.md
   - Code reference:
       - "<span><i class='fa-solid fa-vial-circle-check'></i>&nbsp;&nbsp;FairTest</span>": FairTest.md

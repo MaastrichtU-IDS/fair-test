@@ -48,8 +48,8 @@ class MetricTest(FairTest):
                     if 'titles' in datacite_data.keys():
                         self.data['datacite']['title'] = datacite_data['titles'][0]['title']
                         print(self.data['datacite']['title'])
-                        if not 'resource_title' in self.data:
-                            self.data['resource_title'] = self.data['datacite']['title']
+                        if not 'title' in self.data:
+                            self.data['title'] = self.data['datacite']['title']
 
                     if 'descriptions' in datacite_data.keys():
                         self.data['datacite']['description'] = datacite_data['descriptions'][0]['description']
