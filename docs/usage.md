@@ -45,7 +45,7 @@ DEFAULT_SUBJECT="https://doi.org/10.1594/PANGAEA.908011"
 Create a `a1_check_something.py` file in the `metrics` folder with your test:
 
 ````python title="metrics/a1_check_something.py"
-from fair_test import FairTest
+from fair_test import FairTest, FairTestEvaluation
 
 class MetricTest(FairTest):
     metric_path = 'a1-check-something'
@@ -59,36 +59,36 @@ class MetricTest(FairTest):
         'https://github.com/MaastrichtU-IDS/fair-test': 0,
     }
 
-    def evaluate(self):
-        self.info(f'Checking something for {self.subject}')
-        g = self.retrieve_rdf(self.subject, use_harvester=False)
+    def evaluate(self, eval: FairTestEvaluation):
+        eval.info(f'Checking something for {self.subject}')
+        g = eval.retrieve_rdf(self.subject, use_harvester=False)
         if len(g) > 0:
-            self.success(f'{len(g)} triples found, test sucessful')
+            eval.success(f'{len(g)} triples found, test sucessful')
         else:
-            self.failure('No triples found, test failed')
-        return self.response()
+            eval.failure('No triples found, test failed')
+        return eval.response()
 ````
 
 ℹ️ A few common operations are available on the `self` object:
 
 * Logging operations: 
 ```python
-self.info('Something happened')
-self.warn('Something bad happened')
-self.failure('The test failed')
-self.success('The test succeeded')
+eval.info('Something happened')
+eval.warn('Something bad happened')
+eval.failure('The test failed')
+eval.success('The test succeeded')
 ```
 
 * Retrieve RDF from a URL (returns a RDFLib Graph): 
 
 ```python
-g = self.retrieve_rdf(self.subject)
+g = eval.retrieve_rdf(eval.subject)
 ```
 
 * Parse a string to RDF:
 
 ```python
-g = self.parse_rdf(text, 
+g = eval.parse_rdf(text, 
     mime_type='text/turtle', 
     log_msg='RDF from the subject URL'
 )
@@ -97,12 +97,12 @@ g = self.parse_rdf(text,
 * Return the metric test results:
 
 ```python
-return self.response()
+return eval.response()
 ```
 
 !!! info "Documentation for all functions"
 
-    You can find the details for all functions available in the [`Code reference`](/fair-test/FairTest) section
+    You can find the details for all functions available in the [`Code reference`](/fair-test/FairTest/) section
 
 
 ## 🦄 Deploy the API
