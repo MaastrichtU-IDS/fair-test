@@ -228,13 +228,26 @@ class FairTestEvaluation(BaseModel):
             rdf_data = [rdf_data]
         if type(rdf_data) == list:
             for rdf_entry in rdf_data:
-                if '@context' in rdf_entry and (rdf_entry['@context'].startswith('http://schema.org') or rdf_entry['@context'].startswith('https://schema.org')):
-                    rdf_entry['@context'] = 'https://schema.org/docs/jsonldcontext.json'
-            # RDFLib JSON-LD has issue with encoding: https://github.com/RDFLib/rdflib/issues/1416
-            rdf_data = jsonld.expand(rdf_data)
+                try:
+                    # Dirty hack to fix RDFLib that is not able to parse JSON-LD schema.org:
+                    if '@context' in rdf_entry:
+                        if isinstance(rdf_entry['@context'], str):
+                            if rdf_entry['@context'].startswith('http://schema.org') or rdf_entry['@context'].startswith('https://schema.org'):
+                                rdf_entry['@context'] = 'https://schema.org/docs/jsonldcontext.json'
+                        if isinstance(rdf_entry['@context'], list):
+                            for i, cont in enumerate(rdf_entry['@context']):
+                                if isinstance(cont, str):
+                                    rdf_entry['@context'][i] = 'https://schema.org/docs/jsonldcontext.json'
+                except:
+                    pass
+            # RDFLib JSON-LD had issue with encoding: https://github.com/RDFLib/rdflib/issues/1416
+            # rdf_data = jsonld.expand(rdf_data)
             rdf_data = json.dumps(rdf_data)
             mime_type = 'json-ld'
         
+        # rdf_data = json.dumps(rdf_data)
+        # mime_type = 'json-ld'
+        self.warn('PARSING')
         g = ConjunctiveGraph()
         try:
             g.parse(data=rdf_data, format=mime_type)
