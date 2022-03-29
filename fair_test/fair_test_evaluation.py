@@ -241,7 +241,7 @@ class FairTestEvaluation(BaseModel):
                 except:
                     pass
             # RDFLib JSON-LD had issue with encoding: https://github.com/RDFLib/rdflib/issues/1416
-            # rdf_data = jsonld.expand(rdf_data)
+            rdf_data = jsonld.expand(rdf_data)
             rdf_data = json.dumps(rdf_data)
             mime_type = 'json-ld'
         
