@@ -289,7 +289,7 @@ class FairTestEvaluation(BaseModel):
             else:
                 test_subjs = [None]
             for test_subj in test_subjs:
-                for s, p, o in g.triples((test_subj, pred, None)):
+                for s, p, o in g.triples((test_subj, URIRef(str(pred)), None)):
                     self.info(f"Found a value for property {str(pred)} => {str(o)}")
                     values.add(str(o))
 
