@@ -245,9 +245,6 @@ class FairTestEvaluation(BaseModel):
             rdf_data = json.dumps(rdf_data)
             mime_type = 'json-ld'
         
-        # rdf_data = json.dumps(rdf_data)
-        # mime_type = 'json-ld'
-        self.warn('PARSING')
         g = ConjunctiveGraph()
         try:
             g.parse(data=rdf_data, format=mime_type)
