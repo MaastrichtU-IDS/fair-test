@@ -341,6 +341,7 @@ class FairTestEvaluation(BaseModel):
             "https://purl.org/dc/terms/identifier", 
             "https://purl.org/dc/elements/1.1/identifier", 
             "https://schema.org/identifier", 
+            "http://ogp.me/ns#"
         ]
         all_preds_id = [p.replace('https://', 'http://') for p in preds_id] + preds_id
         all_preds_uris = [URIRef(str(s)) for s in all_preds_id] 
