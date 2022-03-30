@@ -6,7 +6,7 @@ import datetime
 import urllib.parse
 import json
 import requests
-from rdflib import ConjunctiveGraph, URIRef, RDF
+from rdflib import ConjunctiveGraph, URIRef, Literal, RDF
 from rdflib.namespace import FOAF
 import html
 import yaml
@@ -81,6 +81,23 @@ class FairTestEvaluation(BaseModel):
         if self.subject.startswith('http://doi.org/'):
             alt_uris.add(self.subject.replace('http://doi.org/', 'http://dx.doi.org/'))
             alt_uris.add(self.subject.lower())
+        # from urllib.parse import urlparse
+        # result = urlparse(eval.subject)
+        # if result.scheme and result.netloc:
+        #     if result.netloc == 'doi.org':
+        #         alt_uris.append(eval.subject.replace('https://doi.org/', 'http://dx.doi.org/'))
+        #         # doi = result.path[1:]
+        #         eval.info('The subject resource URI ' + eval.subject + ' is a DOI')
+
+
+        try:
+            # Resolve the subject URI if possible and add redirects as alternative URIs
+            r = requests.get(self.subject)
+            r.raise_for_status()  # Raises a HTTPError if the status is 4xx, 5xxx
+            if r.history:
+                alt_uris.add(r.url)
+        except Exception:
+            pass
 
         self.data['alternative_uris'] = list(alt_uris)
 
@@ -89,8 +106,7 @@ class FairTestEvaluation(BaseModel):
         arbitrary_types_allowed = True
 
 
-
-    # TODO: Use signposting links to find links to download metadata from (rel=alternate)
+    # TODO: Use signposting to find links to download metadata from (rel=alternate)
     # https://datatracker.ietf.org/doc/html/draft-nottingham-http-link-header-10#section-6.2.2
     # TODO: implement metadata extraction with more tools? 
     # e.g. Apache Tika for PDF/pptx? or ruby Kellog's Distiller? http://rdf.greggkellogg.net/distiller
@@ -135,8 +151,9 @@ class FairTestEvaluation(BaseModel):
             r.raise_for_status()  # Raises a HTTPError if the status is 4xx, 5xxx
             self.info(f'Successfully resolved {url}')
             if r.history:
-                self.info(f"Request was redirected to {r.url}. Adding as alternative URI: {', '.join(self.data['alternative_uris'])}")
-                self.data['alternative_uris'].append(r.url)
+                self.info(f"Request was redirected to {r.url}.")
+                # if not r.url in self.data['alternative_uris']:
+                #     self.data['alternative_uris'].append(r.url)
             if 'link' in r.headers.keys():
                 signposting_links = r.headers['link']
                 found_signposting = True
@@ -261,7 +278,7 @@ class FairTestEvaluation(BaseModel):
 
         Parameters:
             g (Graph): RDFLib Graph
-            pred (list): Lit of predicates to find value for
+            pred (list): List of predicates to find value for
             subj (list, optional): Optionally also limit the results for a list of subjects
 
         Returns:
@@ -282,13 +299,10 @@ class FairTestEvaluation(BaseModel):
             self.info(f"Checking values for subjects URIs: {str(subj)}")
 
         for pred in list(check_preds):
-            if isinstance(subj, list):
-                test_subjs = [URIRef(str(s)) for s in subj] 
-            elif subj:
-                test_subjs = [URIRef(str(subj))]
-            else:
-                test_subjs = [None]
-            for test_subj in test_subjs:
+            if not isinstance(subj, list):
+                subj = [subj]
+                # test_subjs = [URIRef(str(s)) for s in subj] 
+            for test_subj in subj:
                 for s, p, o in g.triples((test_subj, URIRef(str(pred)), None)):
                     self.info(f"Found a value for property {str(pred)} => {str(o)}")
                     values.add(str(o))
@@ -296,7 +310,67 @@ class FairTestEvaluation(BaseModel):
         return list(values)
 
 
-    def extract_data_uri(self, g):
+    def extract_subject_from_metadata(self, g, alt_uris=None):
+        """
+        Helper to extract properties from a RDFLib Graph
+
+        Parameters:
+            g (Graph): RDFLib Graph
+            alt_uris (list): List of alternative URIs for the subject to find
+
+        Returns:
+            subject_uri (Any): The subject URI used as ID in the metadata
+        """
+        subject_uri = None
+        if not alt_uris:
+            alt_uris = self.data['alternative_uris']
+
+        preds_id = [
+            "https://purl.org/dc/terms/identifier", 
+            "https://purl.org/dc/elements/1.1/identifier", 
+            "https://schema.org/identifier", 
+        ]
+        all_preds_id = [p.replace('https://', 'http://') for p in preds_id] + preds_id
+        all_preds_uris = [URIRef(str(s)) for s in all_preds_id] 
+        resource_properties = {}
+        resource_linked_to = {}
+
+        for alt_uri in alt_uris:
+            uri_ref = URIRef(str(alt_uri))
+            # Search with the subject URI as triple subject
+            for s, p, o in g.triples((uri_ref, None, None)):
+                self.info(f"Found subject identifier in metadata: {str(s)}")
+                resource_properties[str(p)] = str(o)
+                subject_uri = uri_ref
+
+            if not subject_uri:
+                # Search with the subject URI as triple object
+                for pred in all_preds_uris:
+                    for s, p, o in g.triples((None, pred, uri_ref)):
+                        self.info(f"Found subject identifier in metadata: {str(s)}")
+                        resource_linked_to[str(s)] = str(p)
+                        subject_uri = s
+
+                    if not subject_uri:
+                        # Also check when URI defined as Literal
+                        for s, p, o in g.triples((None, pred, Literal(str(uri_ref)))):
+                            self.info(f"Found subject identifier in metadata: {str(s)}")
+                            resource_linked_to[str(s)] = str(p)
+                            subject_uri = s
+
+
+        if len(resource_properties.keys()) > 0 or len(resource_linked_to.keys()) > 0:
+            if not 'identifier_in_metadata' in self.data.keys():
+                self.data['identifier_in_metadata'] = {}
+            if len(resource_properties.keys()) > 0:
+                self.data['identifier_in_metadata']['properties'] = resource_properties
+            if len(resource_linked_to.keys()) > 0:
+                self.data['identifier_in_metadata']['linked_to'] = resource_linked_to
+
+        return subject_uri
+
+
+    def extract_data_uri(self, g, subject_uri=None):
         """
         Helper to easily retrieve the URI of the data from RDF metadata (RDFLib Graph)
 
@@ -319,8 +393,10 @@ class FairTestEvaluation(BaseModel):
             "https://purl.obolibrary.org/obo/IAO_0000136"
         ]
         http_props = [p.replace('https://', 'http://') for p in data_props] 
+        if not subject_uri:
+            subject_uri = [URIRef(str(s)) for s in self.data['alternative_uris']] 
         self.info(f"Searching for the data URI using the following predicates: {', '.join(data_props + http_props)}")
-        return self.extract_prop(g, preds=data_props + http_props, subj=self.data['alternative_uris'])
+        return self.extract_prop(g, preds=data_props + http_props, subj=subject_uri)
 
 
 
