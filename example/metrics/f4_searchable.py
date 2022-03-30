@@ -2,7 +2,7 @@ from fair_test import FairTest, FairTestEvaluation
 import requests
 from urllib.parse import urlparse
 import json
-from duckduckgo_search import ddg
+# from duckduckgo_search import ddg
 # from fastapi import APIRouter, Body, Depends
 # from fastapi_utils.cbv import cbv
 
@@ -71,29 +71,29 @@ class MetricTest(FairTest):
         # print(req.json())
 
         ## Check DuckDuckGo search using the resource title and its alternative URIs
-        if 'title' in eval.data.keys() and len(eval.data['title']) > 0:
-            title = eval.data['title'][0]
+        # if 'title' in eval.data.keys() and len(eval.data['title']) > 0:
+        #     title = eval.data['title'][0]
 
-            resource_uris = eval.data['alternative_uris']
-            eval.info('Running search in DuckDuckGo for: ' + title)
-            try:
-                # ddg(keywords, region='wt-wt', safesearch='Moderate', time=None, max_results=50):
-                search_results = ddg(title, region='wt-wt', max_results=80)
-                # search_results = list(search(title, tld="co.in", num=20, stop=20, pause=1))
-                # print(json.dumps(search_results, indent=2))
-                uris_found = [s['href'] for s in search_results] 
+        #     resource_uris = eval.data['alternative_uris']
+        #     eval.info('Running search in DuckDuckGo for: ' + title)
+        #     try:
+        #         # ddg(keywords, region='wt-wt', safesearch='Moderate', time=None, max_results=50):
+        #         search_results = ddg(title, region='wt-wt', max_results=80)
+        #         # search_results = list(search(title, tld="co.in", num=20, stop=20, pause=1))
+        #         # print(json.dumps(search_results, indent=2))
+        #         uris_found = [s['href'] for s in search_results] 
 
-                matching_uris = list(set(resource_uris).intersection(uris_found))
-                # if any(i in resource_uris for i in search_results):
-                if matching_uris:
-                    eval.success('Found the resource URI ' + ', '.join(matching_uris) + ' when searching in popular Search Engines for ' + title)
-                else:
-                    eval.warn('Did not find one of the resource URIs ' + ', '.join(resource_uris) + ' in the URIs found: '+ ', '.join(uris_found))
-                    eval.warn(f"Resource not found when searching in DuckDuckGo for {title}")
-            except:
-                eval.warn('Error running DuckDuckGo search')
-        else:
-            eval.warn('No resource title found, cannot search in Search Engine')
+        #         matching_uris = list(set(resource_uris).intersection(uris_found))
+        #         # if any(i in resource_uris for i in search_results):
+        #         if matching_uris:
+        #             eval.success('Found the resource URI ' + ', '.join(matching_uris) + ' when searching in popular Search Engines for ' + title)
+        #         else:
+        #             eval.warn('Did not find one of the resource URIs ' + ', '.join(resource_uris) + ' in the URIs found: '+ ', '.join(uris_found))
+        #             eval.warn(f"Resource not found when searching in DuckDuckGo for {title}")
+        #     except:
+        #         eval.warn('Error running DuckDuckGo search')
+        # else:
+        #     eval.warn('No resource title found, cannot search in Search Engine')
 
         return eval.response()
 
