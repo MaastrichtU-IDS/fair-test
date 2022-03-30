@@ -1,12 +1,7 @@
 from fair_test import FairTest, FairTestEvaluation
 import json
-import rdflib
 import requests
 import yaml
-# JSON-LD workaround 
-# from pyld import jsonld
-# from rdflib import ConjunctiveGraph
-# from rdflib.serializer import Serializer
 
 
 class MetricTest(FairTest):
@@ -17,6 +12,11 @@ class MetricTest(FairTest):
 This particular test takes a broad view of what defines a 'knowledge representation language'; in this evaluation, anything that can be represented as structured data will be accepted"""
     author = 'https://orcid.org/0000-0002-1501-1082'
     metric_version = '0.1.0'
+    test_test={
+        'https://w3id.org/ejp-rd/fairdatapoints/wp13/dataset/c5414323-eab1-483f-a883-77951f246972': 1,
+        'https://doi.org/10.1594/PANGAEA.908011': 1,
+        'http://example.com': 0,
+    }
 
 
     def evaluate(self, eval: FairTestEvaluation):        

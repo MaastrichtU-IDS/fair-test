@@ -1,10 +1,4 @@
 from fair_test import FairTest, FairTestEvaluation
-import json
-import rdflib
-# JSON-LD workaround 
-# from pyld import jsonld
-# from rdflib import ConjunctiveGraph
-# from rdflib.serializer import Serializer
 
 
 class MetricTest(FairTest):
@@ -16,6 +10,10 @@ This particular test takes a broad view of what defines a 'knowledge representat
 Any form of ontologically-grounded linked data will pass this test."""
     author = 'https://orcid.org/0000-0002-1501-1082'
     metric_version = '0.1.0'
+    test_test={
+        'https://w3id.org/ejp-rd/fairdatapoints/wp13/dataset/c5414323-eab1-483f-a883-77951f246972': 1,
+        'https://doi.org/10.1594/PANGAEA.908011': 0,
+    }
 
 
     def evaluate(self, eval: FairTestEvaluation):        
@@ -23,8 +21,9 @@ Any form of ontologically-grounded linked data will pass this test."""
         if len(g) > 1:
             eval.info(f'Successfully found and parsed RDF metadata. It contains {str(len(g))} triples')
 
+        subject_uri = eval.extract_subject_from_metadata(g, eval.data['alternative_uris'])
         # Retrieve URI of the data in the RDF metadata
-        data_res = eval.extract_data_uri(g)
+        data_res = eval.extract_data_uri(g, subject_uri)
         if len(data_res) < 1:
             eval.failure("Could not find data URI in the metadata.")
 
@@ -34,12 +33,6 @@ Any form of ontologically-grounded linked data will pass this test."""
             if len(data_g) > 1:
                 eval.success(f'Successfully retrieved RDF for the data URI: {value}. It contains {str(len(g))} triples')
             else:
-                eval.warn(f"Could not find RDF at the data URI: {value}")
+                eval.failure(f"Could not find RDF at the data URI: {value}")
 
         return eval.response()
-
-
-    test_test={
-        'https://w3id.org/ejp-rd/fairdatapoints/wp13/dataset/c5414323-eab1-483f-a883-77951f246972': 1,
-        'https://doi.org/10.1594/PANGAEA.908011': 0,
-    }

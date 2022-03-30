@@ -14,6 +14,11 @@ vocabularies published in an appropriate knowledge-exchange format.
 Resolve IRIs, check FAIRness of the returned documents."""
     author = 'https://orcid.org/0000-0002-1501-1082'
     metric_version = '0.1.0'
+    test_test={
+        'https://w3id.org/ejp-rd/fairdatapoints/wp13/dataset/c5414323-eab1-483f-a883-77951f246972': 1,
+        'https://doi.org/10.1594/PANGAEA.908011': 1,
+        'http://example.com': 0,
+    }
 
 
     def evaluate(self, eval: FairTestEvaluation):        
@@ -21,7 +26,8 @@ Resolve IRIs, check FAIRness of the returned documents."""
         lov_api = 'https://lov.linkeddata.es/dataset/lov/api/v2/vocabulary/list'
         lod_cloudnet = 'https://lod-cloud.net/lod-data.json'
 
-        g = eval.retrieve_rdf(eval.subject)
+        # g = eval.retrieve_rdf(eval.subject)
+        g = eval.retrieve_rdf(eval.subject, use_harvester=True)
         if len(g) == 0:
             eval.failure('No RDF found at the subject URL provided.')
             return eval.response()
@@ -79,8 +85,3 @@ Resolve IRIs, check FAIRness of the returned documents."""
 
             
         return eval.response()
-
-
-    test_test={
-        'https://doi.org/10.1594/PANGAEA.908011': 1,
-    }
