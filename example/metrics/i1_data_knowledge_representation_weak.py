@@ -44,13 +44,15 @@ This particular test takes a broad view of what defines a 'knowledge representat
                 try:
                     r = requests.get(value, headers={'accept': 'application/json'})
                     metadata = r.json()
-                    eval.success(f'Successfully found and parsed JSON data for {value}: ' + json.dumps(metadata))
+                    eval.data['metadata_json'] = metadata
+                    eval.success(f'Successfully found and parsed JSON data for {value}')
                 except:
                     eval.warn(f'No JSON metadata found for {value}, searching for YAML')
                     try:
-                        r = requests.get(value, headers={'accept': 'application/json'})
+                        r = requests.get(value, headers={'accept': 'text/yaml'})
                         metadata = yaml.load(r.text, Loader=yaml.FullLoader)
-                        eval.success(f'Successfully found and parsed YAML data for {value}: ' + json.dumps(r))
+                        eval.data['metadata_yaml'] = metadata
+                        eval.success(f'Successfully found and parsed YAML data for {value}')
                     except:
                         eval.failure(f'No YAML metadata found for {value}')
             

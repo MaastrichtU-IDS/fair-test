@@ -15,6 +15,7 @@ This particular test takes a broad view of what defines a 'knowledge representat
     test_test={
         'https://w3id.org/ejp-rd/fairdatapoints/wp13/dataset/c5414323-eab1-483f-a883-77951f246972': 1,
         'https://doi.org/10.1594/PANGAEA.908011': 1,
+        'https://w3id.org/FAIR_Tests/tests/gen2_structured_metadata': 1,
         'http://example.com': 0,
     }
 
@@ -27,16 +28,18 @@ This particular test takes a broad view of what defines a 'knowledge representat
         else:
             eval.warn('No RDF metadata found, searching for JSON')
             try:
-                r = requests.get(eval.subject, headers={'accept': 'application/json'})
-                metadata = r.json()
-                eval.success('Successfully found and parsed JSON metadata: ' + json.dumps(metadata))
+                r_json = requests.get(eval.subject, headers={'accept': 'application/json'})
+                metadata = r_json.json()
+                eval.data['metadata_json'] = metadata
+                eval.success('Successfully found and parsed JSON metadata')
             except:
                 eval.warn('No JSON metadata found, searching for YAML')
                 try:
-                    r = requests.get(eval.subject, headers={'accept': 'application/json'})
-                    metadata = yaml.load(r.text, Loader=yaml.FullLoader)
-                    eval.success('Successfully found and parsed YAML metadata: ' + json.dumps(r))
-                except:
+                    r_yaml = requests.get(eval.subject, headers={'accept': 'text/yaml'})
+                    metadata = yaml.load(str(r_yaml.text), Loader=yaml.FullLoader)
+                    eval.data['metadata_yaml'] = metadata
+                    eval.success('Successfully found and parsed YAML metadata')
+                except Exception as e:
                     eval.failure('No YAML metadata found')
             
         return eval.response()
