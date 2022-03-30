@@ -175,7 +175,7 @@ class FairTestEvaluation(BaseModel):
             # Error: e.args[0]
 
 
-        self.log('INFO: Checking for metadata embedded in the HTML page returned by the resource URI ' + url + ' using extruct')
+        self.info('Checking for metadata embedded in the HTML page returned by the resource URI ' + url + ' using extruct')
         try:
             if not html_text:
                 get_uri = requests.get(url, headers={'Accept': 'text/html'})
@@ -184,9 +184,13 @@ class FairTestEvaluation(BaseModel):
             try:
                 extructed = extruct.extract(html_text.encode('utf8'))
                 self.data['extruct'] = extructed
-                self.log(f"INFO: found metadata with extruct in the formats: {', '.join(extructed.keys())}")
+                self.info(f"Found metadata with extruct in the formats: {', '.join(extructed.keys())}")
                 if extructed['json-ld']:
-                    g = self.parse_rdf(extructed['json-ld'], 'json-ld', log_msg='HTML embedded RDF')
+                    g = self.parse_rdf(extructed['json-ld'], 'json-ld', log_msg='HTML embedded JSON-LD RDF')
+                    if len(g) > 0:
+                        return g
+                if extructed['rdfa']:
+                    g = self.parse_rdf(extructed['rdfa'], 'json-ld', log_msg='HTML embedded RDFa')
                     if len(g) > 0:
                         return g
                 # Check extruct results:

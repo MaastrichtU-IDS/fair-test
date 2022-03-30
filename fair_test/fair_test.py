@@ -64,6 +64,7 @@ class FairTest(BaseModel):
     description: str
     author: str = settings.CONTACT_ORCID
     default_subject: str = settings.DEFAULT_SUBJECT
+    topics = []
     test_test = {}
     
 
@@ -110,6 +111,7 @@ class FairTest(BaseModel):
             "x-tests_metric": f"{settings.HOST_URL}/tests/{self.metric_path}",
             "description": self.description,
             "x-applies_to_principle": self.applies_to_principle,
+            # "x-topics": self.topics,
             "contact": {
               "x-organization": settings.ORG_NAME,
               "url": settings.CONTACT_URL,
