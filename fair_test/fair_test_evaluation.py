@@ -144,12 +144,15 @@ class FairTestEvaluation(BaseModel):
         self.info(f'Checking if Signposting links can be found in the resource URI headers at {url}')
         # https://github.com/FAIRMetrics/Metrics/blob/master/MetricsEvaluatorCode/Ruby/metrictests/fair_metrics_utilities.rb#L355
         found_signposting = False
+        html_text = None
         # Check if URL resolve and if redirection
         # r = requests.head(url)
         try:
             r = requests.get(url)
             r.raise_for_status()  # Raises a HTTPError if the status is 4xx, 5xxx
             self.info(f'Successfully resolved {url}')
+            html_text = r.text
+            # html_text = html.unescape(r.text)
             if r.history:
                 self.info(f"Request was redirected to {r.url}.")
                 # if not r.url in self.data['alternative_uris']:
@@ -171,10 +174,39 @@ class FairTestEvaluation(BaseModel):
             self.warn(f'Could not resolve the URL: {url}')
             # Error: e.args[0]
 
+
+        self.log('INFO: Checking for metadata embedded in the HTML page returned by the resource URI ' + url + ' using extruct')
+        try:
+            if not html_text:
+                get_uri = requests.get(url, headers={'Accept': 'text/html'})
+                # html_text = html.unescape(get_uri.text)
+                html_text = get_uri.text
+            try:
+                extructed = extruct.extract(html_text.encode('utf8'))
+                self.data['extruct'] = extructed
+                self.log(f"INFO: found metadata with extruct in the formats: {', '.join(extructed.keys())}")
+                if extructed['json-ld']:
+                    g = self.parse_rdf(extructed['json-ld'], 'json-ld', log_msg='HTML embedded RDF')
+                    if len(g) > 0:
+                        return g
+                # Check extruct results:
+                # for format in extructed.keys():
+                #     if extructed[format]:
+                #         if format == 'dublincore' and extructed[format] == [{"namespaces": {}, "elements": [], "terms": []}]:
+                #             # Handle case where extruct generate empty dict
+                #             continue
+                #         eval.data['extruct'][format] = extructed[format]
+            except Exception as e:
+                self.warn('Error when parsing the subject URL HTML embedded JSON-LD from ' + url + ' using extruct. Getting: ' + str(e.args[0]))
+
+        except Exception as e:
+            self.warn('Error when running extruct on ' + url + '. Getting: ' + str(e.args[0]))
+
+
+        # Perform content negociation last because it's the slowest for a lot of URLs like zenodo
         # We need to do direct content negociation to turtle and json
         # because some URLs dont support standard weighted content negociation
         check_mime_types = [ 'text/turtle', 'application/ld+json', 'text/turtle, application/turtle, application/x-turtle;q=0.9, application/ld+json;q=0.8, application/rdf+xml, text/n3, text/rdf+n3;q=0.7' ]
-        html_text = None
         for mime_type in check_mime_types:
             try:
                 r = requests.get(url, headers={'accept': mime_type})
@@ -197,30 +229,6 @@ class FairTestEvaluation(BaseModel):
             except Exception:
                 self.warn(f'Could not find metadata with content-negotiation when asking for: {mime_type}')
                 # Error: e.args[0]
-
-        self.log('INFO: Checking for metadata embedded in the HTML page returned by the resource URI ' + url + ' using extruct')
-        try:
-            if not html_text:
-                get_uri = requests.get(url, headers={'Accept': 'text/html'})
-                html_text = html.unescape(get_uri.text)
-            try:
-                extructed = extruct.extract(html_text.encode('utf8'))
-                self.data['extruct'] = extructed
-                self.log(f"INFO: found metadata with extruct in the formats: {', '.join(extructed.keys())}")
-                if extructed['json-ld']:
-                    return self.parse_rdf(extructed['json-ld'], 'json-ld', log_msg='HTML embedded RDF')
-                # Check extruct results:
-                # for format in extructed.keys():
-                #     if extructed[format]:
-                #         if format == 'dublincore' and extructed[format] == [{"namespaces": {}, "elements": [], "terms": []}]:
-                #             # Handle case where extruct generate empty dict
-                #             continue
-                #         eval.data['extruct'][format] = extructed[format]
-            except Exception as e:
-                self.warn('Error when parsing the subject URL HTML embedded JSON-LD from ' + url + ' using extruct. Getting: ' + str(e.args[0]))
-
-        except Exception as e:
-            self.warn('Error when running extruct on ' + url + '. Getting: ' + str(e.args[0]))
 
         return ConjunctiveGraph()
 
