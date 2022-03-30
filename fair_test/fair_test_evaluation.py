@@ -117,7 +117,7 @@ class FairTestEvaluation(BaseModel):
             harvester_url: str = 'https://fair-tests.137.120.31.101.nip.io/tests/harvester',
     ):
         """
-        Retrieve RDF from an URL.
+        Retrieve RDF from an URL. Super useful.
 
         Parameters:
             url (str): URL to retrieve RDF from
@@ -324,7 +324,7 @@ class FairTestEvaluation(BaseModel):
 
     def extract_subject_from_metadata(self, g, alt_uris=None):
         """
-        Helper to extract properties from a RDFLib Graph
+        Helper to extract the subject URI to which metadata about the resource is attached in a RDFLib Graph
 
         Parameters:
             g (Graph): RDFLib Graph

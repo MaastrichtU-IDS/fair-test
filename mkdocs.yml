@@ -57,7 +57,7 @@ theme:
 # https://fontawesome.com/icons/
 # https://squidfunk.github.io/mkdocs-material/reference/icons-emojis/
 nav:
-  - Getting started:
+  - About:
     - About: index.md
     - Usage: usage.md
     - Publish: publish.md
