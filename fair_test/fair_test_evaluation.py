@@ -456,7 +456,7 @@ class FairTestEvaluation(BaseModel):
     # Logging utilities
     def log(self, log_msg: str, prefix: str = None):
         # Add timestamp?
-        # log_msg = '[' + str(datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")) + '] ' + log_msg 
+        log_msg = '[' + str(datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")) + '] ' + log_msg 
         if prefix:
             log_msg = prefix + ' ' + log_msg
         self.comment.append(log_msg)
