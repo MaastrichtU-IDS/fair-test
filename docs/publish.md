@@ -8,7 +8,7 @@ You are welcome to add your tests to the FAIR Enough metrics API. To do so: fork
 
 !!! info "Persistent URLs"
 
-	This service uses persistent URLs. This means your test will be made permanently available at the URL https://metrics.api.fair-enough.semanticscience.org/tests/ + your test path
+	This service uses persistent URLs. This means your test will be made permanently available at the URL https://w3id.org/fair-enough/metrics/tests/ + your test path
 
 
 ## 🗄️ Or publish a new API on your server

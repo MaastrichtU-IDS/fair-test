@@ -6,7 +6,7 @@ import datetime
 import urllib.parse
 import json
 import requests
-from rdflib import ConjunctiveGraph, URIRef, Literal, RDF
+from rdflib import ConjunctiveGraph, URIRef, Literal, BNode, RDF
 from rdflib.namespace import FOAF
 import html
 import yaml
@@ -410,7 +410,21 @@ class FairTestEvaluation(BaseModel):
             subject_uri = [URIRef(str(s)) for s in self.data['alternative_uris']] 
         self.info(f"Searching for the data URI using the following predicates: {', '.join(data_props + http_props)}")
         return self.extract_prop(g, preds=data_props + http_props, subj=subject_uri)
-
+        # if isinstance(extracted, BNode):
+        # Try to retrieve the data content URL?
+        # Specific use-case: https://doi.org/10.1594/PANGAEA.908011
+        # "distribution": [
+        #     {
+        #     "@type": "DataDownload",
+        #     "encodingFormat": "text/html",
+        #     "contentUrl": "https://doi.pangaea.de/10.1594/PANGAEA.908011?format=html"
+        #     },
+        #     {
+        #     "@type": "DataDownload",
+        #     "encodingFormat": "text/tab-separated-values",
+        #     "contentUrl": "https://doi.pangaea.de/10.1594/PANGAEA.908011?format=textfile"
+        #     }
+        # ]
 
 
     def response(self) -> list:
@@ -465,6 +479,7 @@ class FairTestEvaluation(BaseModel):
                 "http://semanticscience.org/resource/metadata": self.data
             }
         ]
+
 
     # Logging utilities
     def log(self, log_msg: str, prefix: str = None):

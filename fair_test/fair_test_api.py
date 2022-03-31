@@ -176,7 +176,10 @@ class FairTestAPI(FastAPI):
             assert r.status_code == 200
             res = r.json()
             # Check score:
-            assert res[0]['http://semanticscience.org/resource/SIO_000300'][0]['@value'] == eval['score']
+            score = int(res[0]['http://semanticscience.org/resource/SIO_000300'][0]['@value'])
+            if score != eval['score']:
+                print(f"❌ Wrong score ({score} instead of {eval['score']} for {eval['subject']} with {eval['metric_id']}")
+            assert score == eval['score']
 
         # Test get YAML
         metrics_id_to_test = set()
@@ -192,7 +195,7 @@ class FairTestAPI(FastAPI):
 
         
         # test bad request
-        response = test_endpoint.post(f'/tests/a1-access-protocol', 
+        response = test_endpoint.post(f'/tests/a1-metadata-protocol', 
             json={'subject': ''},
             headers={'accept': 'application/json'})
         assert response.status_code == 422
