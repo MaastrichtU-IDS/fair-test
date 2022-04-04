@@ -93,10 +93,12 @@ class FairTestEvaluation(BaseModel):
         harvester_url: Optional[str] = 'https://fair-tests.137.120.31.101.nip.io/tests/harvester',
     ) -> Any:
         """
-        Retrieve RDF metadata from a URL. Super useful. It tries:
+        Retrieve metadata from a URL, RDF metadata parsed as a RDFLib Graph in priority. 
+        Super useful. It tries:
         - Following signposting links (returned in HTTP headers)  
         - Extracting JSON-LD embedded in the HTML
         - Asking RDF through content-negociation
+        - Can return JSON found as a fallback, if RDF metadata is not found
         You can also use an external harvester API to get the RDF metadata
 
         Parameters:
