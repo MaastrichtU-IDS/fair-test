@@ -10,6 +10,7 @@ class MetricTest(FairTest):
 - Search for structured metadata at the resource URI. 
 - Use HTTP requests with content-negotiation (RDF, JSON-LD, JSON), 
 - Extract metadata from the HTML landing page using extruct"""
+    topics = ['metadata']
     author = 'https://orcid.org/0000-0002-1501-1082'
     metric_version = '0.1.0'
     test_test={

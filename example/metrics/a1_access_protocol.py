@@ -12,7 +12,7 @@ For the protocol , do an HTTP get on the URL to see if it returns a valid docume
 Find information about authorization in metadata"""
     author = 'https://orcid.org/0000-0002-1501-1082'
     metric_version = '0.1.0'
-    tests={
+    test_test={
         'https://w3id.org/ejp-rd/fairdatapoints/wp13/dataset/c5414323-eab1-483f-a883-77951f246972': 1,
         'https://raw.githubusercontent.com/ejp-rd-vp/resource-metadata-schema/master/data/example-rdf/turtle/patientRegistry.ttl': 1,
         'Wrong entry': 0,

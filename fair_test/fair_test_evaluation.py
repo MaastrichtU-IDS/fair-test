@@ -170,16 +170,17 @@ class FairTestEvaluation(BaseModel):
             extructed = extruct.extract(html_text.encode('utf8'))
             if url == self.subject:
                 self.data['extruct'] = extructed
-            self.info(f"Found metadata with extruct in the formats: {', '.join(extructed.keys())}")
             if len(extructed['json-ld']) > 0:
                 g = self.parse_rdf(extructed['json-ld'], 'json-ld', log_msg='HTML embedded JSON-LD RDF')
                 if len(g) > 0:
+                    self.info(f"Found JSON-LD RDF metadata embedded in the HTML with extruct")
                     return g
                 else:
                     metadata_obj = extructed['json-ld']
             if len(extructed['rdfa']) > 0:
                 g = self.parse_rdf(extructed['rdfa'], 'json-ld', log_msg='HTML embedded RDFa')
                 if len(g) > 0:
+                    self.info(f"Found RDFa metadata embedded in the HTML with extruct")
                     return g
                 elif not metadata_obj:
                     metadata_obj = extructed['rdfa']
@@ -206,20 +207,16 @@ class FairTestEvaluation(BaseModel):
                 # If return text/plain we parse as turtle
                 content_type = content_type.replace('text/plain', 'text/turtle')
                 self.info(f'Content-negotiation: found some metadata in {content_type} when asking for {mime_type}')
-                if content_type.startswith('text/html'):
-                    # If HTML we check later with extruct
-                    html_text = r.text
-                    continue
                 try:
                     # If return JSON-LD
                     self.data['json-ld'] = r.json()
                     if not metadata_obj:
                         metadata_obj = r.json()
-                    return self.parse_rdf(r.json(), content_type, log_msg='content negotiation RDF')
+                    return self.parse_rdf(r.json(), content_type, log_msg='content negotiation JSON-LD RDF')
                 except Exception:
                     # If returns RDF, such as turtle
                     return self.parse_rdf(r.text, content_type, log_msg='content negotiation RDF')
-            except Exception:
+            except Exception as e:
                 self.info(f'Content-negotiation: error with {url} when asking for {mime_type}. Getting {str(e.args[0])}')
                 # Error: e.args[0]
 
@@ -243,15 +240,14 @@ class FairTestEvaluation(BaseModel):
             g (Graph): A RDFLib Graph
         """
         # https://rdflib.readthedocs.io/en/stable/plugin_parsers.html
-        # rdflib_formats = ['turtle', 'json-ld', 'xml', 'ntriples', 'nquads', 'trig', 'n3']
-        # We need to make this ugly fix because regular content negotiation dont work with schema.org
-        # https://github.com/schemaorg/schemaorg/issues/2578
+        parse_formats = ['turtle', 'json-ld', 'xml', 'ntriples', 'nquads', 'trig', 'n3']
+
         if type(rdf_data) == dict:
             rdf_data = [rdf_data]
         if type(rdf_data) == list:
             for rdf_entry in rdf_data:
                 try:
-                    # Dirty hack to fix RDFLib that is not able to parse JSON-LD schema.org:
+                    # Dirty hack to fix RDFLib that is not able to parse JSON-LD schema.org (https://github.com/schemaorg/schemaorg/issues/2578)
                     if '@context' in rdf_entry:
                         if isinstance(rdf_entry['@context'], str):
                             if rdf_entry['@context'].startswith('http://schema.org') or rdf_entry['@context'].startswith('https://schema.org'):
@@ -265,15 +261,33 @@ class FairTestEvaluation(BaseModel):
             # RDFLib JSON-LD had issue with encoding: https://github.com/RDFLib/rdflib/issues/1416
             rdf_data = jsonld.expand(rdf_data)
             rdf_data = json.dumps(rdf_data)
-            mime_type = 'json-ld'
+            parse_formats = ['json-ld']
         
-        g = ConjunctiveGraph()
-        try:
-            g.parse(data=rdf_data, format=mime_type)
-            self.info(f'Successfully parsed {mime_type} RDF from {log_msg}, containing {str(len(g))} triples')
-        except Exception as e:
-            self.warn('Could not parse ' + mime_type + ' metadata from ' + log_msg + ' with RDFLib parser ' + mime_type + ' ' + str(e))
+        else:
+            # Try to guess the format to parse from mime type
+            mime_type = mime_type.split(';')[0]
+            if 'turtle' in mime_type:
+                parse_formats = ['turtle']
+            elif 'xml' in mime_type:
+                parse_formats = ['xml']
+            elif 'ntriples' in mime_type:
+                parse_formats = ['ntriples']
+            elif 'nquads' in mime_type:
+                parse_formats = ['nquads']
+            elif 'trig' in mime_type:
+                parse_formats = ['trig']
+            elif mime_type.startswith('text/html'):
+                parse_formats = []
 
+        for rdf_format in parse_formats:
+            try:
+                g = ConjunctiveGraph()
+                g.parse(data=rdf_data, format=rdf_format)
+                self.info(f'Successfully parsed {mime_type} RDF from {log_msg} with parser {rdf_format}, containing {str(len(g))} triples')
+                return g
+            except Exception as e:
+                self.info(f'Could not parse {mime_type} metadata from {log_msg} with parser {rdf_format}. Getting error: {str(e)}')
+        
         return g
 
 

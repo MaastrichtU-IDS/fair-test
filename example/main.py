@@ -1,4 +1,4 @@
-from fair_test import FairTest, FairTestEvaluationAPI
+from fair_test import FairTest, FairTestAPI
 
 
 app = FairTestAPI(

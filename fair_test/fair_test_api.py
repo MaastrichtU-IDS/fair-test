@@ -168,18 +168,24 @@ class FairTestAPI(FastAPI):
         RED = '\033[91m'
         BOLD = '\033[1m'
         END = '\033[0m'
-        # PURPLE = '\033[95m'
-        # CYAN = '\033[96m'
-        # DARKCYAN = '\033[36m'
-        # BLUE = '\033[94m'
-        # GREEN = '\033[92m'
-        # YELLOW = '\033[93m'
+        YELLOW = '\033[33m'
+        CYAN = '\033[36m'
+        PURPLE = '\033[95m'
+        BLUE = '\033[34m'
+        GREEN = '\033[32m'
+
+        if metric:
+            run_evals = [ev for ev in eval_list if ev['metric_id'] == metric]
+        else:
+            run_evals = eval_list
+
+        print(f"⏳️ Running tests for {BOLD}{len(run_evals)}{END} metric/subject/score combinations")
 
         # Test POST metrics evaluation request
-        for eval in eval_list:
+        for eval in run_evals:
             if metric and metric != eval['metric_id']:
                 continue
-            print(f"Test posting subject <{eval['subject']}> to {eval['metric_id']} (expect {eval['score']})")
+            print(f"Testing {YELLOW}{eval['subject']}{END} with {CYAN}{eval['metric_id']}{END} (expect {BOLD + str(eval['score']) + END})")
             r = test_endpoint.post(f"/tests/{eval['metric_id']}",
                 json={ 'subject': eval['subject'] },
                 headers={"Accept": "application/json"}
@@ -220,4 +226,4 @@ class FairTestAPI(FastAPI):
         response = test_endpoint.get('/')
         assert response.status_code == 200
 
-        print(f"Tested a total of {len(eval_list)} FAIR metrics tests/subjects/score combinations")
+        print(f"✅ Successfully tested a total of {BOLD}{len(run_evals)}{END} FAIR metrics tests/subjects/score combinations")
