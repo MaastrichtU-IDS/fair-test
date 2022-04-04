@@ -23,8 +23,8 @@ Here are some projects using `fair-test` to deploy FAIR test services:
 
 ## 🤝 Credits
 
-To define some of the helper functions, we took inspirations from other projects working on FAIR evaluations: the [FAIR evaluator](https://fairsharing.github.io/FAIR-Evaluator-FrontEnd/#!/), [F-UJI](https://f-uji.net/), and [FAIR Checker](https://fair-checker.france-bioinformatique.fr/).
+Thanks to the people behind the FAIR evaluation services [FAIR evaluator](https://fairsharing.github.io/FAIR-Evaluator-FrontEnd/#!/), [F-UJI](https://f-uji.net/), and [FAIR Checker](https://fair-checker.france-bioinformatique.fr/), for the various inspirations and ideas.
 
-Using the specifications for FAIR evaluation services defined by the [FAIR metrics working group](https://github.com/FAIRMetrics/Metrics){:target="_blank"}.
+Thanks to the [FAIR metrics working group](https://github.com/FAIRMetrics/Metrics){:target="_blank"} for the specifications for FAIR evaluation services they defined.
 
 Library built with [FastAPI](https://fastapi.tiangolo.com/){:target="_blank"}, and [RDFLib](https://github.com/RDFLib/rdflib){:target="_blank"}.
