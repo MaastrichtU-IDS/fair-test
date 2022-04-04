@@ -36,7 +36,7 @@ Resolve the licenses IRI"""
 
 
         eval.info(f"Checking RDF metadata to find links to all the alternative identifiers: <{'>, <'.join(eval.data['alternative_uris'])}>")
-        subject_uri = eval.extract_subject_from_metadata(g, eval.data['alternative_uris'])
+        subject_uri = eval.extract_metadata_subject(g, eval.data['alternative_uris'])
 
         # TODO: check DataCite too?
         license_preds = [

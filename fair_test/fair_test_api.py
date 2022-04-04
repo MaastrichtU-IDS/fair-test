@@ -30,7 +30,7 @@ class FairTestAPI(FastAPI):
     def __init__(self,
             *args,
             title: str = "FAIR Metrics Test API", 
-            description="FAIR Metrics Test API for online resources. Follows the specifications described by the [FAIRMetrics](https://github.com/FAIRMetrics/Metrics) working group. \n[Source code](https://github.com/MaastrichtU-IDS/fair-test)",
+            description="FAIR Metrics Test API for online resources. Follows the specifications described by the [FAIRMetrics](https://github.com/FAIRMetrics/Metrics) working group. \nBuilt with the [**fair-test** library](https://maastrichtu-ids.github.io/fair-test)",
             version="0.1.0",
             cors_enabled=True,
             public_url='https://metrics.api.fair-enough.semanticscience.org',

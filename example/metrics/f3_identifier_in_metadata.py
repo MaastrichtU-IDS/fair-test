@@ -34,7 +34,7 @@ If found, retrieve informations about this resource (title, description, date cr
         # Stats for KG: https://www.w3.org/TR/hcls-dataset
 
         eval.info(f"Checking RDF metadata to find links to all the alternative identifiers: <{'>, <'.join(eval.data['alternative_uris'])}>")
-        subject_uri = eval.extract_subject_from_metadata(g, eval.data['alternative_uris'])
+        subject_uri = eval.extract_metadata_subject(g, eval.data['alternative_uris'])
 
         if subject_uri:
             if 'properties' in eval.data['identifier_in_metadata'].keys():

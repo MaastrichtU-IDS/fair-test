@@ -2,6 +2,7 @@ fastapi>=0.51.0
 uvicorn[standard]>=0.12.0
 python-dotenv
 requests
+PyYAML
 rdflib>=6.1.1
 extruct
 PyLD

@@ -111,7 +111,7 @@ class FairTest(BaseModel):
             "x-tests_metric": f"{settings.HOST_URL}/tests/{self.metric_path}",
             "description": self.description,
             "x-applies_to_principle": self.applies_to_principle,
-            # "x-topics": self.topics,
+            "x-topics": self.topics,
             "contact": {
               "x-organization": settings.ORG_NAME,
               "url": settings.CONTACT_URL,

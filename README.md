@@ -1,4 +1,6 @@
-# ☑️ FAIR test
+<h1 align="center">
+  ☑️ FAIR Test
+</h1>
 
 [![Version](https://img.shields.io/pypi/v/fair-test)](https://pypi.org/project/fair-test) [![Python versions](https://img.shields.io/pypi/pyversions/fair-test)](https://pypi.org/project/fair-test)
 

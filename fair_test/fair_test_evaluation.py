@@ -1,23 +1,17 @@
 from pydantic import BaseModel
-from fastapi import HTTPException
-from fastapi.responses import JSONResponse, PlainTextResponse
-from typing import Optional, List, Any
+from fastapi.responses import JSONResponse
+from typing import Optional, List, Dict, Any
+# from fastapi import HTTPException
+# from fastapi.responses import JSONResponse, PlainTextResponse
 import datetime
-import urllib.parse
 import json
 import requests
+from urllib.parse import urlparse, quote
 from rdflib import ConjunctiveGraph, URIRef, Literal, BNode, RDF
-from rdflib.namespace import FOAF
-import html
-import yaml
 import extruct
 from fair_test.config import settings
 from pyld import jsonld
 # pyld is required to parse jsonld with rdflib
-
-
-# class MetricInput(BaseModel):
-#     subject: str = settings.DEFAULT_SUBJECT
 
 
 class FairTestEvaluation(BaseModel):
@@ -59,12 +53,14 @@ class FairTestEvaluation(BaseModel):
     id: Optional[str] # URL of the test results
     data: Optional[dict] = {}
 
-    def __init__(self, subject: str, metric_path: str) -> None:
+
+    def __init__(self, 
+        subject: str, 
+        metric_path: str
+    ) -> None:
         super().__init__()
         self.subject = subject
-        self.id = f"{settings.HOST_URL}/metrics/{metric_path}#{urllib.parse.quote(str(self.subject))}/result-{self.date}"
-        # self.comment = []
-        # self.data = {}
+        self.id = f"{settings.HOST_URL}/metrics/{metric_path}#{quote(str(self.subject))}/result-{self.date}"
 
         alt_uris = set()
         alt_uris.add(self.subject)
@@ -75,29 +71,9 @@ class FairTestEvaluation(BaseModel):
             alt_uris.add(self.subject.replace('https://', 'http://'))
         
         # Fix to add an alternative URI for doi.org that is commonly used as identifier in the metadata
-        if self.subject.startswith('https://doi.org/'):
-            alt_uris.add(self.subject.replace('https://doi.org/', 'http://dx.doi.org/'))
-            alt_uris.add(self.subject.lower())
-        if self.subject.startswith('http://doi.org/'):
-            alt_uris.add(self.subject.replace('http://doi.org/', 'http://dx.doi.org/'))
-            alt_uris.add(self.subject.lower())
-        # from urllib.parse import urlparse
-        # result = urlparse(eval.subject)
-        # if result.scheme and result.netloc:
-        #     if result.netloc == 'doi.org':
-        #         alt_uris.append(eval.subject.replace('https://doi.org/', 'http://dx.doi.org/'))
-        #         # doi = result.path[1:]
-        #         eval.info('The subject resource URI ' + eval.subject + ' is a DOI')
-
-
-        try:
-            # Resolve the subject URI if possible and add redirects as alternative URIs
-            r = requests.get(self.subject)
-            r.raise_for_status()  # Raises a HTTPError if the status is 4xx, 5xxx
-            if r.history:
-                alt_uris.add(r.url)
-        except Exception:
-            pass
+        parsed_url = urlparse(self.subject)
+        if parsed_url.netloc and parsed_url.netloc == 'doi.org':
+            alt_uris.add('http://dx.doi.org/' + parsed_url.path[1:])
 
         self.data['alternative_uris'] = list(alt_uris)
 
@@ -112,17 +88,21 @@ class FairTestEvaluation(BaseModel):
     # e.g. Apache Tika for PDF/pptx? or ruby Kellog's Distiller? http://rdf.greggkellogg.net/distiller
     # c.f. https://github.com/FAIRMetrics/Metrics/blob/master/MetricsEvaluatorCode/Ruby/metrictests/fair_metrics_utilities.rb
     def retrieve_rdf(self, 
-            url: str, 
-            use_harvester: bool = False, 
-            harvester_url: str = 'https://fair-tests.137.120.31.101.nip.io/tests/harvester',
-    ):
+        url: str, 
+        use_harvester: Optional[bool] = False, 
+        harvester_url: Optional[str] = 'https://fair-tests.137.120.31.101.nip.io/tests/harvester',
+    ) -> Any:
         """
-        Retrieve RDF from an URL. Super useful.
+        Retrieve RDF metadata from a URL. Super useful. It tries:
+        - Following signposting links (returned in HTTP headers)  
+        - Extracting JSON-LD embedded in the HTML
+        - Asking RDF through content-negociation
+        You can also use an external harvester API to get the RDF metadata
 
         Parameters:
-            url (str): URL to retrieve RDF from
-            use_harvester (bool, optional): Use an external harvester to retrieve the RDF instead of the built-in python harvester 
-            harvester_url (str, optional): URL of the RDF harvester used
+            url: URL to retrieve RDF from
+            use_harvester: Use an external harvester to retrieve the RDF instead of the built-in python harvester 
+            harvester_url: URL of the RDF harvester used
 
         Returns:
             g (Graph): A RDFLib Graph with the RDF found at the given URL
@@ -147,16 +127,29 @@ class FairTestEvaluation(BaseModel):
         html_text = None
         # Check if URL resolve and if redirection
         # r = requests.head(url)
+
         try:
             r = requests.get(url)
             r.raise_for_status()  # Raises a HTTPError if the status is 4xx, 5xxx
             self.info(f'Successfully resolved {url}')
             html_text = r.text
-            # html_text = html.unescape(r.text)
             if r.history:
+                # Extract alternative URIs if request redirected
                 self.info(f"Request was redirected to {r.url}.")
-                # if not r.url in self.data['alternative_uris']:
-                #     self.data['alternative_uris'].append(r.url)
+                redirect_url = r.url
+                if redirect_url.startswith('https://linkinghub.elsevier.com/retrieve/pii/'):
+                    # Special case to handle Elsevier bad redirections to ScienceDirect
+                    redirect_url = redirect_url.replace('https://linkinghub.elsevier.com/retrieve/pii/', 'https://www.sciencedirect.com/science/article/pii/')
+
+                self.data['redirect_url'] = redirect_url
+                if url == self.subject and not redirect_url in self.data['alternative_uris']:
+                    self.info(f"Adding {redirect_url} to the list of alternative URIs for the subject")
+                    self.data['alternative_uris'].append(redirect_url)
+                    if r.url.startswith('http://'):
+                        self.data['alternative_uris'].append(redirect_url.replace('http://', 'https://'))
+                    elif r.url.startswith('https://'):
+                        self.data['alternative_uris'].append(redirect_url.replace('https://', 'http://'))
+
             if 'link' in r.headers.keys():
                 signposting_links = r.headers['link']
                 found_signposting = True
@@ -173,7 +166,6 @@ class FairTestEvaluation(BaseModel):
         except Exception:
             self.warn(f'Could not resolve the URL: {url}')
             # Error: e.args[0]
-
 
         self.info('Checking for metadata embedded in the HTML page returned by the resource URI ' + url + ' using extruct')
         try:
@@ -237,14 +229,18 @@ class FairTestEvaluation(BaseModel):
         return ConjunctiveGraph()
 
 
-    def parse_rdf(self, rdf_data, mime_type: str = None, log_msg: str = ''):
+    def parse_rdf(self, 
+        rdf_data: Any, 
+        mime_type: Optional[str] = None, 
+        log_msg: Optional[str] = ''
+    ) -> Any:
         """
         Parse any string or JSON-like object to a RDFLib Graph
 
         Parameters:
             rdf_data (str|object): Text or object to convert to RDF
-            mime_type (str, optional): Mime type of the data to convert
-            log_msg (str, optional): Text to use when logging about the parsing process (help debugging)
+            mime_type: Mime type of the data to convert
+            log_msg: Text to use when logging about the parsing process (help debugging)
 
         Returns:
             g (Graph): A RDFLib Graph
@@ -284,31 +280,35 @@ class FairTestEvaluation(BaseModel):
         return g
 
 
-    def extract_prop(self, g, preds, subj = None):
+    def extract_prop(self, 
+        g: Any, 
+        preds: List[Any], 
+        subj: Optional[Any] = None
+    ) -> List[Any]:
         """
         Helper to extract properties from a RDFLib Graph
 
         Parameters:
             g (Graph): RDFLib Graph
-            pred (list): List of predicates to find value for
-            subj (list, optional): Optionally also limit the results for a list of subjects
+            pred: List of predicates to find value for
+            subj: Optionally also limit the results for a list of subjects
 
         Returns:
-            props (list): A list of the values found for the given properties
+            props: A list of the values found for the given properties
         """
         values = set()
         check_preds = set()
         for pred in preds:
-            check_preds.add(URIRef(str(pred)))
             # Add the http/https counterpart for each predicate
+            check_preds.add(URIRef(str(pred)))
             if str(pred).startswith('http://'):
                 check_preds.add(URIRef(str(pred).replace('http://', 'https://')))
             elif str(pred).startswith('https://'):
                 check_preds.add(URIRef(str(pred).replace('https://', 'http://')))
 
-        self.info(f"Checking values for properties: {preds}")
+        self.info(f"Checking properties values for properties: {preds}")
         if subj:
-            self.info(f"Checking values for subjects URIs: {str(subj)}")
+            self.info(f"Checking properties values for subject URI(s): {str(subj)}")
 
         for pred in list(check_preds):
             if not isinstance(subj, list):
@@ -317,21 +317,24 @@ class FairTestEvaluation(BaseModel):
             for test_subj in subj:
                 for s, p, o in g.triples((test_subj, URIRef(str(pred)), None)):
                     self.info(f"Found a value for property {str(pred)} => {str(o)}")
-                    values.add(str(o))
+                    values.add(o)
 
         return list(values)
 
 
-    def extract_subject_from_metadata(self, g, alt_uris=None):
+    def extract_metadata_subject(self, 
+        g: Any, 
+        alt_uris: Optional[List[str]] = None
+    ) -> Any:
         """
         Helper to extract the subject URI to which metadata about the resource is attached in a RDFLib Graph
 
         Parameters:
             g (Graph): RDFLib Graph
-            alt_uris (list): List of alternative URIs for the subject to find
+            alt_uris: List of alternative URIs for the subject to find
 
         Returns:
-            subject_uri (Any): The subject URI used as ID in the metadata
+            subject_uri: The subject URI used as ID in the metadata
         """
         subject_uri = None
         if not alt_uris:
@@ -341,6 +344,7 @@ class FairTestEvaluation(BaseModel):
             "https://purl.org/dc/terms/identifier", 
             "https://purl.org/dc/elements/1.1/identifier", 
             "https://schema.org/identifier", 
+            "https://schema.org/sameAs",
             "http://ogp.me/ns#url"
         ]
         all_preds_id = [p.replace('https://', 'http://') for p in preds_id] + preds_id
@@ -383,12 +387,16 @@ class FairTestEvaluation(BaseModel):
         return subject_uri
 
 
-    def extract_data_uri(self, g, subject_uri=None):
+    def extract_data_subject(self, 
+        g: Any, 
+        subject_uri: Optional[List[Any]] = None
+    ) -> List[Any]:
         """
-        Helper to easily retrieve the URI of the data from RDF metadata (RDFLib Graph)
+        Helper to easily retrieve the subject URI of the data from RDF metadata (RDFLib Graph)
 
         Parameters:
             g (Graph): RDFLib Graph
+            subject_uri: metadata subject URI
 
         Returns:
             data_uri (list): List of URI found for the data in the metadata
@@ -405,39 +413,47 @@ class FairTestEvaluation(BaseModel):
             "https://semanticscience.org/resource/is-about", 
             "https://purl.obolibrary.org/obo/IAO_0000136"
         ]
-        http_props = [p.replace('https://', 'http://') for p in data_props] 
+        # http_props = [p.replace('https://', 'http://') for p in data_props] 
         if not subject_uri:
             subject_uri = [URIRef(str(s)) for s in self.data['alternative_uris']] 
         self.info(f"Searching for the data URI using the following predicates: {', '.join(data_props + http_props)}")
-        return self.extract_prop(g, preds=data_props + http_props, subj=subject_uri)
-        # if isinstance(extracted, BNode):
-        # Try to retrieve the data content URL?
-        # Specific use-case: https://doi.org/10.1594/PANGAEA.908011
-        # "distribution": [
-        #     {
-        #     "@type": "DataDownload",
-        #     "encodingFormat": "text/html",
-        #     "contentUrl": "https://doi.pangaea.de/10.1594/PANGAEA.908011?format=html"
-        #     },
-        #     {
-        #     "@type": "DataDownload",
-        #     "encodingFormat": "text/tab-separated-values",
-        #     "contentUrl": "https://doi.pangaea.de/10.1594/PANGAEA.908011?format=textfile"
-        #     }
-        # ]
+        
+        data_uris = self.extract_prop(g, preds=data_props, subj=subject_uri)
+        
+        # Also extract data download URL when possible
+        content_props = [
+            "https://schema.org/url",
+            "https://schema.org/contentUrl", 
+            "http://www.w3.org/ns/dcat#downloadURL"
+        ]
+        extracted_urls = set()
+        for data_uri in data_uris:
+            if isinstance(data_uri, BNode):
+                content_urls = self.extract_prop(g, preds=content_props, subj=data_uri)
+                for content_url in content_urls:
+                    extracted_urls.add(str(content_url))
+            else:
+                extracted_urls.add(str(data_uri))
+
+        if not 'data_url' in self.data.keys():
+            self.data['content_url'] = []
+        self.data['content_url'] = self.data['content_url'] + list(extracted_urls)
+
+        return data_uris
 
 
-    def response(self) -> list:
+
+    def response(self) -> JSONResponse:
         """
         Function used to generate the FAIR metric test results as JSON-LD, and return this JSON-LD as HTTP response
 
         Returns:
-            response (JSONResponse): HTTP response containing the test results as JSON-LD
+            response: HTTP response containing the test results as JSON-LD
         """
         return JSONResponse(self.to_jsonld())
 
 
-    def to_jsonld(self) -> list:
+    def to_jsonld(self) -> List[Dict]:
         # To see the object used by the original FAIR metrics:
         # curl -L -X 'POST' -d '{"subject": ""}' 'https://w3id.org/FAIR_Tests/tests/gen2_unique_identifier'
         return [
@@ -482,7 +498,10 @@ class FairTestEvaluation(BaseModel):
 
 
     # Logging utilities
-    def log(self, log_msg: str, prefix: str = None):
+    def log(self, 
+        log_msg: str, 
+        prefix: Optional[str] = None
+    ) -> None:
         # Add timestamp?
         log_msg = '[' + str(datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")) + '] ' + log_msg 
         if prefix:
@@ -490,40 +509,40 @@ class FairTestEvaluation(BaseModel):
         self.comment.append(log_msg)
         # print(log_msg)
 
-    def warn(self, log_msg: str):
+    def warn(self, log_msg: str) -> None:
         """
         Log a warning related to the FAIR test execution (add to the comments of the test)
 
         Parameters:
-            log_msg (str): Message to log
+            log_msg: Message to log
         """
         self.log(log_msg, 'WARN:')
     
-    def info(self, log_msg: str):
+    def info(self, log_msg: str) -> None:
         """
         Log an info message related to the FAIR test execution (add to the comments of the test)
 
         Parameters:
-            log_msg (str): Message to log
+            log_msg: Message to log
         """
         self.log(log_msg, 'INFO:')
 
-    def failure(self, log_msg: str):
+    def failure(self, log_msg: str) -> None:
         """
         Log a failure message related to the FAIR test execution (add to the comments of the test and set score to 0)
 
         Parameters:
-            log_msg (str): Message to log
+            log_msg: Message to log
         """
         self.score = 0
         self.log(log_msg, 'FAILURE:')
 
-    def success(self, log_msg: str):
+    def success(self, log_msg: str) -> None:
         """
         Log a success message related to the FAIR test execution (add to the comments of the test and set score to 1)
 
         Parameters:
-            log_msg (str): Message to log
+            log_msg: Message to log
         """
         if self.score >= 1:
             self.bonus(log_msg)
@@ -531,7 +550,7 @@ class FairTestEvaluation(BaseModel):
             self.score += 1
             self.log(log_msg, 'SUCCESS:')
 
-    def bonus(self, log_msg: str):
+    def bonus(self, log_msg: str) -> None:
         self.score_bonus += 1
         self.log(log_msg, 'SUCCESS:')
 

@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     CONTACT_ORCID: str = '0000-0002-1501-1082'
     ORG_NAME: str = 'Institute of Data Science at Maastricht University'
     DEFAULT_SUBJECT: str = 'https://doi.org/10.1594/PANGAEA.908011'
-
+    
     class Config:
         env_file = '.env'
         env_file_encoding = 'utf-8'

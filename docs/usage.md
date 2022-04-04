@@ -40,6 +40,67 @@ ORG_NAME="Institute of Data Science at Maastricht University"
 DEFAULT_SUBJECT="https://doi.org/10.1594/PANGAEA.908011"
 ```
 
+
+??? note "You can also securely provide secrets environment variables"
+
+    It can be useful to pass API keys to use private services in your metrics tests, such as Search engines APIs. In this example we will define an API key to perform Bing search named `APIKEY_BING_SEARCH`
+    
+    1. Create an additional `secrets.env` environment file, it should not be committed to git (make sure it is added to the `.gitignore`).
+
+        ```bash
+        APIKEY_BING_SEARCH="yourapikey"
+        ```
+
+    2. Add this file to your `docker-compose.prod.yml` to use the secrets in production:
+
+        ```yaml
+        services:
+        api:
+            env_file:
+            - secrets.env
+        ```
+
+        To use the secret in development you can also add it to the `docker-compose.yml`, or define it locally in your terminal with `EXPORT APIKEY_BING_SEARCH="yourapikey"`. But be careful not blowing up your quotas.
+
+    3. You can then retrieve this API key in your metrics tests:
+
+        ```python
+        import os
+        apikey = os.get_env('APIKEY_BING_SEARCH')
+        ```
+
+
+
+<!-- <details><summary>You can also provide secrets environment variables</summary><br/>
+
+It can be useful to pass API keys to use private services in your metrics tests, such as Search engines APIs. In this example we will define an API key to perform Bing search named <code>APIKEY_BING_SEARCH</code>
+<br/><br/>
+1. Create an additional <code>secrets.env</code> environment file, it should not be committed to git (make sure it is added to the <code>.gitignore</code>).
+
+```bash
+APIKEY_BING_SEARCH="yourapikey"
+```
+
+2. Add this file to your <code>docker-compose.prod.yml</code> to use the secrets in production:
+
+```yaml
+services:
+  api:
+    env_file:
+      - secrets.env
+```
+
+To use the secret in development you can also add it to the <code>docker-compose.yml</code>, or define it locally in your terminal with <code>EXPORT APIKEY_BING_SEARCH="yourapikey"</code>. But be careful not blowing up your quotas.
+<br/><br/>
+3. You can then retrieve this API key in your metrics tests:
+
+```python
+import os
+apikey = os.get_env('APIKEY_BING_SEARCH')
+```
+
+</details> -->
+
 ## 🎯 Define a FAIR metrics test
 
 Create a `a1_check_something.py` file in the `metrics` folder with your test:
@@ -100,7 +161,7 @@ g = eval.parse_rdf(text,
 return eval.response()
 ```
 
-!!! info "Documentation for all functions"
+!!! abstract "Documentation for all functions"
 
     You can find the details for all functions available in the [`Code reference`](/fair-test/FairTest/) section
 

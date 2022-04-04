@@ -6,7 +6,7 @@ You can either publish your new tests directly in our existing FAIR enough metri
 
 You are welcome to add your tests to the FAIR Enough metrics API. To do so: fork the repository on GitHub, create your metrics tests in the `metrics` folder, and submit a pull request to propose adding your tests to the [FAIR enough metrics API repository](https://github.com/MaastrichtU-IDS/fair-enough-metrics){:target="_blank"}, it will be made available at [https://metrics.api.fair-enough.semanticscience.org](https://metrics.api.fair-enough.semanticscience.org){:target="_blank"}.
 
-!!! info "Persistent URLs"
+!!! success "Persistent URLs"
 
 	This service uses persistent URLs. This means your test will be made permanently available at the URL https://w3id.org/fair-enough/metrics/tests/ + your test path
 

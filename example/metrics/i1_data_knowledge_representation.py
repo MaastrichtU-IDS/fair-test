@@ -21,9 +21,9 @@ Any form of ontologically-grounded linked data will pass this test."""
         if len(g) > 1:
             eval.info(f'Successfully found and parsed RDF metadata. It contains {str(len(g))} triples')
 
-        subject_uri = eval.extract_subject_from_metadata(g, eval.data['alternative_uris'])
+        subject_uri = eval.extract_metadata_subject(g, eval.data['alternative_uris'])
         # Retrieve URI of the data in the RDF metadata
-        data_res = eval.extract_data_uri(g, subject_uri)
+        data_res = eval.extract_data_subject(g, subject_uri)
         if len(data_res) < 1:
             eval.failure("Could not find data URI in the metadata.")
 
