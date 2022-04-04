@@ -41,22 +41,38 @@ Tests are automatically run by a GitHub Actions workflow when new code is pushed
     pip install pytest
     ```
 
-Define the test, if not already done, it will test all cases defined in your FAIR metrics tests `test_test` attribute:
+??? note "If not already done, define the 2 files required to run the tests"
 
-```python title="tests/test_metrics.py"
-from fastapi.testclient import TestClient
-from main import app
-
-endpoint = TestClient(app)
-
-def test_api():
-    app.run_tests(endpoint)
-```
+    It will test all cases defined in your FAIR metrics tests `test_test` attribute:
+    
+    ```python title="tests/conftest.py"
+    def pytest_addoption(parser):
+        parser.addoption("--metric", action="store", default=None)
+    ```
+    
+    and:
+    
+    ```python title="tests/test_metrics.py"
+    import pytest
+    from fastapi.testclient import TestClient
+    from main import app
+    
+    endpoint = TestClient(app)
+    
+    def test_api(pytestconfig):
+        app.run_tests(endpoint, pytestconfig.getoption('metric'))
+    ```
 
 Run the tests locally (from the root folder):
 
 ```bash
 pytest -s
+```
+
+Run the tests only for a specific metric test:
+
+```bash
+pytest -s --metric a1-metadata-protocol
 ```
 
 ### 📖 Generate docs

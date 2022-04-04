@@ -145,7 +145,7 @@ class FairTestAPI(FastAPI):
         return test_tests
 
 
-    def run_tests(self, test_endpoint):
+    def run_tests(self, test_endpoint, metric: str = None):
         """
         Run `pytest` tests for each metric test. URLs to test and expected scores are defined with the `test_test` attribute.
         Use this in a test file to automatically test all metrics tests, for example:
@@ -177,6 +177,8 @@ class FairTestAPI(FastAPI):
 
         # Test POST metrics evaluation request
         for eval in eval_list:
+            if metric and metric != eval['metric_id']:
+                continue
             print(f"Test posting subject <{eval['subject']}> to {eval['metric_id']} (expect {eval['score']})")
             r = test_endpoint.post(f"/tests/{eval['metric_id']}",
                 json={ 'subject': eval['subject'] },
@@ -187,7 +189,7 @@ class FairTestAPI(FastAPI):
             # Check score:
             score = int(res[0]['http://semanticscience.org/resource/SIO_000300'][0]['@value'])
             if score != eval['score']:
-                print(f"❌ Wrong score: got {RED}{score}{END} instead of {RED}{eval['score']}{END} for {BOLD}{eval['subject']}{END} with {BOLD}{eval['metric_id']}{END}")
+                print(f"❌ Wrong score: got {RED}{score}{END} instead of {RED}{eval['score']}{END} for {BOLD}{eval['subject']}{END} with the metric test {BOLD}{eval['metric_id']}{END}")
             assert score == eval['score']
 
         # Test get YAML
