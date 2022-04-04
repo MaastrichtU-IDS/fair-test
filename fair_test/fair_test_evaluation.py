@@ -416,7 +416,7 @@ class FairTestEvaluation(BaseModel):
         # http_props = [p.replace('https://', 'http://') for p in data_props] 
         if not subject_uri:
             subject_uri = [URIRef(str(s)) for s in self.data['alternative_uris']] 
-        self.info(f"Searching for the data URI using the following predicates: {', '.join(data_props + http_props)}")
+        self.info(f"Searching for the data URI using the following predicates: {', '.join(data_props)}")
         
         data_uris = self.extract_prop(g, preds=data_props, subj=subject_uri)
         
