@@ -33,7 +33,7 @@ pip install -e .
 
 [![Run tests](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/run-tests.yml/badge.svg)](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/run-tests.yml) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=MaastrichtU-IDS_fair-test&metric=coverage)](https://sonarcloud.io/dashboard?id=MaastrichtU-IDS_fair-test)
 
-Tests are automatically run by a GitHub Actions workflow when new code is pushed to the GitHub repository. Subject URLs to test are retrieved from the `test_test` attribute for each metric test.
+Tests are automatically run by a GitHub Actions workflow when new code is pushed to the GitHub repository. The subject URLs to test and their expected score are retrieved from the `test_test` attribute for each metric test.
 
 ??? success "Install `pytest` for testing"
 

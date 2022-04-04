@@ -125,6 +125,7 @@ class FairTestEvaluation(BaseModel):
         # https://github.com/FAIRMetrics/Metrics/blob/master/MetricsEvaluatorCode/Ruby/metrictests/fair_metrics_utilities.rb#L355
         found_signposting = False
         html_text = None
+        metadata_obj = []
         # Check if URL resolve and if redirection
         # r = requests.head(url)
 
@@ -159,7 +160,7 @@ class FairTestEvaluation(BaseModel):
             if found_signposting:
                 self.info(f'Found Signposting links: {str(signposting_links)}')
                 self.data['signposting'] = str(signposting_links)
-                # TODO: parse signposting links, get alternate and meta?
+                # TODO: parse signposting links, get alternate and meta? https://signposting.org/FAIR
                 # return self.retrieve_rdf(str(signposting_links))
             else:
                 self.info('Could not find Signposting links')
@@ -169,34 +170,31 @@ class FairTestEvaluation(BaseModel):
 
         self.info('Checking for metadata embedded in the HTML page returned by the resource URI ' + url + ' using extruct')
         try:
-            if not html_text:
-                get_uri = requests.get(url, headers={'Accept': 'text/html'})
-                # html_text = html.unescape(get_uri.text)
-                html_text = get_uri.text
-            try:
-                extructed = extruct.extract(html_text.encode('utf8'))
+            extructed = extruct.extract(html_text.encode('utf8'))
+            if url == self.subject:
                 self.data['extruct'] = extructed
-                self.info(f"Found metadata with extruct in the formats: {', '.join(extructed.keys())}")
-                if extructed['json-ld']:
-                    g = self.parse_rdf(extructed['json-ld'], 'json-ld', log_msg='HTML embedded JSON-LD RDF')
-                    if len(g) > 0:
-                        return g
-                if extructed['rdfa']:
-                    g = self.parse_rdf(extructed['rdfa'], 'json-ld', log_msg='HTML embedded RDFa')
-                    if len(g) > 0:
-                        return g
-                # Check extruct results:
-                # for format in extructed.keys():
-                #     if extructed[format]:
-                #         if format == 'dublincore' and extructed[format] == [{"namespaces": {}, "elements": [], "terms": []}]:
-                #             # Handle case where extruct generate empty dict
-                #             continue
-                #         eval.data['extruct'][format] = extructed[format]
-            except Exception as e:
-                self.warn('Error when parsing the subject URL HTML embedded JSON-LD from ' + url + ' using extruct. Getting: ' + str(e.args[0]))
-
+            self.info(f"Found metadata with extruct in the formats: {', '.join(extructed.keys())}")
+            if len(extructed['json-ld']) > 0:
+                g = self.parse_rdf(extructed['json-ld'], 'json-ld', log_msg='HTML embedded JSON-LD RDF')
+                if len(g) > 0:
+                    return g
+                else:
+                    metadata_obj = extructed['json-ld']
+            if len(extructed['rdfa']) > 0:
+                g = self.parse_rdf(extructed['rdfa'], 'json-ld', log_msg='HTML embedded RDFa')
+                if len(g) > 0:
+                    return g
+                elif not metadata_obj:
+                    metadata_obj = extructed['rdfa']
+            if not metadata_obj and len(extructed['microdata']) > 0:
+                metadata_obj = extructed['microdata']
+            if not metadata_obj and extructed['dublincore'] != [{"namespaces": {},"elements": [],"terms": []}]:
+                # Dublin core always comes as this empty dict if no match 
+                metadata_obj = extructed['dublincore']
+            # The rest is not extracted because usually give no interesting metadata:
+            # opengraph, microformat
         except Exception as e:
-            self.warn('Error when running extruct on ' + url + '. Getting: ' + str(e.args[0]))
+            self.info('Error when running extruct on ' + url + '. Getting: ' + str(e.args[0]))
 
 
         # Perform content negociation last because it's the slowest for a lot of URLs like zenodo
@@ -218,15 +216,17 @@ class FairTestEvaluation(BaseModel):
                 try:
                     # If return JSON-LD
                     self.data['json-ld'] = r.json()
+                    if not metadata_obj:
+                        metadata_obj = r.json()
                     return self.parse_rdf(r.json(), content_type, log_msg='content negotiation RDF')
                 except Exception:
                     # If returns RDF, such as turtle
                     return self.parse_rdf(r.text, content_type, log_msg='content negotiation RDF')
             except Exception:
-                self.warn(f'Could not find metadata with content-negotiation when asking for: {mime_type}')
+                self.info(f'Could not find metadata with content-negotiation when asking for: {mime_type}')
                 # Error: e.args[0]
 
-        return ConjunctiveGraph()
+        return metadata_obj
 
 
     def parse_rdf(self, 
