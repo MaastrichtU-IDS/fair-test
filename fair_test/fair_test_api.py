@@ -165,6 +165,15 @@ class FairTestAPI(FastAPI):
             test_endpoint (TestClient): FastAPI TestClient of the app to test
         """
         eval_list = self.get_metrics_tests_tests()
+        RED = '\033[91m'
+        BOLD = '\033[1m'
+        END = '\033[0m'
+        # PURPLE = '\033[95m'
+        # CYAN = '\033[96m'
+        # DARKCYAN = '\033[36m'
+        # BLUE = '\033[94m'
+        # GREEN = '\033[92m'
+        # YELLOW = '\033[93m'
 
         # Test POST metrics evaluation request
         for eval in eval_list:
@@ -178,7 +187,7 @@ class FairTestAPI(FastAPI):
             # Check score:
             score = int(res[0]['http://semanticscience.org/resource/SIO_000300'][0]['@value'])
             if score != eval['score']:
-                print(f"❌ Wrong score ({score} instead of {eval['score']} for {eval['subject']} with {eval['metric_id']}")
+                print(f"❌ Wrong score: got {RED}{score}{END} instead of {RED}{eval['score']}{END} for {BOLD}{eval['subject']}{END} with {BOLD}{eval['metric_id']}{END}")
             assert score == eval['score']
 
         # Test get YAML

@@ -17,13 +17,13 @@ pip install -e .
 ??? bug "If you are facing issues, use a virtual environment to avoid conflicts"
 
     Create the virtual environment folder in your workspace:
-
+    
     ```bash
     python3 -m venv .venv
     ```
-
+    
     Activate the virtual environment:
-
+    
     ```bash
     source .venv/bin/activate
     ```
@@ -41,8 +41,19 @@ Tests are automatically run by a GitHub Actions workflow when new code is pushed
     pip install pytest
     ```
 
+Define the test, if not already done, it will test all cases defined in your FAIR metrics tests `test_test` attribute:
 
-Run the tests locally (from the root folder) with prints displayed:
+```python title="tests/test_metrics.py"
+from fastapi.testclient import TestClient
+from main import app
+
+endpoint = TestClient(app)
+
+def test_api():
+    app.run_tests(endpoint)
+```
+
+Run the tests locally (from the root folder):
 
 ```bash
 pytest -s

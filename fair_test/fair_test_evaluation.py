@@ -290,7 +290,7 @@ class FairTestEvaluation(BaseModel):
 
         Parameters:
             g (Graph): RDFLib Graph
-            pred: List of predicates to find value for
+            preds: List of predicates to find value for
             subj: Optionally also limit the results for a list of subjects
 
         Returns:
