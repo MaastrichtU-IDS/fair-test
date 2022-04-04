@@ -55,12 +55,12 @@ DEFAULT_SUBJECT="https://doi.org/10.1594/PANGAEA.908011"
     
         ```yaml title="docker-compose.prod.yml"
         services:
-        api:
-            env_file:
-            - secrets.env
+            api:
+                env_file:
+                - secrets.env
         ```
     
-        To use the secret in development you can also add it to the `docker-compose.yml`, or define it locally in your terminal with `EXPORT APIKEY_BING_SEARCH="yourapikey"`. But be careful not blowing up your quotas.
+        To use the secret in development you can also add it to the `docker-compose.yml`, or define the env variable locally in your terminal with `export APIKEY_BING_SEARCH="yourapikey"`. But be careful not blowing up your quotas.
     
     3. You can then retrieve this API key in your metrics tests:
     

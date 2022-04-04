@@ -123,7 +123,6 @@ class FairTestEvaluation(BaseModel):
             except Exception as e:
                 self.warn(f'Failed to reach the Harvester at {harvester_url}, using the built-in python harvester')
 
-        self.info(f'Checking if Signposting links can be found in the resource URI headers at {url}')
         # https://github.com/FAIRMetrics/Metrics/blob/master/MetricsEvaluatorCode/Ruby/metrictests/fair_metrics_utilities.rb#L355
         found_signposting = False
         html_text = None
@@ -138,7 +137,6 @@ class FairTestEvaluation(BaseModel):
             html_text = r.text
             if r.history:
                 # Extract alternative URIs if request redirected
-                self.info(f"Request was redirected to {r.url}.")
                 redirect_url = r.url
                 if redirect_url.startswith('https://linkinghub.elsevier.com/retrieve/pii/'):
                     # Special case to handle Elsevier bad redirections to ScienceDirect
@@ -146,13 +144,14 @@ class FairTestEvaluation(BaseModel):
 
                 self.data['redirect_url'] = redirect_url
                 if url == self.subject and not redirect_url in self.data['alternative_uris']:
-                    self.info(f"Adding {redirect_url} to the list of alternative URIs for the subject")
+                    self.info(f"Request was redirected to {redirect_url}, adding to the list of alternative URIs for the subject")
                     self.data['alternative_uris'].append(redirect_url)
                     if r.url.startswith('http://'):
                         self.data['alternative_uris'].append(redirect_url.replace('http://', 'https://'))
                     elif r.url.startswith('https://'):
                         self.data['alternative_uris'].append(redirect_url.replace('https://', 'http://'))
 
+            # TODO: handle signposting links headers, get alternate and meta? https://signposting.org/FAIR
             if 'link' in r.headers.keys():
                 signposting_links = r.headers['link']
                 found_signposting = True
@@ -162,13 +161,9 @@ class FairTestEvaluation(BaseModel):
             if found_signposting:
                 self.info(f'Found Signposting links: {str(signposting_links)}')
                 self.data['signposting'] = str(signposting_links)
-                # TODO: parse signposting links, get alternate and meta? https://signposting.org/FAIR
-                # return self.retrieve_metadata(str(signposting_links))
-            else:
-                self.info('Could not find Signposting links')
-        except Exception:
-            self.warn(f'Could not resolve the URL: {url}')
-            # Error: e.args[0]
+                # return self.retrieve_metadata(str(signposting_link))
+        except Exception as e:
+            self.warn(f"Error resolving the URL {url} : {str(e.args[0])}")
 
         self.info('Checking for metadata embedded in the HTML page returned by the resource URI ' + url + ' using extruct')
         try:
@@ -196,7 +191,7 @@ class FairTestEvaluation(BaseModel):
             # The rest is not extracted because usually give no interesting metadata:
             # opengraph, microformat
         except Exception as e:
-            self.info('Error when running extruct on ' + url + '. Getting: ' + str(e.args[0]))
+            self.info(f"Error when running extruct on {url}. Getting: {str(e.args[0])}")
 
 
         # Perform content negociation last because it's the slowest for a lot of URLs like zenodo
@@ -210,7 +205,7 @@ class FairTestEvaluation(BaseModel):
                 content_type = r.headers['Content-Type'].replace(' ', '').replace(';charset=utf-8', '')
                 # If return text/plain we parse as turtle
                 content_type = content_type.replace('text/plain', 'text/turtle')
-                self.info(f'Found some metadata in {content_type} when asking for {mime_type}')
+                self.info(f'Content-negotiation: found some metadata in {content_type} when asking for {mime_type}')
                 if content_type.startswith('text/html'):
                     # If HTML we check later with extruct
                     html_text = r.text
@@ -225,7 +220,7 @@ class FairTestEvaluation(BaseModel):
                     # If returns RDF, such as turtle
                     return self.parse_rdf(r.text, content_type, log_msg='content negotiation RDF')
             except Exception:
-                self.info(f'Could not find metadata with content-negotiation when asking for: {mime_type}')
+                self.info(f'Content-negotiation: error with {url} when asking for {mime_type}. Getting {str(e.args[0])}')
                 # Error: e.args[0]
 
         return metadata_obj
@@ -275,7 +270,7 @@ class FairTestEvaluation(BaseModel):
         g = ConjunctiveGraph()
         try:
             g.parse(data=rdf_data, format=mime_type)
-            self.info(f'{str(len(g))} triples parsed. Metadata from {mime_type} {log_msg} parsed with RDFLib parser {mime_type}')
+            self.info(f'Successfully parsed {mime_type} RDF from {log_msg}, containing {str(len(g))} triples')
         except Exception as e:
             self.warn('Could not parse ' + mime_type + ' metadata from ' + log_msg + ' with RDFLib parser ' + mime_type + ' ' + str(e))
 
@@ -308,17 +303,16 @@ class FairTestEvaluation(BaseModel):
             elif str(pred).startswith('https://'):
                 check_preds.add(URIRef(str(pred).replace('https://', 'http://')))
 
-        self.info(f"Checking properties values for properties: {preds}")
-        if subj:
-            self.info(f"Checking properties values for subject URI(s): {str(subj)}")
-
+        # self.info(f"Checking properties values for properties: {preds}")
+        # if subj:
+        #     self.info(f"Checking properties values for subject URI(s): {str(subj)}")
         for pred in list(check_preds):
             if not isinstance(subj, list):
                 subj = [subj]
                 # test_subjs = [URIRef(str(s)) for s in subj] 
             for test_subj in subj:
                 for s, p, o in g.triples((test_subj, URIRef(str(pred)), None)):
-                    self.info(f"Found a value for property {str(pred)} => {str(o)}")
+                    self.info(f"Found a value for a property {str(pred)} => {str(o)}")
                     values.add(o)
 
         return list(values)
@@ -358,7 +352,7 @@ class FairTestEvaluation(BaseModel):
             uri_ref = URIRef(str(alt_uri))
             # Search with the subject URI as triple subject
             for s, p, o in g.triples((uri_ref, None, None)):
-                self.info(f"Found subject identifier in metadata: {str(s)}")
+                self.info(f"Found the subject URI in the metadata: {str(s)}")
                 resource_properties[str(p)] = str(o)
                 subject_uri = uri_ref
 
@@ -366,14 +360,14 @@ class FairTestEvaluation(BaseModel):
                 # Search with the subject URI as triple object
                 for pred in all_preds_uris:
                     for s, p, o in g.triples((None, pred, uri_ref)):
-                        self.info(f"Found subject identifier in metadata: {str(s)}")
+                        self.info(f"Found the subject URI in the metadata: {str(s)}")
                         resource_linked_to[str(s)] = str(p)
                         subject_uri = s
 
                     if not subject_uri:
-                        # Also check when URI defined as Literal
+                        # Also check when the subject URI defined as Literal
                         for s, p, o in g.triples((None, pred, Literal(str(uri_ref)))):
-                            self.info(f"Found subject identifier in metadata: {str(s)}")
+                            self.info(f"Found the subject URI in the metadata: {str(s)}")
                             resource_linked_to[str(s)] = str(p)
                             subject_uri = s
 
@@ -428,6 +422,7 @@ class FairTestEvaluation(BaseModel):
             "https://schema.org/contentUrl", 
             "http://www.w3.org/ns/dcat#downloadURL"
         ]
+        self.info(f"Checking if the data URI point to a download URL using one of the following predicates: {', '.join(content_props)}")
         extracted_urls = set()
         for data_uri in data_uris:
             if isinstance(data_uri, BNode):
