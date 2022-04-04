@@ -25,8 +25,8 @@ Resolve the licenses IRI"""
         # Issue with extracting license from some URIs, such as https://www.uniprot.org/uniprot/P51587
         # Getting a URI that is not really the license as output
         
-        # g = eval.retrieve_rdf(eval.subject)
-        g = eval.retrieve_rdf(eval.subject, use_harvester=True, harvester_url='http://wrong-url-for-testing')
+        # g = eval.retrieve_metadata(eval.subject)
+        g = eval.retrieve_metadata(eval.subject, use_harvester=True, harvester_url='http://wrong-url-for-testing')
         
         if len(g) == 0:
             eval.failure('No RDF found at the subject URL provided.')

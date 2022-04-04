@@ -17,7 +17,7 @@ Any form of ontologically-grounded linked data will pass this test."""
 
 
     def evaluate(self, eval: FairTestEvaluation):        
-        g = eval.retrieve_rdf(eval.subject)
+        g = eval.retrieve_metadata(eval.subject)
         if len(g) > 1:
             eval.info(f'Successfully found and parsed RDF metadata. It contains {str(len(g))} triples')
 
@@ -29,7 +29,7 @@ Any form of ontologically-grounded linked data will pass this test."""
 
         # Check if RDF data can be found at the data URI
         for value in data_res:
-            data_g = eval.retrieve_rdf(value)
+            data_g = eval.retrieve_metadata(value)
             if len(data_g) > 1:
                 eval.success(f'Successfully retrieved RDF for the data URI: {value}. It contains {str(len(g))} triples')
             else:

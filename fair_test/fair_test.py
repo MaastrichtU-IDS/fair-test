@@ -43,7 +43,7 @@ class FairTest(BaseModel):
 
         def evaluate(self, eval: FairTestEvaluation):
             eval.info(f'Checking something for {self.subject}')
-            g = eval.retrieve_rdf(self.subject, use_harvester=False)
+            g = eval.retrieve_metadata(self.subject, use_harvester=False)
             if len(g) > 0:
                 eval.success(f'{len(g)} triples found, test sucessful')
             else:

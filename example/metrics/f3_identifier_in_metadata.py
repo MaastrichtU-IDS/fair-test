@@ -23,7 +23,7 @@ If found, retrieve informations about this resource (title, description, date cr
 
     def evaluate(self, eval: FairTestEvaluation):
 
-        g = eval.retrieve_rdf(eval.subject)
+        g = eval.retrieve_metadata(eval.subject)
         if len(g) == 0:
             eval.failure('No RDF found at the subject URL provided.')
             return eval.response()

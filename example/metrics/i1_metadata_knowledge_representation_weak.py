@@ -22,7 +22,7 @@ This particular test takes a broad view of what defines a 'knowledge representat
 
     def evaluate(self, eval: FairTestEvaluation):        
         # https://github.com/vemonet/fuji/blob/master/fuji_server/helper/preprocessor.py#L190
-        g = eval.retrieve_rdf(eval.subject)
+        g = eval.retrieve_metadata(eval.subject)
         if len(g) > 1:
             eval.success('Successfully parsed the RDF metadata retrieved with content negotiation. It contains ' + str(len(g)) + ' triples')
         else:

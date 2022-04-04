@@ -36,7 +36,7 @@ class FairTestEvaluation(BaseModel):
 
         def evaluate(self, eval: FairTestEvaluation):
             eval.info(f'Checking something for {self.subject}')
-            g = eval.retrieve_rdf(self.subject, use_harvester=False)
+            g = eval.retrieve_metadata(self.subject, use_harvester=False)
             if len(g) > 0:
                 eval.success(f'{len(g)} triples found, test sucessful')
             else:
@@ -87,7 +87,7 @@ class FairTestEvaluation(BaseModel):
     # TODO: implement metadata extraction with more tools? 
     # e.g. Apache Tika for PDF/pptx? or ruby Kellog's Distiller? http://rdf.greggkellogg.net/distiller
     # c.f. https://github.com/FAIRMetrics/Metrics/blob/master/MetricsEvaluatorCode/Ruby/metrictests/fair_metrics_utilities.rb
-    def retrieve_rdf(self, 
+    def retrieve_metadata(self, 
         url: str, 
         use_harvester: Optional[bool] = False, 
         harvester_url: Optional[str] = 'https://fair-tests.137.120.31.101.nip.io/tests/harvester',
@@ -161,7 +161,7 @@ class FairTestEvaluation(BaseModel):
                 self.info(f'Found Signposting links: {str(signposting_links)}')
                 self.data['signposting'] = str(signposting_links)
                 # TODO: parse signposting links, get alternate and meta? https://signposting.org/FAIR
-                # return self.retrieve_rdf(str(signposting_links))
+                # return self.retrieve_metadata(str(signposting_links))
             else:
                 self.info('Could not find Signposting links')
         except Exception:

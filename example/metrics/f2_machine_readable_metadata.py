@@ -37,7 +37,7 @@ class MetricTest(FairTest):
     def evaluate(self, eval: FairTestEvaluation):
         eval.info('Checking if machine readable data (e.g. RDF, JSON-LD) can be retrieved using content-negotiation at ' + eval.subject)
         
-        g = eval.retrieve_rdf(eval.subject)
+        g = eval.retrieve_metadata(eval.subject)
         
         if len(g) > 0:
             eval.success(f'RDF metadata containing {len(g)} triples found at the subject URL provided.')

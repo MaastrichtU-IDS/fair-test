@@ -19,7 +19,7 @@ This particular test takes a broad view of what defines a 'knowledge representat
 
 
     def evaluate(self, eval: FairTestEvaluation):        
-        g = eval.retrieve_rdf(eval.subject)
+        g = eval.retrieve_metadata(eval.subject)
         if len(g) > 1:
             eval.info(f'Successfully found and parsed RDF metadata. It contains {str(len(g))} triples')
 
@@ -34,7 +34,7 @@ This particular test takes a broad view of what defines a 'knowledge representat
         # Check if structured data can be found at the data URI
         for value in data_res:
             eval.info(f'Found data URI: {value}. Try retrieving RDF')
-            data_g = eval.retrieve_rdf(value)
+            data_g = eval.retrieve_metadata(value)
             if len(data_g) > 1:
                 eval.info(f'Successfully retrieved RDF for the data URI: {value}. It contains {str(len(g))} triples')
                 eval.success(f'Successfully found and parsed RDF data for {value}')

@@ -33,7 +33,7 @@ Find information about authorization in metadata"""
             eval.failure(f'Could not resolve {eval.subject}. Getting: {e.args[0]}')
 
         eval.info('Authorization: checking for dct:accessRights in metadata')
-        g = eval.retrieve_rdf(eval.subject)
+        g = eval.retrieve_metadata(eval.subject)
         found_access_rights = False
         access_rights_preds = [DCTERMS.accessRights]
         for pred in access_rights_preds:
