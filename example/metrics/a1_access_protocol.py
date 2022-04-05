@@ -34,6 +34,13 @@ Find information about authorization in metadata"""
 
         eval.info('Authorization: checking for dct:accessRights in metadata')
         g = eval.retrieve_metadata(eval.subject)
+
+        if not isinstance(g, (list, dict)) and len(g) > 0:
+            eval.info(f'Successfully found and parsed RDF metadata available at {eval.subject}. It contains {str(len(g))} triples')
+        else:
+            eval.failure(f"No RDF metadata found at the subject URL {eval.subject}")
+            return eval.response()
+            
         found_access_rights = False
         access_rights_preds = [DCTERMS.accessRights]
         for pred in access_rights_preds:
