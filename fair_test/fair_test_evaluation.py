@@ -279,16 +279,24 @@ class FairTestEvaluation(BaseModel):
             elif mime_type.startswith('text/html'):
                 parse_formats = []
 
+        g = ConjunctiveGraph()
+        # Remove some auto-generated triples about the HTML content
+        remove_preds = ['http://www.w3.org/1999/xhtml/vocab#role']
         for rdf_format in parse_formats:
             try:
                 g = ConjunctiveGraph()
                 g.parse(data=rdf_data, format=rdf_format)
+
+                for rm_pred in remove_preds:
+                    g.remove((None, URIRef(rm_pred), None))
+
                 self.info(f'Successfully parsed {mime_type} RDF from {log_msg} with parser {rdf_format}, containing {str(len(g))} triples')
                 return g
             except Exception as e:
                 self.info(f'Could not parse {mime_type} metadata from {log_msg} with parser {rdf_format}. Getting error: {str(e)}')
         
         return g
+        # return None
 
 
     def extract_prop(self, 
