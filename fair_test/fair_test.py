@@ -129,7 +129,7 @@ class FairTest(BaseModel):
               "x-id": self.author,
             }
           },
-          "host": settings.HOST,
+          "host": settings.HOST_URL.replace('https://', '').replace('http://', ''),
           "basePath": "/tests/",
           "schemes": [
             "https"

@@ -4,7 +4,6 @@ from pydantic import BaseSettings
 # Settings of the API
 class Settings(BaseSettings):
     HOST_URL: str = "https://w3id.org/fair-enough/metrics"
-    HOST: str = HOST_URL.replace('https://', '').replace('http://', '')
     CONTACT_URL: str = 'https://github.com/MaastrichtU-IDS/fair-enough-metrics'
     CONTACT_NAME: str = 'Vincent Emonet'
     CONTACT_EMAIL: str = 'vincent.emonet@gmail.com'
