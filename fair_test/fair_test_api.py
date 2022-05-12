@@ -1,9 +1,10 @@
-from fastapi import FastAPI
-from fastapi.responses import RedirectResponse
-from fastapi.middleware.cors import CORSMiddleware
 import os
+
 import yaml
 from fair_test.config import settings
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
 
 
 class FairTestAPI(FastAPI):
@@ -212,10 +213,12 @@ class FairTestAPI(FastAPI):
 
         
         # test bad request
-        response = test_endpoint.post(f'/tests/a1-metadata-protocol', 
-            json={'subject': ''},
-            headers={'accept': 'application/json'})
-        assert response.status_code == 422
+        for metric_id in list(metrics_id_to_test):
+            response = test_endpoint.post(f'/tests/{metric_id}', 
+                json={'subject': ''},
+                headers={'accept': 'application/json'})
+            assert response.status_code == 422
+            break
 
         # test 404
         response = test_endpoint.get(f'/dont-exist', 

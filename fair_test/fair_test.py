@@ -73,11 +73,14 @@ class FairTest(BaseModel):
     contact_name: str = settings.CONTACT_NAME
     contact_email: str = settings.CONTACT_EMAIL
     organization: str = settings.ORG_NAME
-    metric_readme_url: str = f"{settings.HOST_URL}/tests/{metric_path}"
+    metric_readme_url: str = None
 
 
     def __init__(self) -> None:
         super().__init__()
+
+        if not self.metric_readme_url:
+          self.metric_readme_url= f"{settings.HOST_URL}/tests/{self.metric_path}"
 
 
     class Config:

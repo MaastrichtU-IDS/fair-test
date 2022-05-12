@@ -1,16 +1,18 @@
-from pydantic import BaseModel
-from fastapi.responses import JSONResponse
-from typing import Optional, List, Dict, Any
 # from fastapi import HTTPException
 # from fastapi.responses import JSONResponse, PlainTextResponse
 import datetime
 import json
-import requests
-from urllib.parse import urlparse, quote
-from rdflib import ConjunctiveGraph, URIRef, Literal, BNode, RDF
+from typing import Any, Dict, List, Optional
+from urllib.parse import quote, urlparse
+
 import extruct
+import requests
 from fair_test.config import settings
+from fastapi.responses import JSONResponse
+from pydantic import BaseModel
 from pyld import jsonld
+from rdflib import RDF, BNode, ConjunctiveGraph, Literal, URIRef
+
 # pyld is required to parse jsonld with rdflib
 
 
