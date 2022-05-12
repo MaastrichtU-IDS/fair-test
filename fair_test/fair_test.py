@@ -1,19 +1,21 @@
-from pydantic import BaseModel
-from fastapi import HTTPException
-from fastapi.responses import JSONResponse, PlainTextResponse
-from typing import Optional, List, Any
 import datetime
-import urllib.parse
-import json
-import requests
-from rdflib import ConjunctiveGraph, URIRef, RDF
-from rdflib.namespace import FOAF
 import html
-import yaml
+import json
+import urllib.parse
+from typing import Any, List, Optional
+
 import extruct
+import requests
+import yaml
 from fair_test import FairTestEvaluation
 from fair_test.config import settings
+from fastapi import HTTPException
+from fastapi.responses import JSONResponse, PlainTextResponse
+from pydantic import BaseModel
 from pyld import jsonld
+from rdflib import RDF, ConjunctiveGraph, URIRef
+from rdflib.namespace import FOAF
+
 # pyld is required to parse jsonld with rdflib
 
 
@@ -62,11 +64,17 @@ class FairTest(BaseModel):
     id: Optional[str] # URL of the test results
     title: str
     description: str
-    author: str = settings.CONTACT_ORCID
     default_subject: str = settings.DEFAULT_SUBJECT
     topics = []
     test_test = {}
-    
+
+    author: str = settings.CONTACT_ORCID
+    contact_url: str = settings.CONTACT_URL
+    contact_name: str = settings.CONTACT_NAME
+    contact_email: str = settings.CONTACT_EMAIL
+    organization: str = settings.ORG_NAME
+    metric_readme_url: str = f"{settings.HOST_URL}/tests/{metric_path}"
+
 
     def __init__(self) -> None:
         super().__init__()
@@ -108,16 +116,16 @@ class FairTest(BaseModel):
           "info": {
             "version": f"{str(self.metric_version)}",
             "title": self.title,
-            "x-tests_metric": f"{settings.HOST_URL}/tests/{self.metric_path}",
+            "x-tests_metric": self.metric_readme_url,
             "description": self.description,
             "x-applies_to_principle": self.applies_to_principle,
             "x-topics": self.topics,
             "contact": {
-              "x-organization": settings.ORG_NAME,
-              "url": settings.CONTACT_URL,
-              "name": settings.CONTACT_NAME,
+              "x-organization": self.organization,
+              "url": self.contact_url,
+              "name": self.contact_name,
               "x-role": "responsible developer",
-              "email": settings.CONTACT_EMAIL,
+              "email": self.contact_email,
               "x-id": self.author,
             }
           },
