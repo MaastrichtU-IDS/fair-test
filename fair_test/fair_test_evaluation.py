@@ -153,17 +153,25 @@ class FairTestEvaluation(BaseModel):
                     elif r.url.startswith('https://'):
                         self.data['alternative_uris'].append(redirect_url.replace('https://', 'http://'))
 
-            # TODO: handle signposting links headers, get alternate and meta? https://signposting.org/FAIR
-            if 'link' in r.headers.keys():
-                signposting_links = r.headers['link']
-                found_signposting = True
-            if 'Link' in r.headers.keys():
-                signposting_links = r.headers['Link']
-                found_signposting = True
-            if found_signposting:
-                self.info(f'Found Signposting links: {str(signposting_links)}')
-                self.data['signposting'] = str(signposting_links)
-                # return self.retrieve_metadata(str(signposting_link))
+            # Handle signposting links headers https://signposting.org/FAIR
+            if r.links:
+                # Follow signposting links, this could create a lot of recursions (to be checked)
+                self.info(f'Found Signposting links: {str(r.links)}')
+                self.data['signposting_links'] = r.links
+                check_rels = ['alternate', 'describedby', 'meta']
+                # Alternate is used by schema.org
+                for rel in check_rels:
+                    if rel in r.links.keys():
+                        rel_url = r.links[rel]['url']
+                        if not rel_url.startswith('http://') and not rel_url.startswith('https://'):
+                            # In some case the rel URL provided is relative to the requested URL
+                            if r.url.endswith('/') and rel_url.startswith('/'):
+                                rel_url = rel_url[1:]
+                            rel_url = r.url + rel_url
+                        metadata_obj = self.retrieve_metadata(rel_url)
+                        if len(metadata_obj) > 0:
+                            return metadata_obj
+
         except Exception as e:
             self.warn(f"Error resolving the URL {url} : {str(e.args[0])}")
 
@@ -206,17 +214,17 @@ class FairTestEvaluation(BaseModel):
                 r = requests.get(url, headers={'accept': mime_type})
                 r.raise_for_status()  # Raises a HTTPError if the status is 4xx, 5xxx
                 content_type = r.headers['Content-Type'].replace(' ', '').replace(';charset=utf-8', '')
-                # If return text/plain we parse as turtle
-                content_type = content_type.replace('text/plain', 'text/turtle')
+                # If return text/plain we parse as turtle or JSON-LD
+                # content_type = content_type.replace('text/plain', 'text/turtle')
                 self.info(f'Content-negotiation: found some metadata in {content_type} when asking for {mime_type}')
                 try:
-                    # If return JSON-LD
+                    # If returns JSON
                     self.data['json-ld'] = r.json()
                     if not metadata_obj:
                         metadata_obj = r.json()
-                    return self.parse_rdf(r.json(), content_type, log_msg='content negotiation JSON-LD RDF')
+                    return self.parse_rdf(r.json(), 'json-ld', log_msg='content negotiation JSON-LD RDF')
                 except Exception:
-                    # If returns RDF, such as turtle
+                    # If returns RDF as text, such as turtle
                     return self.parse_rdf(r.text, content_type, log_msg='content negotiation RDF')
             except Exception as e:
                 self.info(f'Content-negotiation: error with {url} when asking for {mime_type}. Getting {str(e.args[0])}')
@@ -278,8 +286,8 @@ class FairTestEvaluation(BaseModel):
                 parse_formats = ['nquads']
             elif 'trig' in mime_type:
                 parse_formats = ['trig']
-            elif mime_type.startswith('text/html'):
-                parse_formats = []
+            # elif mime_type.startswith('text/html'):
+            #     parse_formats = []
 
         g = ConjunctiveGraph()
         # Remove some auto-generated triples about the HTML content

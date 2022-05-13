@@ -1,7 +1,8 @@
-from fair_test import FairTest, FairTestEvaluation
 import json
+
 import requests
 import yaml
+from fair_test import FairTest, FairTestEvaluation
 
 
 class MetricTest(FairTest):

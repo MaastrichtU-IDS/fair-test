@@ -1,22 +1,11 @@
-import datetime
-import html
-import json
-import urllib.parse
 from typing import Any, List, Optional
 
-import extruct
-import requests
 import yaml
 from fair_test import FairTestEvaluation
 from fair_test.config import settings
 from fastapi import HTTPException
 from fastapi.responses import JSONResponse, PlainTextResponse
 from pydantic import BaseModel
-from pyld import jsonld
-from rdflib import RDF, ConjunctiveGraph, URIRef
-from rdflib.namespace import FOAF
-
-# pyld is required to parse jsonld with rdflib
 
 
 class MetricInput(BaseModel):
@@ -126,6 +115,7 @@ class FairTest(BaseModel):
             "contact": {
               "x-organization": self.organization,
               "url": self.contact_url,
+              # "name": self.contact_name.encode('latin1').decode('iso-8859-1'),
               "name": self.contact_name,
               "x-role": "responsible developer",
               "email": self.contact_email,
@@ -178,6 +168,6 @@ class FairTest(BaseModel):
             }
           }
         }
-        api_yaml = yaml.dump(metric_info, indent=2)
+        api_yaml = yaml.dump(metric_info, indent=2, allow_unicode=True)
         return PlainTextResponse(content=api_yaml, media_type='text/x-yaml')
 

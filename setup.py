@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 setup(
-    version='0.0.6',
+    version='0.0.7',
     name='fair-test',
     license='MIT',
     license_files = ('LICENSE'),

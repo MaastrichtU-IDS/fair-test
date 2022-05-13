@@ -1,6 +1,4 @@
-[![Version](https://img.shields.io/pypi/v/fair-test)](https://pypi.org/project/fair-test) [![Python versions](https://img.shields.io/pypi/pyversions/fair-test)](https://pypi.org/project/fair-test) [![MIT license](https://img.shields.io/badge/license-MIT-success)](https://github.com/MaastrichtU-IDS/fair-test/blob/main/LICENSE)
-
-<!-- [![MIT license](https://img.shields.io/pypi/l/fair-test)](https://github.com/MaastrichtU-IDS/fair-test/blob/main/LICENSE) -->
+[![Version](https://img.shields.io/pypi/v/fair-test)](https://pypi.org/project/fair-test) [![Python versions](https://img.shields.io/pypi/pyversions/fair-test)](https://pypi.org/project/fair-test) [![MIT license](https://img.shields.io/pypi/l/fair-test)](https://github.com/MaastrichtU-IDS/fair-test/blob/main/LICENSE)
 
 `fair-test` is a Python library to build and deploy [FAIR](https://www.go-fair.org/fair-principles/){:target="_blank"} metrics tests APIs, supporting the specifications used by the [FAIRMetrics working group](https://github.com/FAIRMetrics/Metrics){:target="_blank"}, that can be queried to assess if a resource is complying with the [FAIR principles](https://www.go-fair.org/fair-principles/){:target="_blank"} (Findable, Accessible, Interoperable, Reusable).
 

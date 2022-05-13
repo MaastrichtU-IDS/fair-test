@@ -1,7 +1,8 @@
-from fair_test import FairTest, FairTestEvaluation
-from rdflib.namespace import RDFS, XSD, DC, DCTERMS, VOID, OWL, SKOS
-import requests
 from urllib.parse import urlparse
+
+import requests
+from fair_test import FairTest, FairTestEvaluation
+from rdflib.namespace import DC, DCTERMS, OWL, RDFS, SKOS, VOID, XSD
 
 
 class MetricTest(FairTest):

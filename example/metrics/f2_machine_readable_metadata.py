@@ -1,5 +1,5 @@
-from fair_test import FairTest, FairTestEvaluation
 import requests
+from fair_test import FairTest, FairTestEvaluation
 
 
 class MetricTest(FairTest):
@@ -40,7 +40,7 @@ class MetricTest(FairTest):
         
         g = eval.retrieve_metadata(eval.subject)
         
-        if len(g) > 0:
+        if len(g) > 1:
             eval.success(f'RDF metadata containing {len(g)} triples found at the subject URL provided.')
         else:
             eval.failure('No RDF found at the subject URL provided.')

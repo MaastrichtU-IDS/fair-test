@@ -28,7 +28,7 @@ app = FairTestAPI(
 )
 ```
 
-Create a `.env` file to provide informations used for the API, such as contact details and the host URL (note that you don't need to change it for localhost in development), e.g.:
+Create a `.env` file to provide the global informations used for the API, such as contact details and the host URL (note that you don't need to change it for localhost in development), e.g.:
 
 ```bash title=".env"
 HOST_URL="https://metrics.api.fair-enough.semanticscience.org"
@@ -81,13 +81,22 @@ class MetricTest(FairTest):
     applies_to_principle = 'A1'
     title = 'Check something'
     description = """Test something"""
+    # Optional, infos about contacts will be defined by the .env file if not provided here
     author = 'https://orcid.org/0000-0000-0000-0000'
+    contact_url="https://github.com/LUMC-BioSemantics/RD-FAIRmetrics"
+    contact_name="Your Name"
+    contact_email="your.email@email.com"
+    organization="The Organization for which this test is published"
+    # Optional, if your metric test has a detailed readme:
+    metric_readme_url="https://w3id.org/rd-fairmetrics/RD-F4"
+    
     metric_version = '0.1.0'
     test_test={
-        'http://doi.org/10.1594/PANGAEA.908011': 1,
-        'https://github.com/MaastrichtU-IDS/fair-test': 0,
+        'https://w3id.org/fair-enough/collections': 1,
+        'http://example.com': 0,
     }
 
+    
     def evaluate(self, eval: FairTestEvaluation):
         eval.info(f'Checking something for {self.subject}')
         g = eval.retrieve_metadata(self.subject, use_harvester=False)

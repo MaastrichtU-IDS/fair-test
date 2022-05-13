@@ -1,6 +1,6 @@
-from fair_test import FairTest, FairTestEvaluation
-from rdflib.namespace import RDFS, XSD, DC, DCTERMS, VOID, OWL, SKOS
 import requests
+from fair_test import FairTest, FairTestEvaluation
+from rdflib.namespace import DC, DCTERMS, OWL, RDFS, SKOS, VOID, XSD
 
 
 class MetricTest(FairTest):
@@ -35,7 +35,7 @@ Find information about authorization in metadata"""
         eval.info('Authorization: checking for dct:accessRights in metadata')
         g = eval.retrieve_metadata(eval.subject)
 
-        if not isinstance(g, (list, dict)) and len(g) > 0:
+        if not isinstance(g, (list, dict)) and len(g) > 1:
             eval.info(f'Successfully found and parsed RDF metadata available at {eval.subject}. It contains {str(len(g))} triples')
         else:
             eval.failure(f"No RDF metadata found at the subject URL {eval.subject}")

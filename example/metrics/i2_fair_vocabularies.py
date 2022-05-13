@@ -1,7 +1,8 @@
-from fair_test import FairTest, FairTestEvaluation
-import requests
-import re
 import io
+import re
+
+import requests
+from fair_test import FairTest, FairTestEvaluation
 
 
 class MetricTest(FairTest):
