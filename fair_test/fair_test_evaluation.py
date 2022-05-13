@@ -176,6 +176,7 @@ class FairTestEvaluation(BaseModel):
             self.warn(f"Error resolving the URL {url} : {str(e.args[0])}")
 
         self.info('Checking for metadata embedded in the HTML page returned by the resource URI ' + url + ' using extruct')
+        # TODO: support client-side JS generated HTML using Selenium https://github.com/vemonet/extruct-selenium
         try:
             extructed = extruct.extract(html_text.encode('utf8'))
             if url == self.subject:
