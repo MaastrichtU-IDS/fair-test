@@ -1,6 +1,6 @@
-from fastapi.testclient import TestClient
-from fair_test import FairTestAPI
 import yaml
+from fair_test import FairTestAPI
+from fastapi.testclient import TestClient
 
 # Test the API using a list of subjects and expected score
 # TODO: remove? Now using embedded test_test attribute
@@ -13,7 +13,7 @@ eval_list = [
     ## a1-access-protocol
     {
         'metric_id': 'a1-access-protocol',
-        'subject': 'https://raw.githubusercontent.com/ejp-rd-vp/resource-metadata-schema/master/data/example-rdf/turtle/patientRegistry.ttl',
+        'subject': 'https://doi.org/10.1594/PANGAEA.908011',
         'score': 1,
     },
     ## FAIR Data Point failing occasionally
@@ -22,14 +22,14 @@ eval_list = [
     #     'subject': 'https://w3id.org/ejp-rd/fairdatapoints/wp13/dataset/c5414323-eab1-483f-a883-77951f246972',
     #     'score': 1,
     # },
-    ## f1-unique-persistent-id
+    ## a1-metadata-protocol
     {
-        'metric_id': 'f1-unique-persistent-id',
-        'subject': 'https://raw.githubusercontent.com/ejp-rd-vp/resource-metadata-schema/master/data/example-rdf/turtle/patientRegistry.ttl',
+        'metric_id': 'a1-metadata-protocol',
+        'subject': 'Wrong entry',
         'score': 0,
     },
     # {
-    #     'metric_id': 'f1-unique-persistent-id',
+    #     'metric_id': 'a1-metadata-protocol',
     #     'subject': 'https://w3id.org/ejp-rd/fairdatapoints/wp13/dataset/c5414323-eab1-483f-a883-77951f246972',
     #     'score': 1,
     # },

@@ -6,3 +6,4 @@ PyYAML
 rdflib>=6.1.1
 extruct
 PyLD
+idutils

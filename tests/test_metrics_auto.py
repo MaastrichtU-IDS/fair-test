@@ -1,5 +1,5 @@
-from fastapi.testclient import TestClient
 from fair_test import FairTestAPI
+from fastapi.testclient import TestClient
 
 # Test the API using the URL and expected score 
 # defined with the test_test attribute for each metrics test
@@ -9,5 +9,5 @@ app = FairTestAPI(metrics_folder_path='example/metrics')
 endpoint = TestClient(app)
 
 
-def test_api():
-    app.run_tests(endpoint)
+def test_api(pytestconfig):
+    app.run_tests(endpoint, pytestconfig.getoption('metric'))

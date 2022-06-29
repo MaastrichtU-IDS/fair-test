@@ -1,11 +1,10 @@
-# from fastapi import HTTPException
-# from fastapi.responses import JSONResponse, PlainTextResponse
 import datetime
 import json
 from typing import Any, Dict, List, Optional
 from urllib.parse import quote, urlparse
 
 import extruct
+import idutils
 import requests
 from fair_test.config import settings
 from fastapi.responses import JSONResponse
@@ -14,6 +13,8 @@ from pyld import jsonld
 from rdflib import RDF, BNode, ConjunctiveGraph, Literal, URIRef
 
 # pyld is required to parse jsonld with rdflib
+# from fastapi import HTTPException
+# from fastapi.responses import JSONResponse, PlainTextResponse
 
 
 class FairTestEvaluation(BaseModel):
@@ -47,6 +48,7 @@ class FairTestEvaluation(BaseModel):
     ```
     """
     subject: Optional[str]
+    subject_url: Optional[str]
     score: int = 0
     score_bonus: int = 0
     comment: List = []
@@ -63,29 +65,53 @@ class FairTestEvaluation(BaseModel):
         super().__init__()
         self.subject = subject
         self.id = f"{settings.HOST_URL}/metrics/{metric_path}#{quote(str(self.subject))}/result-{self.date}"
+        self.subject_url = self.get_url(subject)
 
-        alt_uris = set()
-        alt_uris.add(self.subject)
-        # Add HTTPS/HTTPS counterpart as alternative URIs
-        if self.subject.startswith('http://'):
-            alt_uris.add(self.subject.replace('http://', 'https://'))
-        elif self.subject.startswith('https://'):
-            alt_uris.add(self.subject.replace('https://', 'http://'))
-        
-        # Fix to add an alternative URI for doi.org that is commonly used as identifier in the metadata
-        parsed_url = urlparse(self.subject)
-        if parsed_url.netloc and parsed_url.netloc == 'doi.org':
-            alt_uris.add('http://dx.doi.org/' + parsed_url.path[1:])
+        # Add potential alternative URIs for the subject
+        if self.subject_url:
+            alt_uris = set()
+            alt_uris.add(self.subject_url)
+            # Add HTTPS/HTTPS counterpart as alternative URIs
+            if self.subject_url.startswith('http://'):
+                alt_uris.add(self.subject_url.replace('http://', 'https://'))
+            elif self.subject.startswith('https://'):
+                alt_uris.add(self.subject_url.replace('https://', 'http://'))
+            
+            # Fix to add an alternative URI for doi.org that is commonly used as identifier in the metadata
+            parsed_url = urlparse(self.subject_url)
+            if parsed_url.netloc and parsed_url.netloc == 'doi.org':
+                alt_uris.add('http://dx.doi.org/' + parsed_url.path[1:])
 
-        self.data['alternative_uris'] = list(alt_uris)
+            self.data['alternative_uris'] = list(alt_uris)
 
 
     class Config:
         arbitrary_types_allowed = True
 
 
-    # TODO: Use signposting to find links to download metadata from (rel=alternate)
-    # https://datatracker.ietf.org/doc/html/draft-nottingham-http-link-header-10#section-6.2.2
+    def get_url(self, id: str) -> str:
+        """Return the full URL for a given identifiers (e.g. URL, DOI, handle)"""
+        if idutils.is_url(id):
+            self.info(f'Validated the resource {id} is a URL')
+            return id
+        
+        if idutils.is_doi(id):
+            self.info(f'Validated the resource {id} is a DOI')
+            return idutils.to_url(id, 'doi', 'https')
+
+        if idutils.is_handle(id):
+            self.info(f'Validated the resource {id} is a handle')
+            return idutils.to_url(id, 'handle', 'https')
+
+        # TODO: add INCHI key?
+        # inchikey = regexp(/^\w{14}\-\w{10}\-\w$/)
+        # return f"https://pubchem.ncbi.nlm.nih.gov/rest/rdf/inchikey/{inchikey}"
+
+        self.warn(f'Could not validate the given resource URI {id} is a URL, DOI, or handle')
+        return None
+
+
+
     # TODO: implement metadata extraction with more tools? 
     # e.g. Apache Tika for PDF/pptx? or ruby Kellog's Distiller? http://rdf.greggkellogg.net/distiller
     # c.f. https://github.com/FAIRMetrics/Metrics/blob/master/MetricsEvaluatorCode/Ruby/metrictests/fair_metrics_utilities.rb
@@ -111,6 +137,12 @@ class FairTestEvaluation(BaseModel):
         Returns:
             g (Graph): A RDFLib Graph with the RDF found at the given URL
         """
+        original_url = url
+        url = self.get_url(url)
+        if not url:
+            self.warn(f'The resource {original_url} could not be converted to a valid URL, hence no metadata could be retrieved')
+            return []
+
         if use_harvester == True:
             # Check the harvester response:
             # curl -X POST -d '{"subject": "https://doi.org/10.1594/PANGAEA.908011"}' https://fair-tests.137.120.31.101.nip.io/tests/harvester
