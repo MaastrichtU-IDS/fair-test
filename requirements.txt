@@ -4,6 +4,6 @@ python-dotenv
 requests
 PyYAML
 rdflib>=6.1.1
-extruct
 PyLD
+extruct
 idutils

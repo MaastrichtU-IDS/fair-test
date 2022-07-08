@@ -8,7 +8,9 @@ FAIR metrics tests are evaluations taking a subject URL as input, executing a ba
 
 ## ℹ️ How it works
 
-The user defines custom FAIR metrics tests in python in a specific folder (the `metrics` folder by default), and starts the API. They can then access the API to run the metrics tests on the subject URLs of their choice.
+You define FAIR metric tests using custom python objects in separate files in a specific folder. The objects will guide you to provide all required metadata for your test as attributes, and implement the test evaluation logic as a function. The library also provides additional helper functions for common tasks, such as retrieving metadata from a URL, or testing a metric test.
+
+These tests can then be deployed as a web API, and registered in central FAIR evaluation service supporting the FAIR metrics working group framework, such as [FAIR enough](https://fair-enough.semanticscience.org) or the [FAIR evaluator](https://fairsharing.github.io/FAIR-Evaluator-FrontEnd/). Finally, users of the evaluation services will be able to group the registered metrics tests in collections used to assess the quality of publicly available digital objects.
 
 !!! help "Report issues"
 

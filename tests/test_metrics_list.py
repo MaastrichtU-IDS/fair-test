@@ -16,23 +16,12 @@ eval_list = [
         'subject': 'https://doi.org/10.1594/PANGAEA.908011',
         'score': 1,
     },
-    ## FAIR Data Point failing occasionally
-    # {
-    #     'metric_id': 'a1-access-protocol',
-    #     'subject': 'https://w3id.org/ejp-rd/fairdatapoints/wp13/dataset/c5414323-eab1-483f-a883-77951f246972',
-    #     'score': 1,
-    # },
     ## a1-metadata-protocol
     {
         'metric_id': 'a1-metadata-protocol',
         'subject': 'Wrong entry',
         'score': 0,
     },
-    # {
-    #     'metric_id': 'a1-metadata-protocol',
-    #     'subject': 'https://w3id.org/ejp-rd/fairdatapoints/wp13/dataset/c5414323-eab1-483f-a883-77951f246972',
-    #     'score': 1,
-    # },
     ## f2-machine-readable-metadata
     # {
     #     'metric_id': 'f2-machine-readable-metadata',
