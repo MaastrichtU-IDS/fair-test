@@ -1,0 +1,76 @@
+name: Publish to PyPI
+# Publish to PyPI when new release on GitHub, if tests pass
+on:
+  workflow_dispatch:
+  release:
+    types: [created]
+    # types: [published]
+
+jobs:
+
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.7, 3.8, 3.9, '3.10']
+
+    steps:
+
+      - uses: actions/checkout@v3
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - uses: actions/cache@v3
+        id: cache
+        with:
+          path: ${{ env.pythonLocation }}
+          key: ${{ runner.os }}-python-${{ env.pythonLocation }}-${{ hashFiles('pyproject.toml') }}-test-v02
+
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: pip install -e ".[dev,doc,test]"
+
+      # - name: Lint
+      #   run: bash scripts/lint.sh
+
+      - name: Test
+        run: bash scripts/test.sh
+
+
+  publish:
+    needs: [ tests ]
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.7"
+
+    - uses: actions/cache@v3
+      id: cache
+      with:
+        path: ${{ env.pythonLocation }}
+        key: ${{ runner.os }}-python-${{ env.pythonLocation }}-${{ hashFiles('pyproject.toml') }}-publish
+
+    - name: Install build dependencies
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: pip install build
+
+    - name: Build distribution
+      run: python -m build
+
+    - name: Publish
+      uses: pypa/gh-action-pypi-publish@v1.5.1
+      with:
+        password: ${{ secrets.PYPI_TOKEN }}
+
+    # - name: Dump GitHub context
+    #   env:
+    #     GITHUB_CONTEXT: ${{ toJson(github) }}
+    #   run: echo "$GITHUB_CONTEXT"

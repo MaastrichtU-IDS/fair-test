@@ -1,11 +1,12 @@
-from typing import Any, List, Optional
+from typing import Optional
 
 import yaml
-from fair_test import FairTestEvaluation
-from fair_test.config import settings
 from fastapi import HTTPException
 from fastapi.responses import JSONResponse, PlainTextResponse
 from pydantic import BaseModel
+
+from fair_test import FairTestEvaluation
+from fair_test.config import settings
 
 
 class MetricInput(BaseModel):
@@ -14,7 +15,7 @@ class MetricInput(BaseModel):
 
 class FairTest(BaseModel):
     """
-    Class to define a FAIR metrics test, 
+    Class to define a FAIR metrics test,
     API calls will be automatically generated for this test when the FairTestAPI is started.
 
     ```python title="metrics/a1_check_something.py"
@@ -42,15 +43,16 @@ class FairTest(BaseModel):
             return eval.response()
     ```
     """
+
     # subject: Optional[str]
     # comment: List = []
     # score: int = 0
     # score_bonus: int = 0
     # date: str = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S+01:00")
-    metric_version: str  = '0.1.0'
+    metric_version: str = "0.1.0"
     metric_path: str
     applies_to_principle: str
-    id: Optional[str] # URL of the test results
+    id: Optional[str]  # URL of the test results
     title: str
     description: str
     default_subject: str = settings.DEFAULT_SUBJECT
@@ -64,26 +66,23 @@ class FairTest(BaseModel):
     organization: str = settings.ORG_NAME
     metric_readme_url: str = None
 
-
     def __init__(self) -> None:
         super().__init__()
 
         if not self.metric_readme_url:
-          self.metric_readme_url= f"{settings.HOST_URL}/tests/{self.metric_path}"
-
+            self.metric_readme_url = f"{settings.HOST_URL}/tests/{self.metric_path}"
 
     class Config:
         arbitrary_types_allowed = True
 
-
     def do_evaluate(self, input: MetricInput):
-        if input.subject == '':
+        if input.subject == "":
             raise HTTPException(status_code=422, detail=f"Provide a subject URL to evaluate")
-        
+
         # TODO: create separate object for each FAIR test evaluation to avoid any conflict? e.g. FairTestEvaluation
         eval = FairTestEvaluation(input.subject, self.metric_path)
         # self.subject = input.subject
-        
+
         return self.evaluate(eval)
         # try:
         #     return self.evaluate(eval)
@@ -92,82 +91,63 @@ class FairTest(BaseModel):
         #         'errorMessage': f'Error while running the evaluation against {input.subject}'
         #     })
 
-
     # Placeholder that will be overwritten for each Metric Test
     def evaluate(self, eval: FairTestEvaluation):
-        return JSONResponse({
-            'errorMessage': 'Not implemented'
-        })
-
+        return JSONResponse({"errorMessage": "Not implemented"})
 
     # https://github.com/LUMC-BioSemantics/RD-FAIRmetrics/blob/main/docs/yaml/RD-R1.yml
     # Function used for the GET YAML call for infos about each Metric Test
     def openapi_yaml(self):
         metric_info = {
-          "swagger": "2.0",
-          "info": {
-            "version": f"{str(self.metric_version)}",
-            "title": self.title,
-            "x-tests_metric": self.metric_readme_url,
-            "description": self.description,
-            "x-applies_to_principle": self.applies_to_principle,
-            "x-topics": self.topics,
-            "contact": {
-              "x-organization": self.organization,
-              "url": self.contact_url,
-              # "name": self.contact_name.encode('latin1').decode('iso-8859-1'),
-              "name": self.contact_name,
-              "x-role": "responsible developer",
-              "email": self.contact_email,
-              "x-id": self.author,
-            }
-          },
-          "host": settings.HOST_URL.replace('https://', '').replace('http://', ''),
-          "basePath": "/tests/",
-          "schemes": [
-            "https"
-          ],
-          "paths": {
-            self.metric_path: {
-              "post": {
-                "parameters": [
-                  {
-                    "name": "content",
-                    "in": "body",
-                    "required": True,
-                    "schema": {
-                      "$ref": "#/definitions/schemas"
+            "swagger": "2.0",
+            "info": {
+                "version": f"{str(self.metric_version)}",
+                "title": self.title,
+                "x-tests_metric": self.metric_readme_url,
+                "description": self.description,
+                "x-applies_to_principle": self.applies_to_principle,
+                "x-topics": self.topics,
+                "contact": {
+                    "x-organization": self.organization,
+                    "url": self.contact_url,
+                    # "name": self.contact_name.encode('latin1').decode('iso-8859-1'),
+                    "name": self.contact_name,
+                    "x-role": "responsible developer",
+                    "email": self.contact_email,
+                    "x-id": self.author,
+                },
+            },
+            "host": settings.HOST_URL.replace("https://", "").replace("http://", ""),
+            "basePath": "/tests/",
+            "schemes": ["https"],
+            "paths": {
+                self.metric_path: {
+                    "post": {
+                        "parameters": [
+                            {
+                                "name": "content",
+                                "in": "body",
+                                "required": True,
+                                "schema": {"$ref": "#/definitions/schemas"},
+                            }
+                        ],
+                        "consumes": ["application/json"],
+                        "produces": ["application/json"],
+                        "responses": {"200": {"description": "The response is a binary (1/0), success or failure"}},
                     }
-                  }
-                ],
-                "consumes": [
-                  "application/json"
-                ],
-                "produces": [
-                  "application/json"
-                ],
-                "responses": {
-                  "200": {
-                    "description": "The response is a binary (1/0), success or failure"
-                  }
                 }
-              }
-            }
-          },
-          "definitions": {
-            "schemas": {
-              "required": [
-                "subject"
-              ],
-              "properties": {
-                "subject": {
-                  "type": "string",
-                  "description": "the GUID being tested"
+            },
+            "definitions": {
+                "schemas": {
+                    "required": ["subject"],
+                    "properties": {
+                        "subject": {
+                            "type": "string",
+                            "description": "the GUID being tested",
+                        }
+                    },
                 }
-              }
-            }
-          }
+            },
         }
         api_yaml = yaml.dump(metric_info, indent=2, allow_unicode=True)
-        return PlainTextResponse(content=api_yaml, media_type='text/x-yaml')
-
+        return PlainTextResponse(content=api_yaml, media_type="text/x-yaml")

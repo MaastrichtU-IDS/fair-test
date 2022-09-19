@@ -4,3 +4,7 @@ __pycache__
 .pytest_cache
 .venv
 build/
+.coverage
+coverage.xml
+
+.DStore

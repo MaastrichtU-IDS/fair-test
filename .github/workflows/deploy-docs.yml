@@ -8,7 +8,7 @@ on:
       - 'fair_test/**'
       - 'docs/**'
       - 'mkdocs.yml'
-      - '.github/workflows/publish-docs.yml'
+      - '.github/workflows/deploy-docs.yml'
 
 jobs:
   build:

@@ -1,103 +1,169 @@
 [![Version](https://img.shields.io/pypi/v/fair-test)](https://pypi.org/project/fair-test) [![Python versions](https://img.shields.io/pypi/pyversions/fair-test)](https://pypi.org/project/fair-test) [![Pull requests welcome](https://img.shields.io/badge/pull%20requests-welcome-brightgreen)](https://github.com/MaastrichtU-IDS/fair-test/fork)
 
-[![Run tests](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/run-tests.yml/badge.svg)](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/run-tests.yml) [![CodeQL](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/codeql-analysis.yml) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=MaastrichtU-IDS_fair-test&metric=coverage)](https://sonarcloud.io/dashboard?id=MaastrichtU-IDS_fair-test)
+[![Run tests](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/test.yml/badge.svg)](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/test.yml) [![CodeQL](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/codeql-analysis.yml) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=MaastrichtU-IDS_fair-test&metric=coverage)](https://sonarcloud.io/dashboard?id=MaastrichtU-IDS_fair-test)
 
-[![Publish to PyPI](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/publish-package.yml/badge.svg)](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/publish-package.yml) [![Publish docs](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/publish-docs.yml/badge.svg)](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/publish-docs.yml)
+[![Publish to PyPI](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/publish.yml/badge.svg)](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/publish.yml) [![Publish docs](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/deploy-docs.yml/badge.svg)](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/deploy-docs.yml)
 
 ### 📥 Install for development
 
-Clone the repository and install the dependencies locally for development:
+Clone the repository and go in the project folder:
 
 ```bash
 git clone https://github.com/MaastrichtU-IDS/fair-test
 cd fair-test
-pip install -e .
 ```
 
-??? bug "If you are facing issues, use a virtual environment to avoid conflicts"
+Create the virtual environment in the project folder :
 
-    Create the virtual environment folder in your workspace:
-    
-    ```bash
-    python3 -m venv .venv
-    ```
-    
-    Activate the virtual environment:
-    
-    ```bash
-    source .venv/bin/activate
-    ```
+```bash
+python3 -m venv .venv
+```
 
+Activate the virtual environment:
+
+```bash
+source .venv/bin/activate
+```
+
+Install all dependencies required for development:
+
+```bash
+pip install -e ".[dev,doc,test]"
+```
+
+You can also enable automated formatting of the code at each commit:
+
+```bash
+pre-commit install
+```
+
+## Development workflow
+
+Deploy the FAIR test API defined in the `example` folder to test your changes:
+
+```bash
+./scripts/dev.sh
+```
+
+Format the code automatically:
+
+```bash
+./scripts/format.sh
+```
+
+Automatically check the code for errors:
+
+```bash
+./scripts/lint.sh
+```
 
 ### ✅ Run the tests
 
-[![Run tests](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/run-tests.yml/badge.svg)](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/run-tests.yml) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=MaastrichtU-IDS_fair-test&metric=coverage)](https://sonarcloud.io/dashboard?id=MaastrichtU-IDS_fair-test)
+[![Run tests](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/test.yml/badge.svg)](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/test.yml) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=MaastrichtU-IDS_fair-test&metric=coverage)](https://sonarcloud.io/dashboard?id=MaastrichtU-IDS_fair-test)
 
-Tests are automatically run by a GitHub Actions workflow when new code is pushed to the GitHub repository. The subject URLs to test and their expected score are retrieved from the `test_test` attribute for each metric test.
-
-??? success "Install `pytest` for testing"
-
-    ```bash
-    pip install pytest
-    ```
+Tests are automatically run by a GitHub Actions workflow when new code is pushed to the GitHub repository. The subject URLs to test and their expected score are retrieved from the `test_test` attribute for each metric test.??? success "Install pytest for testing"
 
 ??? note "If not already done, define the 2 files required to run the tests"
 
     It will test all cases defined in your FAIR metrics tests `test_test` attributes:
-    
+
     ```python title="tests/conftest.py"
     def pytest_addoption(parser):
         parser.addoption("--metric", action="store", default=None)
     ```
-    
+
     and:
-    
+
     ```python title="tests/test_metrics.py"
     import pytest
     from fastapi.testclient import TestClient
     from main import app
-    
+
     endpoint = TestClient(app)
-    
+
     def test_api(pytestconfig):
         app.run_tests(endpoint, pytestconfig.getoption('metric'))
     ```
 
-Run the tests locally (from the root folder):
+Run the tests, you can add the flag `-s` to show the output of all prints:
 
 ```bash
-pytest -s
+./scripts/test.sh -s
 ```
 
-Run the tests only for a specific metric test:
+You can also run the tests only for a specific metric test:
 
 ```bash
-pytest -s --metric a1-metadata-protocol
+./scripts/test.sh -s --metric a1-metadata-protocol
 ```
 
 ### 📖 Generate docs
 
-[![Publish docs](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/publish-docs.yml/badge.svg)](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/publish-docs.yml)
+[![Publish docs](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/deploy-docs.yml/badge.svg)](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/deploy-docs.yml)
 
 The documentation (this website) is automatically generated from the markdown files in the `docs` folder and python docstring comments, and published by a GitHub Actions workflow.
 
-??? abstract "Install the dependencies to generate and serve the documentation locally"
-
-    ```bash
-    pip install -r docs/requirements.txt
-    ```
-
-Start the docs on [http://localhost:8001](http://localhost:8001){:target="_blank"}
+Serve the docs on [http://localhost:8008](http://localhost:8008){:target="_blank"}
 
 ```bash
-mkdocs serve -a localhost:8001
+./scripts/docs-serve.sh
 ```
 
 ### 🏷️ Publish a new release
 
-[![Publish to PyPI](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/publish-package.yml/badge.svg)](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/publish-package.yml)
+[![Publish to PyPI](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/publish.yml/badge.svg)](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/publish.yml)
 
-1. Increment the version in `setup.py`
+1. Increment the `__version__` in `fair_test/__init__.py`
 2. Push to GitHub
 3. Create a new release on GitHub
 4. A GitHub Action workflow will automatically publish the new version to PyPI
+
+<!--
+
+### 🐣 Hatch development workflow
+
+Install [Hatch](https://hatch.pypa.io), this will automatically handle virtual environments and make sure all dependencies are installed when you run a script in the project:
+
+```bash
+pip install hatch
+```
+
+??? note "Optionally you can improve `hatch` terminal completion"
+
+    See the [official documentation](https://hatch.pypa.io/latest/cli/about/#tab-completion) for more details. For ZSH you can run these commands:
+
+    ```bash
+    _HATCH_COMPLETE=zsh_source hatch > ~/.hatch-complete.zsh
+    echo ". ~/.hatch-complete.zsh" >> ~/.zshrc
+    ```
+
+Try the library with the app defined in the `example` folder:
+
+```bash
+hatch run dev
+```
+
+Format the code automatically:
+
+```bash
+hatch run format
+```
+
+Automatically check the code for errors:
+
+```bash
+hatch run lint
+```
+
+Serve the docs:
+
+```bash
+hatch run docs
+```
+
+Run the tests:
+
+```bash
+hatch run test
+```
+-->
