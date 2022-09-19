@@ -142,20 +142,28 @@ features = [
   "doc",
   "dev",
 ]
-# post-install-commands = [
-#   "pre-commit install",
-# ]
+post-install-commands = [
+  "pre-commit install",
+]
 
 # hatch run dev
 [tool.hatch.envs.default.scripts]
 dev = "./scripts/dev.sh"
 format = "./scripts/format.sh"
 lint = "./scripts/lint.sh"
-mint = """black fair_test example tests
-isort fair_test example tests"""
+mint = """
+black fair_test example tests
+isort fair_test example tests
+"""
 docs = "./scripts/docs-serve.sh"
 test = "./scripts/test.sh"
 
+
+
+[tool.hatch.envs.test]
+features = [
+  "test",
+]
 
 [tool.hatch.envs.test.scripts]
 all = "./scripts/test.sh"
