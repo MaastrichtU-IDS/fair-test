@@ -31,14 +31,14 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - uses: actions/cache@v3
-      id: cache
-      with:
-        path: ${{ env.pythonLocation }}
-        key: ${{ runner.os }}-python-${{ env.pythonLocation }}-${{ hashFiles('pyproject.toml') }}-test-v02
+    # - uses: actions/cache@v3
+    #   id: cache
+    #   with:
+    #     path: ${{ env.pythonLocation }}
+    #     key: ${{ runner.os }}-python-${{ env.pythonLocation }}-${{ hashFiles('pyproject.toml') }}-test-v02
 
     - name: Install dependencies
-      if: steps.cache.outputs.cache-hit != 'true'
+      # if: steps.cache.outputs.cache-hit != 'true'
       run: pip install -e .[dev,doc,test]
 
     # - name: Lint
