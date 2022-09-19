@@ -20,7 +20,7 @@ repos:
     rev: v2.37.3
     hooks:
     -   id: pyupgrade
-        name: ⏫  Running pyupgrade
+        name: ⏫ Running pyupgrade
         args:
         - --py3-plus
         - --keep-runtime-typing
