@@ -55,16 +55,20 @@ class FairTest(BaseModel):
     id: Optional[str]  # URL of the test results
     title: str
     description: str
+    metric_readme_url: Optional[str]
+
     default_subject: str = settings.DEFAULT_SUBJECT
     topics = []
     test_test = {}
+    # topics: List[str] = []
+    # test_test: Dict[str, int] = {}
 
     author: str = settings.CONTACT_ORCID
     contact_url: str = settings.CONTACT_URL
     contact_name: str = settings.CONTACT_NAME
     contact_email: str = settings.CONTACT_EMAIL
     organization: str = settings.ORG_NAME
-    metric_readme_url: str = None
+    # metric_readme_url: str = None
 
     def __init__(self) -> None:
         super().__init__()
