@@ -151,10 +151,6 @@ post-install-commands = [
 dev = "./scripts/dev.sh"
 format = "./scripts/format.sh"
 lint = "./scripts/lint.sh"
-mint = """
-black fair_test example tests
-isort fair_test example tests
-"""
 docs = "./scripts/docs-serve.sh"
 test = "./scripts/test.sh"
 

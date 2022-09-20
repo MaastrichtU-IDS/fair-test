@@ -6,6 +6,7 @@ repo_name: MaastrichtU-IDS/fair-test
 repo_url: https://github.com/MaastrichtU-IDS/fair-test
 edit_uri: "edit/main/docs/"
 copyright: Copyright &copy; 2022 Vincent Emonet
+# docs_dir: "."
 
 theme:
   name: "material"
@@ -16,13 +17,13 @@ theme:
   language: en
   # https://squidfunk.github.io/mkdocs-material/setup/changing-the-colors/#primary-color
   palette:
-    - media: "(prefers-color-scheme: light)" 
+    - media: "(prefers-color-scheme: light)"
       scheme: default
       primary: teal
       toggle:
         icon: material/toggle-switch-off-outline
         name: Switch to dark mode
-    - media: "(prefers-color-scheme: dark)" 
+    - media: "(prefers-color-scheme: dark)"
       scheme: slate
       primary: teal
       toggle:
@@ -91,6 +92,8 @@ markdown_extensions:
   - pymdownx.snippets
   - pymdownx.superfences
   - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
   - attr_list
   - smarty
 
