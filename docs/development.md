@@ -13,7 +13,7 @@ git clone https://github.com/MaastrichtU-IDS/fair-test
 cd fair-test
 ```
 
-To install the project for development you can either use `venv` to create a virtual environment yourself, or use `hatch` to automatically handle virtual environments for you.
+To install the project for development you can either use [`venv`](https://docs.python.org/3/library/venv.html) to create a virtual environment yourself, or use [`hatch`](https://hatch.pypa.io) to automatically handle virtual environments for you.
 
 === "venv"
 
@@ -111,21 +111,21 @@ Tests are automatically run by a GitHub Actions workflow when new code is pushed
 ??? note "If not already done, define the 2 files required to run the tests"
 
     It will test all cases defined in your FAIR metrics tests `test_test` attributes:
-    
+
     ```python title="tests/conftest.py"
     def pytest_addoption(parser):
         parser.addoption("--metric", action="store", default=None)
     ```
-    
+
     and:
-    
+
     ```python title="tests/test_metrics.py"
     import pytest
     from fastapi.testclient import TestClient
     from main import app
-    
+
     endpoint = TestClient(app)
-    
+
     def test_api(pytestconfig):
         app.run_tests(endpoint, pytestconfig.getoption('metric'))
     ```
@@ -134,11 +134,11 @@ Tests are automatically run by a GitHub Actions workflow when new code is pushed
 === "venv"
 
 	Run the tests locally:
-	
+
     ```bash
     ./scripts/test.sh
     ```
-    
+
     You can also run the tests only for a specific metric test:
 
     ```bash
@@ -163,7 +163,7 @@ The documentation (this website) is automatically generated from the markdown fi
 Serve the docs on [http://localhost:8008](http://localhost:8008){:target="_blank"}
 
 === "venv"
-	
+
     ```bash
     ./scripts/docs-serve.sh
     ```
@@ -197,7 +197,7 @@ pip install hatch
 ??? note "Optionally you can improve `hatch` terminal completion"
 
     See the [official documentation](https://hatch.pypa.io/latest/cli/about/#tab-completion) for more details. For ZSH you can run these commands:
-    
+
     ```bash
     _HATCH_COMPLETE=zsh_source hatch > ~/.hatch-complete.zsh
     echo ". ~/.hatch-complete.zsh" >> ~/.zshrc
