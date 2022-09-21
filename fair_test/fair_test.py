@@ -4,6 +4,7 @@ import yaml
 from fastapi import HTTPException
 from fastapi.responses import JSONResponse, PlainTextResponse
 from pydantic import BaseModel
+
 from fair_test import FairTestEvaluation
 from fair_test.config import settings
 
