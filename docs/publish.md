@@ -26,7 +26,7 @@ You can easily publish the docker container running your API using [Google Cloud
 
 ## 📍 Then, register your tests
 
-Finally, you will need Register your FAIR Metrics Test in a FAIR evaluation service,  such as [FAIR enough](https://fair-enough.semanticscience.org), or the [FAIR evaluator](https://fairsharing.github.io/FAIR-Evaluator-FrontEnd/),  to be able to use it as part of FAIR evaluations.
+Finally, you will need Register your FAIR Metrics Test in a FAIR evaluation service,  such as [FAIR enough](https://fair-enough.semanticscience.org){:target="_blank"}, or the [FAIR evaluator](https://fairsharing.github.io/FAIR-Evaluator-FrontEnd/){:target="_blank"},  to be able to use it as part of FAIR evaluations.
 
 To register your service in FAIR enough:
 
@@ -36,6 +36,6 @@ To register your service in FAIR enough:
 
 !!! warning "Use persistent URLs"
 
-	When it has been enabled for the FAIR Test API, use your Metrics test persistent URL.
+	When it has been enabled for the FAIR Test API you want to register, use a persistent URL for the Metrics tests. See [w3id.org](https://w3id.org/){:target="_blank"} to easily create and maintain a persistent URL.
 
 Once your FAIR metrics tests are registered in the FAIR evaluation service, you can create collections that use your tests, and run evaluations with those collections.

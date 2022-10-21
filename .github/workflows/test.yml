@@ -43,10 +43,8 @@ jobs:
 
     # - name: Lint
     #   run: bash scripts/lint.sh
-
     # - name: Test
     #   run: bash scripts/test.sh
-
     # - name: Upload coverage
     #   uses: codecov/codecov-action@v3
 

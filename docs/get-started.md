@@ -1,4 +1,4 @@
-This page guides you to choose where to create your FAIR tests.
+This page guides you to choose where and how to create your FAIR tests.
 
 ## ♻️ Use an existing FAIR test repository
 
@@ -14,7 +14,7 @@ You are welcome to submit a pull request to propose to add your tests to our API
 
 ### 🍪 With the cookiecutter interactive CLI
 
-Install [cookiecutter](https://github.com/cookiecutter/cookiecutter):
+Install [cookiecutter](https://github.com/cookiecutter/cookiecutter){:target="_blank"}:
 
 ```bash
 pip install cookiecutter
@@ -32,7 +32,7 @@ Check the generated `README.md` for more details on how to deploy the API in pro
 
 1. Create a `pyproject.toml` file:
 
-```toml title="pyproject.yml"
+```toml title="pyproject.toml"
 [project]
 version = "0.1.0"
 name = "My FAIR test API"

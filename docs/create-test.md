@@ -45,7 +45,7 @@ class MetricTest(FairTest):
 
 ℹ️ A few common operations are available on the `eval` object (a `FairTestEvaluation`):
 
-* Logging operations:
+* **Logging** operations:
 ```python
 eval.info('Something happened')
 eval.warn('Something bad happened')
@@ -53,13 +53,17 @@ eval.failure('The test failed')
 eval.success('The test succeeded')
 ```
 
-* Retrieve RDF from a URL (returns a RDFLib Graph):
+* **Retrieve metadata** from a URL (returns a RDFLib Graph, or JSON-like object):
 
 ```python
 g = eval.retrieve_metadata(eval.subject)
 ```
 
-* Parse a string to RDF:
+!!! tip "Improve the metadata harvesting workflow"
+
+	If the `retrieve_metadata()` function is missing some use-cases, and you would like to improve it, you can find the code in the [`fair_test/fair_test_evaluation.py`](https://github.com/MaastrichtU-IDS/fair-test/blob/main/fair_test/fair_test_evaluation.py#L112) file. Checkout the [Contribute page](/fair-test/contributing) to see how to edit the `fair-test` library.
+
+* Parse a **string to RDF**:
 
 ```python
 g = eval.parse_rdf(text,
@@ -68,13 +72,13 @@ g = eval.parse_rdf(text,
 )
 ```
 
-* Return the metric test results:
+* Return the metric test **results**:
 
 ```python
 return eval.response()
 ```
 
-* There is also a dictionary `test_test` to define URIs to be automatically tested against each metric, and the expected score. See the [Development](/fair-test/development-workflow) section for more detail on running the tests.
+* There is also a dictionary `test_test` to define URIs to be **automatically tested** against each metric, and the expected score. See the [Development workflow](/fair-test/development-workflow) page for more detail on running the tests.
 
 !!! abstract "Documentation for all functions"
 
