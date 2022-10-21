@@ -7,7 +7,7 @@ name = "fair-test"
 description = "A library to build and deploy FAIR metrics tests APIs that can be used by FAIR evaluation services supporting the FAIRMetrics specifications, such as FAIR enough and the FAIR evaluator."
 readme = "README.md"
 requires-python = ">=3.7"
-license = "MIT"
+license = { file = "LICENSE" }
 authors = [
     { name = "Vincent Emonet", email = "vincent.emonet@gmail.com" },
 ]
@@ -134,8 +134,7 @@ warn_unused_ignores = true
 
 
 
-
-# Trying out env from hatch https://hatch.pypa.io
+# Envs from hatch https://hatch.pypa.io
 [tool.hatch.envs.default]
 features = [
   "test",

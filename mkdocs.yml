@@ -60,9 +60,11 @@ theme:
 nav:
   - About:
     - About: index.md
-    - Usage: usage.md
+    - Get started: get-started.md
+    - Development workflow: development-workflow.md
+    - Create a metric test: create-test.md
     - Publish: publish.md
-    - Development: development.md
+    - Contribute: contributing.md
   - Code reference:
       - "<span><i class='fa-solid fa-vial-circle-check'></i>&nbsp;&nbsp;FairTestEvaluation</span>": FairTestEvaluation.md
       - "<span><i class='fa-solid fa-flask'></i>&nbsp;&nbsp;FairTest</span>": FairTest.md
