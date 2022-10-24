@@ -80,11 +80,13 @@ class MetadataHarvest:
                     json={"subject": url},
                     timeout=60,
                     allow_redirects=True,
-                    # headers={"Accept": "application/ld+json"}
+                    headers={"Accept": "application/turtle"},
                 )
                 return self.parse_rdf(res.text, "text/turtle", log_msg="FAIR evaluator harvester RDF")
-            except Exception:
-                self.logs.warn(f"Failed to reach the Harvester at {harvester_url}, using the built-in python harvester")
+            except Exception as e:
+                self.logs.warn(
+                    f"Could not retrieve metadata from the Harvester service at {harvester_url} for {url}: {e}"
+                )
 
         # https://github.com/FAIRMetrics/Metrics/blob/master/MetricsEvaluatorCode/Ruby/metrictests/fair_metrics_utilities.rb#L355
         html_text = None
@@ -216,16 +218,18 @@ class MetadataHarvest:
                     json={"subject": url},
                     timeout=60,
                     allow_redirects=True,
-                    # headers={"Accept": "application/ld+json"}
+                    headers={"Accept": "application/turtle"},
                 )
-                print("POST DONE!", res.text)
+                res.raise_for_status()
                 g = self.parse_rdf(res.text, "text/turtle", log_msg="Metadata harvester service RDF")
-                print(g.serialize(format="turtle"))
                 if len(g) > 1:
                     return g
+                else:
+                    self.logs.warn(f"The Harvester service at {harvester_url} could not find metadata for {url}")
             except Exception as e:
-                print(e)
-                self.logs.warn(f"Failed to reach the Metadata Harvester service at {harvester_url}")
+                self.logs.warn(
+                    f"Could not retrieve metadata from the Harvester service at {harvester_url} for {url}: {e}"
+                )
 
         return metadata_obj
 

@@ -166,7 +166,7 @@ class FairTestEvaluation(BaseModel):
                     json={"subject": url},
                     timeout=60,
                     allow_redirects=True,
-                    # headers={"Accept": "application/ld+json"}
+                    headers={"Accept": "application/turtle"},
                 )
                 return self.parse_rdf(res.text, "text/turtle", log_msg="FAIR evaluator harvester RDF")
             except Exception:
@@ -300,16 +300,15 @@ class FairTestEvaluation(BaseModel):
                     json={"subject": url},
                     timeout=60,
                     allow_redirects=True,
-                    # headers={"Accept": "application/ld+json"}
+                    headers={"Accept": "application/turtle"},
                 )
-                print("POST DONE!", res.text)
+                res.raise_for_status()
+                # curl -i -L -k -H 'Accept: application/turtle' --data '{"subject": "https://doi.org/10.1594/PANGAEA.908011"}' https://w3id.org/FAIR_Tests/tests/harvester
                 g = self.parse_rdf(res.text, "text/turtle", log_msg="Metadata harvester service RDF")
-                print(g.serialize(format="turtle"))
                 if len(g) > 1:
                     return g
             except Exception as e:
-                print(e)
-                self.warn(f"Failed to reach the Metadata Harvester service at {harvester_url}")
+                self.warn(f"Could not retrieve metadata from the Harvester service at {harvester_url} for {url}: {e}")
 
         return metadata_obj
 
