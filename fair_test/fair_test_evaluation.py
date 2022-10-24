@@ -12,6 +12,9 @@ from pyld import jsonld
 from rdflib import BNode, ConjunctiveGraph, Literal, URIRef
 
 from fair_test.config import settings
+from fair_test.fair_test_logger import FairTestLogger
+
+# from fair.fair_test.metadata_harvester import MetadataHarvest
 
 # pyld is required to parse jsonld with rdflib
 # from fastapi import HTTPException
@@ -53,11 +56,11 @@ class FairTestEvaluation(BaseModel):
     subject_url: Optional[str]
     score: int = 0
     score_bonus: int = 0
-    comment: List = []
     date: str = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S+01:00")
     metric_version: str = "0.1.0"
     id: Optional[str]  # URL of the test results
     data: Optional[dict] = {}
+    logs: FairTestLogger = FairTestLogger()
 
     def __init__(self, subject: str, metric_path: str) -> None:
         super().__init__()
@@ -84,6 +87,10 @@ class FairTestEvaluation(BaseModel):
 
     class Config:
         arbitrary_types_allowed = True
+
+    @property
+    def comment(self) -> List[str]:
+        return self.logs.logs
 
     def get_url(self, id: str) -> str:
         """Return the full URL for a given identifiers (e.g. URL, DOI, handle)"""
@@ -113,7 +120,7 @@ class FairTestEvaluation(BaseModel):
         self,
         url: str,
         use_harvester: Optional[bool] = False,
-        harvester_url: Optional[str] = "https://fair-tests.137.120.31.101.nip.io/tests/harvester",
+        harvester_url: Optional[str] = "https://w3id.org/FAIR_Tests/tests/harvester",
     ) -> Any:
         """
         Retrieve metadata from a URL, RDF metadata parsed as a RDFLib Graph in priority.
@@ -132,6 +139,15 @@ class FairTestEvaluation(BaseModel):
         Returns:
             g (Graph): A RDFLib Graph with the RDF found at the given URL
         """
+        # TODO: implement metadata harvester outside of this class (to be used as API)
+        # harvest = MetadataHarvest(
+        #     url=url,
+        #     use_harvester=use_harvester,
+        #     harvester_url=harvester_url
+        # )
+        # self.logs.logs += harvest.log.logs
+        # return harvest
+
         original_url = url
         url = self.get_url(url)
         if not url:
@@ -142,13 +158,14 @@ class FairTestEvaluation(BaseModel):
 
         if use_harvester == True:
             # Check the harvester response:
-            # curl -X POST -d '{"subject": "https://doi.org/10.1594/PANGAEA.908011"}' https://fair-tests.137.120.31.101.nip.io/tests/harvester
+            # curl -X POST -d '{"subject": "https://doi.org/10.1594/PANGAEA.908011"}' https://w3id.org/FAIR_Tests/tests/harvester
             try:
                 self.info(f"Using Harvester at {harvester_url} to retrieve RDF metadata at {url}")
                 res = requests.post(
                     harvester_url,
                     json={"subject": url},
                     timeout=60,
+                    allow_redirects=True,
                     # headers={"Accept": "application/ld+json"}
                 )
                 return self.parse_rdf(res.text, "text/turtle", log_msg="FAIR evaluator harvester RDF")
@@ -271,6 +288,28 @@ class FairTestEvaluation(BaseModel):
                     f"Content-negotiation: error with {url} when asking for {mime_type}. Getting {str(e.args[0])}"
                 )
                 # Error: e.args[0]
+
+        # If nothing found with the built-in metadata harvesting process we try to use the service
+        if not metadata_obj or len(metadata_obj) < 1:
+            try:
+                self.info(
+                    f"Nothing found with built-in metadata harvesting process. Using Metadata Harvester service at {harvester_url} to retrieve RDF metadata from {url}"
+                )
+                res = requests.post(
+                    harvester_url,
+                    json={"subject": url},
+                    timeout=60,
+                    allow_redirects=True,
+                    # headers={"Accept": "application/ld+json"}
+                )
+                print("POST DONE!", res.text)
+                g = self.parse_rdf(res.text, "text/turtle", log_msg="Metadata harvester service RDF")
+                print(g.serialize(format="turtle"))
+                if len(g) > 1:
+                    return g
+            except Exception as e:
+                print(e)
+                self.warn(f"Failed to reach the Metadata Harvester service at {harvester_url}")
 
         return metadata_obj
 
@@ -548,12 +587,7 @@ class FairTestEvaluation(BaseModel):
 
     # Logging utilities
     def log(self, log_msg: str, prefix: Optional[str] = None) -> None:
-        # Add timestamp?
-        log_msg = "[" + str(datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")) + "] " + log_msg
-        if prefix:
-            log_msg = prefix + " " + log_msg
-        self.comment.append(log_msg)
-        # print(log_msg)
+        self.logs.log(log_msg, prefix)
 
     def warn(self, log_msg: str) -> None:
         """
@@ -562,7 +596,7 @@ class FairTestEvaluation(BaseModel):
         Parameters:
             log_msg: Message to log
         """
-        self.log(log_msg, "WARN:")
+        self.logs.warn(log_msg)
 
     def info(self, log_msg: str) -> None:
         """
@@ -571,7 +605,7 @@ class FairTestEvaluation(BaseModel):
         Parameters:
             log_msg: Message to log
         """
-        self.log(log_msg, "INFO:")
+        self.logs.info(log_msg)
 
     def failure(self, log_msg: str) -> None:
         """
@@ -581,7 +615,7 @@ class FairTestEvaluation(BaseModel):
             log_msg: Message to log
         """
         self.score = 0
-        self.log(log_msg, "FAILURE:")
+        self.logs.failure(log_msg)
 
     def success(self, log_msg: str) -> None:
         """
@@ -594,8 +628,8 @@ class FairTestEvaluation(BaseModel):
             self.bonus(log_msg)
         else:
             self.score += 1
-            self.log(log_msg, "SUCCESS:")
+            self.logs.success(log_msg)
 
     def bonus(self, log_msg: str) -> None:
         self.score_bonus += 1
-        self.log(log_msg, "SUCCESS:")
+        self.logs.success(log_msg)

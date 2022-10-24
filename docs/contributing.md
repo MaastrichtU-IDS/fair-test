@@ -137,23 +137,29 @@ Tests are automatically run by a GitHub Actions workflow when new code is pushed
 
 	Run the tests locally:
 
-    ```bash
-    ./scripts/test.sh
-    ```
+	```bash
+	./scripts/test.sh
+	```
 
-    You can also run the tests only for a specific metric test:
+	You can also run the tests only for a specific metric test:
 
-    ```bash
-    ./scripts/test.sh --metric a1-metadata-protocol
-    ```
+	```bash
+	./scripts/test.sh --metric a1-metadata-protocol
+	```
 
 === "hatch"
 
 	Run the tests locally:
 
-    ```bash
-    hatch run test
-    ```
+	```bash
+	hatch run test
+	```
+
+	You can also run the tests only for a specific metric test:
+
+	```bash
+	hatch run test --metric a1-metadata-protocol
+	```
 
 
 ## 📖 Generate docs
