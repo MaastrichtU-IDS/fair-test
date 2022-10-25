@@ -682,14 +682,20 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>pytest -s --metric a1-metadata-protocol
 </code></pre></div>
 <h2 id="deploy-with-docker">🐳 Deploy with docker</h2>
-<p>From the root of the cloned repository, run the command below, and access the OpenAPI Swagger UI on <a href="http://localhost:8000" target="_blank">http://localhost:8000</a></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>docker-compose up
+<p>To deploy the API in development, with automatic reload when the code changes run this command:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>docker-compose up dev
 </code></pre></div>
-<blockquote>
-<p>You can use a reverse <a href="https://github.com/nginx-proxy/nginx-proxy">nginx-proxy</a> for docker to route the services, or any other solution you want.</p>
-</blockquote>
+<p>Access the OpenAPI Swagger UI on <a href="http://localhost:8000" target="_blank">http://localhost:8000</a></p>
 <p>If you make changes to the dependencies in <code>pyproject.toml</code> you will need to rebuild the image to install the new requirements:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>docker-compose up --build
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>docker-compose up dev --build
+</code></pre></div>
+<p>Run the <strong>tests</strong>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>docker-compose run <span class="nb">test</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># You can pass args:</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>docker-compose run <span class="nb">test</span> pytest -s
+</code></pre></div>
+<p>Run in <strong>production</strong> (change the docker-compose.yml to your deployment solution):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>docker-compose up prod -d
 </code></pre></div>
 
 

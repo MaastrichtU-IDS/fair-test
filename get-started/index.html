@@ -688,8 +688,8 @@
 <p>Check the generated <code>README.md</code> for more details on how to deploy the API in production or run the tests.</p>
 <h3 id="manually">✍️ Manually</h3>
 <ol>
-<li>Create a <code>pyproject.toml</code> file:</li>
-</ol>
+<li>
+<p>Create a <code>pyproject.toml</code> file:</p>
 <div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">[project]</span><span class="w"></span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;0.1.0&quot;</span><span class="w"></span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;My FAIR test API&quot;</span><span class="w"></span>
@@ -712,9 +712,9 @@
 <a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">    </span><span class="s">&quot;uvicorn[standard] &gt;=0.12.0,&lt;0.19.0&quot;</span><span class="p">,</span><span class="w"></span>
 <a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="p">]</span><span class="w"></span>
 </code></pre></div>
-<ol>
-<li>Define the API: create a <code>main.py</code> file to declare the API, you can provide a different folder than <code>metrics</code> here, the folder path is relative to where you start the API (the root of the repository):</li>
-</ol>
+</li>
+<li>
+<p>Define the API: create a <code>main.py</code> file to declare the API, you can provide a different folder than <code>metrics</code> here, the folder path is relative to where you start the API (the root of the repository):</p>
 <div class="highlight"><span class="filename">main.py</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span> <span class="nn">fair_test</span> <span class="kn">import</span> <span class="n">FairTestAPI</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">app</span> <span class="o">=</span> <span class="n">FairTestAPI</span><span class="p">(</span>
@@ -728,9 +728,9 @@
 <a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="p">},</span>
 <a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="p">)</span>
 </code></pre></div>
-<ol>
-<li>Create a <code>.env</code> file to provide the global informations used for the API, such as contact details and the host URL (note that you don&rsquo;t need to change it for localhost in development), e.g.:</li>
-</ol>
+</li>
+<li>
+<p>Create a <code>.env</code> file to provide the global informations used for the API, such as contact details and the host URL (note that you don&rsquo;t need to change it for localhost in development), e.g.:</p>
 <div class="highlight"><span class="filename">.env</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nv">HOST_URL</span><span class="o">=</span><span class="s2">&quot;https://metrics.api.fair-enough.semanticscience.org&quot;</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">CONTACT_URL</span><span class="o">=</span><span class="s2">&quot;https://github.com/MaastrichtU-IDS/fair-enough-metrics&quot;</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">CONTACT_NAME</span><span class="o">=</span><span class="s2">&quot;Firstname Lastname&quot;</span>
@@ -739,6 +739,8 @@
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nv">ORG_NAME</span><span class="o">=</span><span class="s2">&quot;Affiliation&quot;</span>
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nv">DEFAULT_SUBJECT</span><span class="o">=</span><span class="s2">&quot;https://doi.org/10.1594/PANGAEA.908011&quot;</span>
 </code></pre></div>
+</li>
+</ol>
 
 
 
