@@ -39,7 +39,7 @@ jobs:
 
     - name: Install dependencies
       if: steps.cache.outputs.cache-hit != 'true'
-      run: pip install -e .[dev,doc,test]
+      run: pip install -e ".[test]"
 
     # - name: Lint
     #   run: bash scripts/lint.sh

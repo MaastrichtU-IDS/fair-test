@@ -47,16 +47,30 @@ pytest -s --metric a1-metadata-protocol
 
 ## 🐳 Deploy with docker
 
-From the root of the cloned repository, run the command below, and access the OpenAPI Swagger UI on [http://localhost:8000](http://localhost:8000){:target="_blank"}
+To deploy the API in development, with automatic reload when the code changes run this command:
 
 ```bash
-docker-compose up
+docker-compose up dev
 ```
 
-> You can use a reverse [nginx-proxy](https://github.com/nginx-proxy/nginx-proxy) for docker to route the services, or any other solution you want.
+Access the OpenAPI Swagger UI on [http://localhost:8000](http://localhost:8000){:target="_blank"}
 
 If you make changes to the dependencies in `pyproject.toml` you will need to rebuild the image to install the new requirements:
 
 ```bash
-docker-compose up --build
+docker-compose up dev --build
+```
+
+Run the **tests**:
+
+```bash
+docker-compose run test
+# You can pass args:
+docker-compose run test pytest -s
+```
+
+Run in **production** (change the docker-compose.yml to your deployment solution):
+
+```bash
+docker-compose up prod -d
 ```

@@ -32,55 +32,55 @@ Check the generated `README.md` for more details on how to deploy the API in pro
 
 1. Create a `pyproject.toml` file:
 
-```toml title="pyproject.toml"
-[project]
-version = "0.1.0"
-name = "My FAIR test API"
-description = "Implementation of the FAIR metrics tests for..."
-readme = "README.md"
-requires-python = ">=3.9"
-license = { file = "LICENSE" }
-authors = [
-    { name = "Firstname Lastname", email = "firstname.lastname@example.com" },
-]
-dependencies = [
-    "fair-test >=0.0.7",
-]
+    ```toml title="pyproject.toml"
+    [project]
+    version = "0.1.0"
+    name = "My FAIR test API"
+    description = "Implementation of the FAIR metrics tests for..."
+    readme = "README.md"
+    requires-python = ">=3.9"
+    license = { file = "LICENSE" }
+    authors = [
+        { name = "Firstname Lastname", email = "firstname.lastname@example.com" },
+    ]
+    dependencies = [
+        "fair-test >=0.0.7",
+    ]
 
-[project.optional-dependencies]
-test = [
-    "pytest >=7.1.3,<8.0.0",
-]
-dev = [
-    "uvicorn[standard] >=0.12.0,<0.19.0",
-]
-```
+    [project.optional-dependencies]
+    test = [
+        "pytest >=7.1.3,<8.0.0",
+    ]
+    dev = [
+        "uvicorn[standard] >=0.12.0,<0.19.0",
+    ]
+    ```
 
 2. Define the API: create a `main.py` file to declare the API, you can provide a different folder than `metrics` here, the folder path is relative to where you start the API (the root of the repository):
 
-```python title="main.py"
-from fair_test import FairTestAPI
+    ```python title="main.py"
+    from fair_test import FairTestAPI
 
-app = FairTestAPI(
-    title='FAIR Metrics tests API',
-    metrics_folder_path='metrics',
-    description="""FAIR Metrics tests API""",
-    cors_enabled=True,
-    license_info = {
-        "name": "MIT license",
-        "url": "https://opensource.org/licenses/MIT"
-    },
-)
-```
+    app = FairTestAPI(
+        title='FAIR Metrics tests API',
+        metrics_folder_path='metrics',
+        description="""FAIR Metrics tests API""",
+        cors_enabled=True,
+        license_info = {
+            "name": "MIT license",
+            "url": "https://opensource.org/licenses/MIT"
+        },
+    )
+    ```
 
 3. Create a `.env` file to provide the global informations used for the API, such as contact details and the host URL (note that you don't need to change it for localhost in development), e.g.:
 
-```bash title=".env"
-HOST_URL="https://metrics.api.fair-enough.semanticscience.org"
-CONTACT_URL="https://github.com/MaastrichtU-IDS/fair-enough-metrics"
-CONTACT_NAME="Firstname Lastname"
-CONTACT_EMAIL="firstname.lastname@example.com"
-CONTACT_ORCID="0000-0000-0000-0000"
-ORG_NAME="Affiliation"
-DEFAULT_SUBJECT="https://doi.org/10.1594/PANGAEA.908011"
-```
+    ```bash title=".env"
+    HOST_URL="https://metrics.api.fair-enough.semanticscience.org"
+    CONTACT_URL="https://github.com/MaastrichtU-IDS/fair-enough-metrics"
+    CONTACT_NAME="Firstname Lastname"
+    CONTACT_EMAIL="firstname.lastname@example.com"
+    CONTACT_ORCID="0000-0000-0000-0000"
+    ORG_NAME="Affiliation"
+    DEFAULT_SUBJECT="https://doi.org/10.1594/PANGAEA.908011"
+    ```
