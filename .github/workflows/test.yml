@@ -31,14 +31,14 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    # - uses: actions/cache@v3
-    #   id: cache
-    #   with:
-    #     path: ${{ env.pythonLocation }}
-    #     key: ${{ runner.os }}-python-${{ env.pythonLocation }}-${{ hashFiles('pyproject.toml') }}-test-v02
+    - uses: actions/cache@v3
+      id: cache
+      with:
+        path: ${{ env.pythonLocation }}
+        key: ${{ runner.os }}-python-${{ env.pythonLocation }}-${{ hashFiles('pyproject.toml') }}-test-v02
 
     - name: Install dependencies
-      # if: steps.cache.outputs.cache-hit != 'true'
+      if: steps.cache.outputs.cache-hit != 'true'
       run: pip install -e ".[test]"
 
     # - name: Lint
@@ -52,12 +52,12 @@ jobs:
       uses: warchant/setup-sonar-scanner@v3
     - name: Test with pytest with coverage
       run: |
-        # coverage erase
+        coverage erase
         pytest --cov fair_test --cov-report xml:coverage.xml tests/
-        # cat coverage.xml
-        # coverage combine --append || true
-        # coverage report
-        # coverage xml
+        cat coverage.xml
+        coverage combine --append || true
+        coverage report
+        coverage xml
       # sonar-scanner
     - name: Run SonarCloud
       env:
