@@ -5,7 +5,7 @@ on:
   push:
     branches: [ main ]
     paths:
-    - 'requirements.txt'
+    - 'pyproject.toml'
     - 'fair_test/**'
     - 'tests/**'
     - 'example/metrics/**'
