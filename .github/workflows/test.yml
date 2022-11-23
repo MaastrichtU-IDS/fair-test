@@ -52,12 +52,12 @@ jobs:
       uses: warchant/setup-sonar-scanner@v3
     - name: Test with pytest with coverage
       run: |
-        coverage erase
+        # coverage erase
         pytest --cov fair_test --cov-report xml:coverage.xml tests/
-        cat coverage.xml
-        coverage combine --append || true
-        coverage report
-        coverage xml
+        # cat coverage.xml
+        # coverage combine --append || true
+        # coverage report
+        # coverage xml
       # sonar-scanner
     - name: Run SonarCloud
       env:
