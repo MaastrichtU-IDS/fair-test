@@ -1,4 +1,4 @@
-__version__ = "0.0.9"
+__version__ = "0.0.10"
 
 from .fair_test_api import FairTestAPI
 from .fair_test_evaluation import FairTestEvaluation
