@@ -1,5 +1,5 @@
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Union
 
 import extruct
@@ -11,30 +11,35 @@ from rdflib import ConjunctiveGraph, Dataset, Graph, URIRef
 from fair_test.fair_test_logger import FairTestLogger
 
 
-# TODO: not yet used by the FairTestEvaluation class
 @dataclass
-class MetadataHarvest:
-    subject: str
-    alt_urls: List[str] = []
+class MetadataHarvester:
+    subject: Optional[str] = None
+    alt_urls: list = field(default_factory=list)
     rdf: Optional[Union[Graph, ConjunctiveGraph, Dataset]] = None
     json: Optional[Dict] = None
+    data: dict = field(default_factory=dict)
     logs: FairTestLogger = FairTestLogger()
 
-    def __post_init__(self):
-        self.retrieve_metadata(self.subject)
+    def get_url(self, id: str) -> str:
+        """Return the full URL for a given identifiers (e.g. URL, DOI, handle)"""
+        if idutils.is_url(id):
+            self.logs.info(f"Validated the resource {id} is a URL")
+            return id
 
-    @property
-    def comment(self) -> List[str]:
-        return self.logs.logs
+        if idutils.is_doi(id):
+            self.logs.info(f"Validated the resource {id} is a DOI")
+            return idutils.to_url(id, "doi", "https")
 
-    @property
-    def asdict(self) -> Dict[str, Any]:
-        return {
-            "subject": self.subject,
-            "rdf": json.load(self.rdf.serialize(format="json-ld")),
-            "json": self.json,
-            "comment": self.comment,
-        }
+        if idutils.is_handle(id):
+            self.logs.info(f"Validated the resource {id} is a handle")
+            return idutils.to_url(id, "handle", "https")
+
+        # TODO: add INCHI key?
+        # inchikey = regexp(/^\w{14}\-\w{10}\-\w$/)
+        # return f"https://pubchem.ncbi.nlm.nih.gov/rest/rdf/inchikey/{inchikey}"
+
+        self.logs.warn(f"Could not validate the given resource URI {id} is a URL, DOI, or handle")
+        return id
 
     # TODO: implement metadata extraction with more tools?
     # e.g. Apache Tika for PDF/pptx? or ruby Kellog's Distiller? http://rdf.greggkellogg.net/distiller
@@ -42,8 +47,8 @@ class MetadataHarvest:
     def retrieve_metadata(
         self,
         url: str,
-        use_harvester: Optional[bool] = False,
-        harvester_url: Optional[str] = "https://w3id.org/FAIR_Tests/tests/harvester",
+        use_harvester: bool = False,
+        harvester_url: str = "https://w3id.org/FAIR_Tests/tests/harvester",
     ) -> Any:
         """
         Retrieve metadata from a URL, RDF metadata parsed as a RDFLib Graph in priority.
@@ -147,6 +152,8 @@ class MetadataHarvest:
         )
         # TODO: support client-side JS generated HTML using Selenium https://github.com/vemonet/extruct-selenium
         try:
+            if not html_text:
+                raise Exception("No HTML text provided")
             extructed = extruct.extract(html_text.encode("utf8"))
             if url == self.subject:
                 self.data["extruct"] = extructed
@@ -278,19 +285,20 @@ class MetadataHarvest:
 
         else:
             # Try to guess the format to parse from mime type
-            mime_type = mime_type.split(";")[0]
-            if "turtle" in mime_type:
-                parse_formats = ["turtle"]
-            elif "xml" in mime_type:
-                parse_formats = ["xml"]
-            elif "ntriples" in mime_type:
-                parse_formats = ["ntriples"]
-            elif "nquads" in mime_type:
-                parse_formats = ["nquads"]
-            elif "trig" in mime_type:
-                parse_formats = ["trig"]
-            # elif mime_type.startswith('text/html'):
-            #     parse_formats = []
+            if mime_type:
+                mime_type = mime_type.split(";")[0]
+                if "turtle" in mime_type:
+                    parse_formats = ["turtle"]
+                elif "xml" in mime_type:
+                    parse_formats = ["xml"]
+                elif "ntriples" in mime_type:
+                    parse_formats = ["ntriples"]
+                elif "nquads" in mime_type:
+                    parse_formats = ["nquads"]
+                elif "trig" in mime_type:
+                    parse_formats = ["trig"]
+                # elif mime_type.startswith('text/html'):
+                #     parse_formats = []
 
         g = ConjunctiveGraph()
         # Remove some auto-generated triples about the HTML content
@@ -311,27 +319,23 @@ class MetadataHarvest:
                 self.logs.info(
                     f"Could not parse {mime_type} metadata from {log_msg} with parser {rdf_format}. Getting error: {str(e)}"
                 )
-
         return g
         # return None
 
-    def get_url(self, id: str) -> str:
-        """Return the full URL for a given identifiers (e.g. URL, DOI, handle)"""
-        if idutils.is_url(id):
-            self.logs.info(f"Validated the resource {id} is a URL")
-            return id
+    @property
+    def comment(self) -> List[str]:
+        return self.logs.logs
 
-        if idutils.is_doi(id):
-            self.logs.info(f"Validated the resource {id} is a DOI")
-            return idutils.to_url(id, "doi", "https")
+    @property
+    def asdict(self) -> Dict[str, Any]:
+        dic = {
+            "subject": self.subject,
+            "json": self.json,
+            "comment": self.comment,
+        }
+        if self.rdf:
+            dic["rdf"] = json.load(self.rdf.serialize(format="json-ld"))
+        return dic
 
-        if idutils.is_handle(id):
-            self.logs.info(f"Validated the resource {id} is a handle")
-            return idutils.to_url(id, "handle", "https")
-
-        # TODO: add INCHI key?
-        # inchikey = regexp(/^\w{14}\-\w{10}\-\w$/)
-        # return f"https://pubchem.ncbi.nlm.nih.gov/rest/rdf/inchikey/{inchikey}"
-
-        self.logs.warn(f"Could not validate the given resource URI {id} is a URL, DOI, or handle")
-        return None
+    # def __post_init__(self):
+    #     self.retrieve_metadata(self.subject)

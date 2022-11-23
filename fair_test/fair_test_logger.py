@@ -15,6 +15,10 @@ class FairTestLogger:
     def logs(self) -> List[str]:
         return self._logs
 
+    @logs.setter
+    def logs(self, value):
+        self._logs = value
+
     def log(self, log_msg: str, prefix: Optional[str] = None) -> None:
         # Add timestamp?
         log_msg = "[" + str(datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")) + "] " + log_msg
