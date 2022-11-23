@@ -63,7 +63,8 @@ test = [
     "black == 22.8.0",
     "isort >=5.0.6,<6.0.0",
     "flake8 >=3.8.3,<6.0.0",
-    "Flake8-pyproject>=1.1.0.post0",
+    "Flake8-pyproject >=1.1.0.post0",
+    "httpx",
 ]
 doc = [
     "mkdocs >=1.1.2,<2.0.0",
