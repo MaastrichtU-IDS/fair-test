@@ -1,6 +1,11 @@
 [project]
 name = "fair-test"
-description = "A library to build and deploy FAIR metrics tests APIs that can be used by FAIR evaluation services supporting the FAIRMetrics specifications, such as FAIR enough and the FAIR evaluator."
+description = """A library to define and publish FAIR metrics tests APIs
+complying with the FAIRMetrics working group specifications.
+Each API can expose multiple metric tests endpoint,
+each test assesses the compliance of a subject URL with a FAIR principle.
+Those APIs can be used by FAIR evaluation services, such as FAIR enough and the FAIR evaluator.
+"""
 readme = "README.md"
 requires-python = ">=3.7"
 license = { file = "LICENSE" }
