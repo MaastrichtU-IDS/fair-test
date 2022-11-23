@@ -20,7 +20,7 @@ class MetadataHarvester:
     data: dict = field(default_factory=dict)
     logs: FairTestLogger = FairTestLogger()
 
-    def get_url(self, id: str) -> str:
+    def get_url(self, id: str) -> Optional[str]:
         """Return the full URL for a given identifiers (e.g. URL, DOI, handle)"""
         if idutils.is_url(id):
             self.logs.info(f"Validated the resource {id} is a URL")
@@ -39,7 +39,7 @@ class MetadataHarvester:
         # return f"https://pubchem.ncbi.nlm.nih.gov/rest/rdf/inchikey/{inchikey}"
 
         self.logs.warn(f"Could not validate the given resource URI {id} is a URL, DOI, or handle")
-        return id
+        return None
 
     # TODO: implement metadata extraction with more tools?
     # e.g. Apache Tika for PDF/pptx? or ruby Kellog's Distiller? http://rdf.greggkellogg.net/distiller

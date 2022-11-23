@@ -86,7 +86,7 @@ class FairTestEvaluation(BaseModel):
     def comment(self) -> List[str]:
         return self.logs.logs
 
-    def get_url(self, id: str) -> str:
+    def get_url(self, id: str) -> Optional[str]:
         """Return the full URL for a given identifiers (e.g. URL, DOI, handle)"""
         harvester = MetadataHarvester()
         url = harvester.get_url(id)
