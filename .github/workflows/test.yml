@@ -7,7 +7,7 @@ on:
     branches: [ main ]
     paths:
     - 'pyproject.toml'
-    - 'fair_test/**'
+    - 'src/**'
     - 'tests/**'
     - 'docs/**'
     - 'mkdocs.yml'
