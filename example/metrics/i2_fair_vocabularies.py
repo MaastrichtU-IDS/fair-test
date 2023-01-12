@@ -29,7 +29,7 @@ Resolve IRIs, check FAIRness of the returned documents."""
 
         g = eval.retrieve_metadata(eval.subject)
         # g = eval.retrieve_metadata(eval.subject, use_harvester=True)
-        if len(g) == 0:
+        if len(g) < 1:
             eval.failure("No RDF found at the subject URL provided.")
             return eval.response()
         else:

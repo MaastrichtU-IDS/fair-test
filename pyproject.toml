@@ -1,3 +1,7 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "fair-test"
 description = "A library to define and publish FAIR metrics tests APIs complying with the FAIRMetrics working group specifications. Each API can expose multiple metric tests endpoint, each test assesses the compliance of a subject URL with a FAIR principle. Those APIs can be used by FAIR evaluation services, such as FAIR enough and the FAIR evaluator."
@@ -76,11 +80,9 @@ doc = [
     "mkdocs-markdownextradata-plugin >=0.1.7,<0.3.0",
 ]
 dev = [
-    "mypy ==0.971",
     "uvicorn[standard] >=0.12.0,<0.19.0",
     "pre-commit >=2.17.0,<3.0.0",
     "autoflake >=1.4.0,<2.0.0",
-
     "types-PyYAML",
     "types-requests",
 ]
@@ -92,12 +94,6 @@ Documentation = "https://maastrichtu-ids.github.io/fair-test"
 History = "https://github.com/MaastrichtU-IDS/fair-test/releases"
 Tracker = "https://github.com/MaastrichtU-IDS/fair-test/issues"
 Source = "https://github.com/MaastrichtU-IDS/fair-test"
-
-
-
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
 
 
 [tool.hatch.version]
