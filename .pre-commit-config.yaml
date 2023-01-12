@@ -24,23 +24,23 @@ repos:
         args:
         - --py3-plus
         - --keep-runtime-typing
--   repo: https://github.com/pycqa/isort
-    rev: 5.10.1
-    hooks:
-    -   id: isort
-        name: 🔄 Formatting imports with isort (python)
+# -   repo: https://github.com/pycqa/isort
+#     rev: 5.10.1
+#     hooks:
+#     -   id: isort
+#         name: 🔄 Formatting imports with isort (python)
 -   repo: https://github.com/psf/black
     rev: 22.8.0
     hooks:
     -   id: black
         name: ✒️  Formatting code with Black
-# -   repo: https://github.com/charliermarsh/ruff-pre-commit
-#     rev: v0.0.138
-#     hooks:
-#     -   id: ruff
-#         name: ⚡️ Formatting code with Ruff
-#         args:
-#         - --fix
+-   repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: v0.0.138
+    hooks:
+    -   id: ruff
+        name: ⚡️ Formatting code with Ruff
+        args:
+        - --fix
 ci:
     autofix_commit_msg: 🎨 [pre-commit.ci] Auto format from pre-commit.com hooks
     autoupdate_commit_msg: ⬆ [pre-commit.ci] pre-commit autoupdate

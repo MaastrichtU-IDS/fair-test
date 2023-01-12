@@ -5,5 +5,4 @@ set -x
 
 ruff src tests
 black src example tests --check
-isort src example tests --check-only
 mypy src

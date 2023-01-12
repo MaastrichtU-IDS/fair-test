@@ -130,18 +130,16 @@ python = ["37", "38", "39", "310", "311"]
 
 # TOOLS
 
-[tool.isort]
-line_length = 120
-profile = "black"
-skip = ["src/fair_test/__init__.py"]
-# known_third_party = ["fair_test"]
+[tool.coverage.run]
+branch = true
+parallel = true
 
-
-[tool.black]
-color = true
-line-length = 120
-target-version = ['py37']
-# skip-string-normalization = true
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
 
 
 [tool.mypy]
@@ -155,44 +153,23 @@ warn_no_return = false
 warn_unused_ignores = true
 
 
-[tool.coverage.run]
-branch = true
-parallel = true
-# omit = [
-#   "src/fair_test/__init__.py",
-# ]
-
-[tool.coverage.report]
-exclude_lines = [
-  "no cov",
-  "if __name__ == .__main__.:",
-  "if TYPE_CHECKING:",
-]
-
-
 [tool.pytest.ini_options]
 filterwarnings = [
     "ignore:the imp module is deprecated in favour of importlib.*:DeprecationWarning:pyRdfa",
     "ignore:It looks like you're parsing an XML document using an HTML parser.*:bs4.XMLParsedAsHTMLWarning:bs4"
 ]
-# addopts = [
-#   "--strict-config",
-#   "--strict-markers",
-# ]
-# xfail_strict = true
-# junit_family = "xunit2"
 
 
-# [tool.flake8]
-# max-line-length = 120
-# select = ["C", "E", "F", "W", "B", "B9"]
-# ignore = ["E203", "E501", "W503"]
-# exclude = ["__init__.py"]
-# max-complexity = 14
+[tool.black]
+color = true
+line-length = 120
+target-version = ['py37']
+# skip-string-normalization = true
 
 
 # https://github.com/charliermarsh/ruff#supported-rules
 [tool.ruff]
+src = ["src", "tests", "example"]
 target-version = "py37"
 line-length = 120
 select = [
@@ -202,7 +179,7 @@ select = [
     "E",  # pycodestyle errors
     "F",  # pyflakes
     # "FBT", # flake8-boolean-trap
-    # "I",  # isort
+    "I",  # isort
     "ICN",
     "N",
     "PLC",
@@ -219,7 +196,6 @@ select = [
     "W",  # pycodestyle warnings
     "YTT",
 ]
-
 ignore = [
     "E501", # line too long
     "B008", # do not perform function calls in argument defaults
@@ -231,4 +207,5 @@ ignore = [
 ]
 
 [tool.ruff.per-file-ignores]
-"__init__.py" = ["F401"]
+"__init__.py" = ["F401"] # module imported but unused
+"src/fair_test/__init__.py" = ["I"]
