@@ -1,10 +1,8 @@
 This page details the workflow to contribute to the `fair-test` library.
 
-[![Version](https://img.shields.io/pypi/v/fair-test)](https://pypi.org/project/fair-test) [![Python versions](https://img.shields.io/pypi/pyversions/fair-test)](https://pypi.org/project/fair-test) [![Pull requests welcome](https://img.shields.io/badge/pull%20requests-welcome-brightgreen)](https://github.com/MaastrichtU-IDS/fair-test/fork)
+[![Version](https://img.shields.io/pypi/v/fair-test)](https://pypi.org/project/fair-test) [![Python versions](https://img.shields.io/pypi/pyversions/fair-test)](https://pypi.org/project/fair-test) [![MIT license](https://img.shields.io/pypi/l/fair-test)](https://github.com/MaastrichtU-IDS/fair-test/blob/main/LICENSE) [![Pull requests welcome](https://img.shields.io/badge/pull%20requests-welcome-brightgreen)](https://github.com/MaastrichtU-IDS/fair-test/fork)
 
-[![Run tests](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/test.yml/badge.svg)](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/test.yml) [![CodeQL](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/codeql-analysis.yml) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=MaastrichtU-IDS_fair-test&metric=coverage)](https://sonarcloud.io/dashboard?id=MaastrichtU-IDS_fair-test)
-
-[![Publish to PyPI](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/publish.yml/badge.svg)](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/publish.yml) [![Publish docs](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/deploy-docs.yml/badge.svg)](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/deploy-docs.yml)
+[![Publish to PyPI](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/publish.yml/badge.svg)](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/publish.yml) [![Run tests](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/test.yml/badge.svg)](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/test.yml) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=MaastrichtU-IDS_fair-test&metric=coverage)](https://sonarcloud.io/dashboard?id=MaastrichtU-IDS_fair-test)
 
 ## 📥 Install for development
 
