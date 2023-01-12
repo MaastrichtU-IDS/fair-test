@@ -19,7 +19,7 @@ Resolve IRIs, check FAIRness of the returned documents."""
     test_test = {
         "https://w3id.org/ejp-rd/fairdatapoints/wp13/dataset/c5414323-eab1-483f-a883-77951f246972": 1,
         "https://doi.org/10.1594/PANGAEA.908011": 1,
-        "http://example.com": 0,
+        "http://example.com": 0,  # TODO: for some reasons it fails, retrieve metadata returns failing URIs
     }
 
     def evaluate(self, eval: FairTestEvaluation):
@@ -46,11 +46,15 @@ Resolve IRIs, check FAIRness of the returned documents."""
 
         # Extract namespace manually because RDFLib can't do it
         extracted_ns = []
-        for row in io.StringIO(g.serialize(format="turtle")):
-            if row.startswith("@prefix"):
-                pattern = re.compile("^.*<(.*?)>")
-                ns = pattern.search(row).group(1)
-                extracted_ns.append(ns)
+        try:
+            for row in io.StringIO(g.serialize(format="turtle")):
+                if row.startswith("@prefix"):
+                    pattern = re.compile("^.*<(.*?)>")
+                    ns = pattern.search(row).group(1)
+                    extracted_ns.append(ns)
+        except Exception as e:
+            eval.failure(f"RDF found at the subject URL provided is not valid: {e}")
+            return eval.response()
         # print('Extracted manually: ', extracted_ns)
 
         validated_ns = set()
