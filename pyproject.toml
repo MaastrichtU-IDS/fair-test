@@ -207,5 +207,4 @@ ignore = [
 ]
 
 [tool.ruff.per-file-ignores]
-"__init__.py" = ["F401"] # module imported but unused
-"src/fair_test/__init__.py" = ["I"]
+"__init__.py" = ["I", "F401"] # module imported but unused
