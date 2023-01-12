@@ -111,6 +111,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -123,7 +125,7 @@ jobs:
 
       - name: Deploy mkdocs on GitHub Pages
         run: |
-          git pull
+          # git pull
           mkdocs gh-deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
