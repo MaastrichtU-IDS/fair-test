@@ -13,4 +13,10 @@
 
 It aims to enable python developers to easily write, and deploy FAIR metric tests functions that can be queried by various FAIR evaluations services, such as [FAIR enough](https://fair-enough.semanticscience.org/) and the [FAIRsharing FAIR Evaluator](https://fairsharing.github.io/FAIR-Evaluator-FrontEnd/).
 
-Visit the `fair-test` documentation website for more details on how to use the library to publish new FAIR tests: [**https://maastrichtu-ids.github.io/fair-test 📖**](https://maastrichtu-ids.github.io/fair-test)
+## 📖 Documentation
+
+Visit the `fair-test` documentation website for more details on how to use the library to publish new FAIR tests: [**https://maastrichtu-ids.github.io/fair-test**](https://maastrichtu-ids.github.io/fair-test)
+
+## 🧑‍💻 Contribute
+
+If you wish to contribute, checkout the [development workflow page](https://maastrichtu-ids.github.io/fair-test/development-workflow/) in the documentation to get started.
