@@ -58,7 +58,7 @@ Resolve the licenses IRI"""
                 f"Could not find a license in the metadata. Searched for the following predicates: {str(license_preds)}"
             )
 
-        if "license" in eval.data.keys():
+        if "license" in eval.data:
             for license_found in eval.data["license"]:
                 eval.info(
                     f"Check if license {eval.data['license']} is approved by the Open Source Initiative, in the SPDX licenses list"
@@ -68,7 +68,7 @@ Resolve the licenses IRI"""
                 spdx_licenses = requests.get(spdx_licenses_url).json()["licenses"]
                 for open_license in spdx_licenses:
                     if license_found in open_license["seeAlso"]:
-                        if open_license["isOsiApproved"] == True:
+                        if open_license["isOsiApproved"] is True:
                             eval.bonus(
                                 "License approved by the Open Source Initiative (" + str(eval.data["license"]) + ")"
                             )

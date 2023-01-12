@@ -3,7 +3,8 @@
 set -e
 set -x
 
-flake8 src example tests
+ruff src tests
+# flake8 src example tests
 black src example tests --check
 isort src example tests --check-only
 mypy src

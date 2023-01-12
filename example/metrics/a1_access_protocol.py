@@ -46,7 +46,7 @@ Find information about authorization in metadata"""
         found_access_rights = False
         access_rights_preds = [DCTERMS.accessRights]
         for pred in access_rights_preds:
-            for s, p, accessRights in g.triples((None, pred, None)):
+            for _s, _p, accessRights in g.triples((None, pred, None)):
                 eval.info(f"Found authorization informations with dcterms:accessRights: {str(accessRights)}")
                 # eval.data['accessRights'] = str(accessRights)
                 found_access_rights = True

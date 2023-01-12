@@ -38,12 +38,12 @@ If found, retrieve informations about this resource (title, description, date cr
         subject_uri = eval.extract_metadata_subject(g, eval.data["alternative_uris"])
 
         if subject_uri:
-            if "properties" in eval.data["identifier_in_metadata"].keys():
+            if "properties" in eval.data["identifier_in_metadata"]:
                 eval.info(
                     "Found properties/links for the subject URI in the metadata: "
                     + ", ".join(list(eval.data["identifier_in_metadata"]["properties"].keys()))
                 )
-            if "linked_to" in eval.data["identifier_in_metadata"].keys():
+            if "linked_to" in eval.data["identifier_in_metadata"]:
                 eval.info(
                     "Found properties/links for the subject URI in the metadata: "
                     + ", ".join(list(eval.data["identifier_in_metadata"]["linked_to"].keys()))

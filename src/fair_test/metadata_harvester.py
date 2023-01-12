@@ -115,7 +115,7 @@ class MetadataHarvester:
                     )
 
                 self.data["redirect_url"] = redirect_url
-                if url == self.subject and not redirect_url in self.data["alternative_uris"]:
+                if url == self.subject and redirect_url not in self.data["alternative_uris"]:
                     self.logs.info(
                         f"Request was redirected to {redirect_url}, adding to the list of alternative URIs for the subject"
                     )
@@ -133,7 +133,7 @@ class MetadataHarvester:
                 check_rels = ["alternate", "describedby", "meta"]
                 # Alternate is used by schema.org
                 for rel in check_rels:
-                    if rel in r.links.keys():
+                    if rel in r.links:
                         rel_url = r.links[rel]["url"]
                         if not rel_url.startswith("http://") and not rel_url.startswith("https://"):
                             # In some case the rel URL provided is relative to the requested URL
@@ -160,14 +160,14 @@ class MetadataHarvester:
             if len(extructed["json-ld"]) > 0:
                 g = self.parse_rdf(extructed["json-ld"], "json-ld", log_msg="HTML embedded JSON-LD RDF")
                 if len(g) > 0:
-                    self.logs.info(f"Found JSON-LD RDF metadata embedded in the HTML with extruct")
+                    self.logs.info("Found JSON-LD RDF metadata embedded in the HTML with extruct")
                     return g
                 else:
                     metadata_obj = extructed["json-ld"]
             if len(extructed["rdfa"]) > 0:
                 g = self.parse_rdf(extructed["rdfa"], "json-ld", log_msg="HTML embedded RDFa")
                 if len(g) > 0:
-                    self.logs.info(f"Found RDFa metadata embedded in the HTML with extruct")
+                    self.logs.info("Found RDFa metadata embedded in the HTML with extruct")
                     return g
                 elif not metadata_obj:
                     metadata_obj = extructed["rdfa"]

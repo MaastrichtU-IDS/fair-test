@@ -154,7 +154,7 @@ class FairTestEvaluation(BaseModel):
                 subj = [subj]
                 # test_subjs = [URIRef(str(s)) for s in subj]
             for test_subj in subj:
-                for s, p, o in g.triples((test_subj, URIRef(str(pred)), None)):
+                for _s, _p, o in g.triples((test_subj, URIRef(str(pred)), None)):
                     self.info(f"Found a value for a property {str(pred)} => {str(o)}")
                     values.add(o)
 
@@ -198,20 +198,20 @@ class FairTestEvaluation(BaseModel):
             if not subject_uri:
                 # Search with the subject URI as triple object
                 for pred in all_preds_uris:
-                    for s, p, o in g.triples((None, pred, uri_ref)):
+                    for s, p, _o in g.triples((None, pred, uri_ref)):
                         self.info(f"Found the subject URI in the metadata: {str(s)}")
                         resource_linked_to[str(s)] = str(p)
                         subject_uri = s
 
                     if not subject_uri:
                         # Also check when the subject URI defined as Literal
-                        for s, p, o in g.triples((None, pred, Literal(str(uri_ref)))):
+                        for s, p, _o in g.triples((None, pred, Literal(str(uri_ref)))):
                             self.info(f"Found the subject URI in the metadata: {str(s)}")
                             resource_linked_to[str(s)] = str(p)
                             subject_uri = s
 
         if len(resource_properties.keys()) > 0 or len(resource_linked_to.keys()) > 0:
-            if not "identifier_in_metadata" in self.data.keys():
+            if "identifier_in_metadata" not in self.data.keys():
                 self.data["identifier_in_metadata"] = {}
             if len(resource_properties.keys()) > 0:
                 self.data["identifier_in_metadata"]["properties"] = resource_properties
@@ -268,7 +268,7 @@ class FairTestEvaluation(BaseModel):
             else:
                 extracted_urls.add(str(data_uri))
 
-        if not "data_url" in self.data.keys():
+        if "data_url" not in self.data.keys():
             self.data["content_url"] = []
         self.data["content_url"] = self.data["content_url"] + list(extracted_urls)
 

@@ -118,7 +118,7 @@ def test_get_yaml():
 
 def test_bad_request():
     response = endpoint.post(
-        f"/tests/a1-access-protocol",
+        "/tests/a1-access-protocol",
         json={"subject": ""},
         headers={"accept": "application/json"},
     )
@@ -127,7 +127,7 @@ def test_bad_request():
 
 
 def test_404():
-    response = endpoint.get(f"/dont-exist", headers={"accept": "application/json"})
+    response = endpoint.get("/dont-exist", headers={"accept": "application/json"})
     assert response.status_code == 404
 
 

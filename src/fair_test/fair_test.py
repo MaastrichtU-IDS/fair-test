@@ -81,7 +81,7 @@ class FairTest(BaseModel):
 
     def do_evaluate(self, input: MetricInput):
         if input.subject == "":
-            raise HTTPException(status_code=422, detail=f"Provide a subject URL to evaluate")
+            raise HTTPException(status_code=422, detail="Provide a subject URL to evaluate")
 
         # TODO: create separate object for each FAIR test evaluation to avoid any conflict? e.g. FairTestEvaluation
         eval = FairTestEvaluation(input.subject, self.metric_path)

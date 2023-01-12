@@ -84,10 +84,7 @@ class FairTestAPI(FastAPI):
             assess_module = assess_name.replace("/", ".")
             import importlib
 
-            MetricTest = getattr(
-                importlib.import_module(f"{metrics_module}.{assess_module}"),
-                "MetricTest",
-            )
+            MetricTest = importlib.import_module(f"{metrics_module}.{assess_module}").MetricTest
             metric = MetricTest()
 
             try:
@@ -119,7 +116,7 @@ class FairTestAPI(FastAPI):
 
     def get_metrics_tests_filepaths(self):
         assess_name_list = []
-        for path, subdirs, files in os.walk(self.metrics_folder_path):
+        for path, _subdirs, files in os.walk(self.metrics_folder_path):
             for filename in files:
                 if not path.endswith("__pycache__") and not filename.endswith("__init__.py"):
                     filepath = path.replace(self.metrics_folder_path, "")
@@ -137,10 +134,7 @@ class FairTestAPI(FastAPI):
             assess_module = metrics_name.replace("/", ".")
             import importlib
 
-            MetricTest = getattr(
-                importlib.import_module(f"{metrics_module}.{assess_module}"),
-                "MetricTest",
-            )
+            MetricTest = importlib.import_module(f"{metrics_module}.{assess_module}").MetricTest
 
             metric = MetricTest()
             for subj, score in metric.test_test.items():
@@ -172,14 +166,8 @@ class FairTestAPI(FastAPI):
         END = "\033[0m"
         YELLOW = "\033[33m"
         CYAN = "\033[36m"
-        PURPLE = "\033[95m"
-        BLUE = "\033[34m"
-        GREEN = "\033[32m"
 
-        if metric:
-            run_evals = [ev for ev in eval_list if ev["metric_id"] == metric]
-        else:
-            run_evals = eval_list
+        run_evals = [ev for ev in eval_list if ev["metric_id"] == metric] if metric else eval_list
 
         print(f"⏳️ Running tests for {BOLD}{len(run_evals)}{END} metric/subject/score combinations")
 
@@ -228,7 +216,7 @@ class FairTestAPI(FastAPI):
             break
 
         # test 404
-        response = test_endpoint.get(f"/dont-exist", headers={"accept": "application/json"})
+        response = test_endpoint.get("/dont-exist", headers={"accept": "application/json"})
         assert response.status_code == 404
 
         # test redirect

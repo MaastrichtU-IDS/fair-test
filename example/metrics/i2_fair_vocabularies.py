@@ -36,7 +36,7 @@ Resolve IRIs, check FAIRness of the returned documents."""
             eval.info(f"RDF metadata containing {len(g)} triples found at the subject URL provided.")
 
         # eval.info('Checking RDF metadata vocabularies')
-        rdflib_ns = [n for n in g.namespace_manager.namespaces()]
+        rdflib_ns = list(g.namespace_manager.namespaces())
         # print('Extracted with RDFLib: ', rdflib_ns)
         # rdflib_ns = [n for n in g.namespaces()]
         # print(rdflib_ns)
@@ -73,7 +73,7 @@ Resolve IRIs, check FAIRness of the returned documents."""
                     validated_ns.add(ns)
 
             # Check for RDFLib extracted ns
-            for index, tuple in rdflib_ns:
+            for _index, tuple in rdflib_ns:
                 tested_ns.add(tuple[1])
                 # if vocab['nsp'].startswith(tuple[1]):
                 if tuple[1].startswith(vocab["nsp"]):
