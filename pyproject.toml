@@ -62,7 +62,7 @@ test = [
     "pytest-cov >=2.12.0,<4.0.0",
     "coverage",
     "mypy ==0.971",
-    "black == 22.8.0",
+    "black ==22.8.0",
     "isort >=5.0.6,<6.0.0",
     "flake8 >=3.8.3,<6.0.0",
     "Flake8-pyproject >=1.1.0.post0",
@@ -101,13 +101,13 @@ build-backend = "hatchling.build"
 
 
 [tool.hatch.version]
-path = "fair_test/__init__.py"
+path = "src/fair_test/__init__.py"
 
 
 [tool.isort]
 line_length = 120
 profile = "black"
-skip = ["fair_test/__init__.py"]
+skip = ["src/fair_test/__init__.py"]
 # known_third_party = ["fair_test"]
 
 
@@ -166,7 +166,7 @@ features = [
 
 [tool.hatch.envs.test.scripts]
 all = "./scripts/test.sh"
-# cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=fair_test --cov=tests"
+# cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=src --cov=tests"
 # no-cov = "cov --no-cov"
 
 
@@ -177,7 +177,7 @@ python = ["37", "38", "39", "310", "311"]
 branch = true
 parallel = true
 # omit = [
-#   "fair_test/__init__.py",
+#   "src/fair_test/__init__.py",
 # ]
 
 [tool.coverage.report]
