@@ -46,7 +46,7 @@ class FairTestEvaluation(BaseModel):
     ```
     """
 
-    subject: str
+    subject: Optional[str]
     subject_url: Optional[str]
     score: int = 0
     score_bonus: int = 0
