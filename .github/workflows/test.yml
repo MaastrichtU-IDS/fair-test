@@ -2,6 +2,7 @@ name: Run tests
 # Run test at each push to master or develop, if changes to package files
 on:
   workflow_dispatch:
+  workflow_call:
   push:
     branches: [ main ]
     paths:
