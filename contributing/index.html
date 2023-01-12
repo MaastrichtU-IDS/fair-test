@@ -684,59 +684,59 @@ Those APIs can be used by FAIR evaluation services, such as FAIR enough and the 
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd</span><span class="w"> </span>fair-test
 </code></pre></div>
 <p>To install the project for development you can either use <a href="https://docs.python.org/3/library/venv.html"><code>venv</code></a> to create a virtual environment yourself, or use <a href="https://hatch.pypa.io"><code>hatch</code></a> to automatically handle virtual environments for you.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">venv</label><label for="__tabbed_1_2">hatch</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">hatch</label><label for="__tabbed_1_2">venv</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<p>Create the virtual environment in the project folder :</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
-</code></pre></div>
-<p>Activate the virtual environment:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
-</code></pre></div>
-<p>Install all dependencies required for development:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev,doc,test]&quot;</span>
-</code></pre></div>
-<p>You can also enable automated formatting of the code at each commit:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>pre-commit<span class="w"> </span>install
-</code></pre></div>
-</div>
-<div class="tabbed-block">
 <p>Install <a href="https://hatch.pypa.io">Hatch</a>, this will automatically handle virtual environments and make sure all dependencies are installed when you run a script in the project:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>pip<span class="w"> </span>install<span class="w"> </span>hatch
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pip<span class="w"> </span>install<span class="w"> </span>hatch
 </code></pre></div>
 <details class="note">
 <summary>Optionally you can improve <code>hatch</code> terminal completion</summary>
 <p>See the <a href="https://hatch.pypa.io/latest/cli/about/#tab-completion">official documentation</a> for more details. For ZSH you can run these commands:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nv">_HATCH_COMPLETE</span><span class="o">=</span>zsh_source<span class="w"> </span>hatch<span class="w"> </span>&gt;<span class="w"> </span>~/.hatch-complete.zsh
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;. ~/.hatch-complete.zsh&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.zshrc
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nv">_HATCH_COMPLETE</span><span class="o">=</span>zsh_source<span class="w"> </span>hatch<span class="w"> </span>&gt;<span class="w"> </span>~/.hatch-complete.zsh
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;. ~/.hatch-complete.zsh&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.zshrc
 </code></pre></div>
 </details>
+</div>
+<div class="tabbed-block">
+<p>Create the virtual environment in the project folder :</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
+</code></pre></div>
+<p>Activate the virtual environment:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+</code></pre></div>
+<p>Install all dependencies required for development:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev,doc,test]&quot;</span>
+</code></pre></div>
+<p>You can also enable automated formatting of the code at each commit:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>pre-commit<span class="w"> </span>install
+</code></pre></div>
 </div>
 </div>
 </div>
 <h2 id="development-workflow">🧑‍💻 Development workflow</h2>
-<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">venv</label><label for="__tabbed_2_2">hatch</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">hatch</label><label for="__tabbed_2_2">venv</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Deploy the FAIR test API defined in the <code>example</code> folder to test your changes:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>./scripts/dev.sh
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>hatch<span class="w"> </span>run<span class="w"> </span>dev
 </code></pre></div>
 <p>The code will be automatically formatted when you commit your changes using <code>pre-commit</code>. But you can also run the script to format the code yourself:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>./scripts/format.sh
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>hatch<span class="w"> </span>run<span class="w"> </span>format
 </code></pre></div>
 <p>Or check the code for errors:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>./scripts/lint.sh
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>hatch<span class="w"> </span>run<span class="w"> </span>lint
 </code></pre></div>
 </div>
 <div class="tabbed-block">
 <p>Deploy the FAIR test API defined in the <code>example</code> folder to test your changes:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>hatch<span class="w"> </span>run<span class="w"> </span>dev
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>./scripts/dev.sh
 </code></pre></div>
 <p>The code will be automatically formatted when you commit your changes using <code>pre-commit</code>. But you can also run the script to format the code yourself:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>hatch<span class="w"> </span>run<span class="w"> </span>format
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>./scripts/format.sh
 </code></pre></div>
 <p>Or check the code for errors:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>hatch<span class="w"> </span>run<span class="w"> </span>lint
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>./scripts/lint.sh
 </code></pre></div>
 </div>
 </div>
@@ -761,22 +761,22 @@ Those APIs can be used by FAIR evaluation services, such as FAIR enough and the 
 <a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>    <span class="n">app</span><span class="o">.</span><span class="n">run_tests</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">pytestconfig</span><span class="o">.</span><span class="n">getoption</span><span class="p">(</span><span class="s1">&#39;metric&#39;</span><span class="p">))</span>
 </code></pre></div>
 </details>
-<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">venv</label><label for="__tabbed_3_2">hatch</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">hatch</label><label for="__tabbed_3_2">venv</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Run the tests locally:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>./scripts/test.sh
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>hatch<span class="w"> </span>run<span class="w"> </span><span class="nb">test</span>
 </code></pre></div>
 <p>You can also run the tests only for a specific metric test:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>./scripts/test.sh<span class="w"> </span>--metric<span class="w"> </span>a1-metadata-protocol
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>hatch<span class="w"> </span>run<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--metric<span class="w"> </span>a1-metadata-protocol
 </code></pre></div>
 </div>
 <div class="tabbed-block">
 <p>Run the tests locally:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>hatch<span class="w"> </span>run<span class="w"> </span><span class="nb">test</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>./scripts/test.sh
 </code></pre></div>
 <p>You can also run the tests only for a specific metric test:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>hatch<span class="w"> </span>run<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--metric<span class="w"> </span>a1-metadata-protocol
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>./scripts/test.sh<span class="w"> </span>--metric<span class="w"> </span>a1-metadata-protocol
 </code></pre></div>
 </div>
 </div>
@@ -785,14 +785,14 @@ Those APIs can be used by FAIR evaluation services, such as FAIR enough and the 
 <p><a href="https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/deploy-docs.yml"><img alt="Publish docs" src="https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/deploy-docs.yml/badge.svg" /></a></p>
 <p>The documentation (this website) is automatically generated from the markdown files in the <code>docs</code> folder and python docstring comments, and published by a GitHub Actions workflow.</p>
 <p>Serve the docs on <a href="http://localhost:8008" target="_blank">http://localhost:8008</a></p>
-<div class="tabbed-set tabbed-alternate" data-tabs="4:2"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">venv</label><label for="__tabbed_4_2">hatch</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:2"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">hatch</label><label for="__tabbed_4_2">venv</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>./scripts/docs-serve.sh
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>hatch<span class="w"> </span>run<span class="w"> </span>docs
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>hatch<span class="w"> </span>run<span class="w"> </span>docs
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>./scripts/docs-serve.sh
 </code></pre></div>
 </div>
 </div>
@@ -805,48 +805,6 @@ Those APIs can be used by FAIR evaluation services, such as FAIR enough and the 
 <li>Create a new release on GitHub</li>
 <li>A GitHub Action workflow will automatically publish the new version to PyPI</li>
 </ol>
-<!--
-
-## 🐣 Hatch development workflow
-
-Install [Hatch](https://hatch.pypa.io), this will automatically handle virtual environments and make sure all dependencies are installed when you run a script in the project:
-
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>pip<span class="w"> </span>install<span class="w"> </span>hatch
-</code></pre></div>
-
-??? note "Optionally you can improve `hatch` terminal completion"
-
-    See the [official documentation](https://hatch.pypa.io/latest/cli/about/#tab-completion) for more details. For ZSH you can run these commands:
-
-    <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="nv">_HATCH_COMPLETE</span><span class="o">=</span>zsh_source<span class="w"> </span>hatch<span class="w"> </span>&gt;<span class="w"> </span>~/.hatch-complete.zsh
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;. ~/.hatch-complete.zsh&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.zshrc
-</code></pre></div>
-
-Deploy the FAIR test API defined in the `example` folder to test your changes:
-
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>hatch<span class="w"> </span>run<span class="w"> </span>dev
-</code></pre></div>
-
-Format the code automatically:
-
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>hatch<span class="w"> </span>run<span class="w"> </span>format
-</code></pre></div>
-
-Automatically check the code for errors:
-
-<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>hatch<span class="w"> </span>run<span class="w"> </span>lint
-</code></pre></div>
-
-Serve the docs locally:
-
-<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>hatch<span class="w"> </span>run<span class="w"> </span>docs
-</code></pre></div>
-
-Run the tests:
-
-<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>hatch<span class="w"> </span>run<span class="w"> </span><span class="nb">test</span>
-</code></pre></div>
--->
 
 
 
