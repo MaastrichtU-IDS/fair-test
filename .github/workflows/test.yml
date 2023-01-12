@@ -83,7 +83,7 @@ jobs:
     #   uses: codecov/codecov-action@v3
 
     - name: Setup SonarCloud
-      uses: warchant/setup-sonar-scanner@v3
+      uses: warchant/setup-sonar-scanner@v4
     - name: Test with pytest with coverage
       run: |
         coverage erase
