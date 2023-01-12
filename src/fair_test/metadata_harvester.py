@@ -23,7 +23,7 @@ class MetadataHarvester:
     logs: FairTestLogger = FairTestLogger()
 
     def get_url(self, id: str) -> Optional[str]:
-        """Return the full URL for a given identifiers (e.g. URL, DOI, handle)"""
+        """Returns the full URL for a given identifiers (e.g. URL, DOI, handle)"""
         if idutils.is_url(id):
             self.logs.info(f"Validated the resource {id} is a URL")
             return id
