@@ -98,7 +98,7 @@ jobs:
         # to get access to secrets.SONAR_TOKEN, provide GITHUB_TOKEN
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # Change the SonarCloud tests analysis config here
-      run: sonar-scanner -Dsonar.login=${{ secrets.SONAR_TOKEN }} -Dsonar.organization=maastrichtu-ids  -Dsonar.host.url=https://sonarcloud.io/ -Dsonar.projectKey=MaastrichtU-IDS_fair-test -Dsonar.python.coverage.reportPaths=coverage.xml -Dsonar.sources=fair_test
+      run: sonar-scanner -Dsonar.login=${{ secrets.SONAR_TOKEN }} -Dsonar.organization=maastrichtu-ids  -Dsonar.host.url=https://sonarcloud.io/ -Dsonar.projectKey=MaastrichtU-IDS_fair-test -Dsonar.python.coverage.reportPaths=coverage.xml -Dsonar.sources=src
 
 
     # - name: SonarCloud Scan
