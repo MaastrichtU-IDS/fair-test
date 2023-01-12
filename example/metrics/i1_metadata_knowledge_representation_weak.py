@@ -39,7 +39,7 @@ This particular test takes a broad view of what defines a 'knowledge representat
                 eval.warn(f"No JSON metadata found, searching for YAML: {e1}")
                 try:
                     r_yaml = requests.get(eval.subject, headers={"accept": "text/yaml"}, timeout=600)
-                    metadata = yaml.safe_load(str(r_yaml.text), Loader=yaml.FullLoader)
+                    metadata = yaml.safe_load(str(r_yaml.text))
                     eval.data["metadata_yaml"] = metadata
                     eval.success("Successfully found and parsed YAML metadata")
                 except Exception as e2:
