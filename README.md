@@ -19,4 +19,4 @@ Visit the `fair-test` documentation website for more details on how to use the l
 
 ## 🧑‍💻 Contribute
 
-If you wish to contribute, checkout the [development workflow page](https://maastrichtu-ids.github.io/fair-test/development-workflow/) in the documentation to get started.
+If you wish to contribute to the `fair-test` library, checkout the [Contribute page](https://maastrichtu-ids.github.io/fair-test/contributing/) in the documentation to get started.

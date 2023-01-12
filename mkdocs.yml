@@ -87,7 +87,7 @@ plugins:
           show_source: true
     # custom_templates: templates
     watch:
-      - fair_test
+      - src
 
 # https://squidfunk.github.io/mkdocs-material/reference/admonitions/#supported-types
 markdown_extensions:
