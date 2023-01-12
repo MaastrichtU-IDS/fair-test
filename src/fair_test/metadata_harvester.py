@@ -10,6 +10,8 @@ from rdflib import ConjunctiveGraph, Dataset, Graph, URIRef
 
 from fair_test.fair_test_logger import FairTestLogger
 
+requests_timeout = 600  # 10min
+
 
 @dataclass
 class MetadataHarvester:
@@ -100,7 +102,7 @@ class MetadataHarvester:
         # r = requests.head(url)
 
         try:
-            r = requests.get(url)
+            r = requests.get(url, timeout=requests_timeout)
             r.raise_for_status()  # Raises a HTTPError if the status is 4xx, 5xxx
             self.logs.info(f"Successfully resolved {url}")
             html_text = r.text
@@ -191,7 +193,7 @@ class MetadataHarvester:
         ]
         for mime_type in check_mime_types:
             try:
-                r = requests.get(url, headers={"accept": mime_type})
+                r = requests.get(url, headers={"accept": mime_type}, timeout=requests_timeout)
                 r.raise_for_status()  # Raises a HTTPError if the status is 4xx, 5xxx
                 content_type = r.headers["Content-Type"].replace(" ", "").replace(";charset=utf-8", "")
                 # If return text/plain we parse as turtle or JSON-LD
@@ -276,8 +278,8 @@ class MetadataHarvester:
                             for i, cont in enumerate(rdf_entry["@context"]):
                                 if isinstance(cont, str):
                                     rdf_entry["@context"][i] = "https://schema.org/docs/jsonldcontext.json"
-                except:
-                    pass
+                except Exception as e:
+                    self.logs.info(f"Error when fixing JSON-LD context: {e}")
             # RDFLib JSON-LD had issue with encoding: https://github.com/RDFLib/rdflib/issues/1416
             rdf_data = jsonld.expand(rdf_data)
             rdf_data = json.dumps(rdf_data)

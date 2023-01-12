@@ -22,7 +22,7 @@ Find information about authorization in metadata"""
     def evaluate(self, eval: FairTestEvaluation):
         eval.info(f"Access protocol: check resource URI protocol is resolvable for {eval.subject}")
         try:
-            r = requests.get(eval.subject)
+            r = requests.get(eval.subject, timeout=600)
             r.raise_for_status()  # Raises a HTTPError if the status is 4xx, 5xxx
             eval.success("Successfully resolved " + eval.subject)
             if r.history:
@@ -46,13 +46,13 @@ Find information about authorization in metadata"""
         found_access_rights = False
         access_rights_preds = [DCTERMS.accessRights]
         for pred in access_rights_preds:
-            for _s, _p, accessRights in g.triples((None, pred, None)):
-                eval.info(f"Found authorization informations with dcterms:accessRights: {str(accessRights)}")
+            for _s, _p, access_rights in g.triples((None, pred, None)):
+                eval.info(f"Found authorization informations with dcterms:accessRights: {str(access_rights)}")
                 # eval.data['accessRights'] = str(accessRights)
                 found_access_rights = True
 
         if found_access_rights:
-            eval.success(f"Found dcterms:accessRights in metadata: {str(accessRights)}")
+            eval.success(f"Found dcterms:accessRights in metadata: {str(access_rights)}")
         else:
             eval.warn(
                 f"Could not find dcterms:accessRights information in metadata. Make sure your metadata contains informations about access rights using one of those predicates: {', '.join(access_rights_preds)}"

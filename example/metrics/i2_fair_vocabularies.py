@@ -61,7 +61,7 @@ Resolve IRIs, check FAIRness of the returned documents."""
         tested_ns = set()
         ignore_ns = []
         eval.info("Check if used vocabularies in Linked Open Vocabularies: " + lov_api)
-        lov_list = requests.get(lov_api).json()
+        lov_list = requests.get(lov_api, timeout=600).json()
         for vocab in lov_list:
             if vocab["nsp"] in ignore_ns:
                 continue

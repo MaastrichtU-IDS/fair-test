@@ -41,18 +41,18 @@ This particular test takes a broad view of what defines a 'knowledge representat
             else:
                 eval.warn(f"No RDF data found for {value}, searching for JSON")
                 try:
-                    r = requests.get(value, headers={"accept": "application/json"})
+                    r = requests.get(value, headers={"accept": "application/json"}, timeout=600)
                     metadata = r.json()
                     eval.data["metadata_json"] = metadata
                     eval.success(f"Successfully found and parsed JSON data for {value}")
-                except:
-                    eval.warn(f"No JSON metadata found for {value}, searching for YAML")
+                except Exception as e1:
+                    eval.warn(f"No JSON metadata found for {value}: {e1}, searching for YAML")
                     try:
-                        r = requests.get(value, headers={"accept": "text/yaml"})
-                        metadata = yaml.load(r.text, Loader=yaml.FullLoader)
+                        r = requests.get(value, headers={"accept": "text/yaml"}, timeout=600)
+                        metadata = yaml.safe_load(r.text, Loader=yaml.FullLoader)
                         eval.data["metadata_yaml"] = metadata
                         eval.success(f"Successfully found and parsed YAML data for {value}")
-                    except:
-                        eval.failure(f"No YAML metadata found for {value}")
+                    except Exception as e2:
+                        eval.failure(f"No YAML metadata found for {value}: {e2}")
 
         return eval.response()

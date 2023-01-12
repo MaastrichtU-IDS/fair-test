@@ -65,7 +65,7 @@ Resolve the licenses IRI"""
                 )
                 # https://github.com/vemonet/fuji/blob/master/fuji_server/helper/preprocessor.py#L229
                 spdx_licenses_url = "https://raw.github.com/spdx/license-list-data/master/json/licenses.json"
-                spdx_licenses = requests.get(spdx_licenses_url).json()["licenses"]
+                spdx_licenses = requests.get(spdx_licenses_url, timeout=600).json()["licenses"]
                 for open_license in spdx_licenses:
                     if license_found in open_license["seeAlso"]:
                         if open_license["isOsiApproved"] is True:

@@ -110,7 +110,7 @@ def test_get_yaml():
         r = endpoint.get(f"/tests/{metric_id}")
         # print(r.text)
         assert r.status_code == 200
-        api_yaml = yaml.load(r.text, Loader=yaml.FullLoader)
+        api_yaml = yaml.safe_load(r.text, Loader=yaml.FullLoader)
         assert api_yaml["info"]["title"]
         assert api_yaml["info"]["x-applies_to_principle"]
         assert api_yaml["info"]["x-tests_metric"]

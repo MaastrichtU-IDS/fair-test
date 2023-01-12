@@ -32,7 +32,7 @@ class MetricTest(FairTest):
             return eval.response()
 
         try:
-            r = requests.get(subject_url)
+            r = requests.get(subject_url, timeout=600)
             r.raise_for_status()  # Raises a HTTPError if the status is 4xx, 5xxx
             eval.success(f"Successfully resolved {subject_url}")
             if r.history:

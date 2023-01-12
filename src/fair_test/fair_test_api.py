@@ -84,8 +84,8 @@ class FairTestAPI(FastAPI):
             assess_module = assess_name.replace("/", ".")
             import importlib
 
-            MetricTest = importlib.import_module(f"{metrics_module}.{assess_module}").MetricTest
-            metric = MetricTest()
+            metric_test = importlib.import_module(f"{metrics_module}.{assess_module}").MetricTest
+            metric = metric_test()
 
             try:
                 # cf. https://github.com/tiangolo/fastapi/blob/master/fastapi/routing.py#L479
@@ -134,9 +134,9 @@ class FairTestAPI(FastAPI):
             assess_module = metrics_name.replace("/", ".")
             import importlib
 
-            MetricTest = importlib.import_module(f"{metrics_module}.{assess_module}").MetricTest
+            metric_test = importlib.import_module(f"{metrics_module}.{assess_module}").MetricTest
 
-            metric = MetricTest()
+            metric = metric_test()
             for subj, score in metric.test_test.items():
                 test_tests.append({"subject": subj, "score": score, "metric_id": metric.metric_path})
         return test_tests
@@ -161,46 +161,46 @@ class FairTestAPI(FastAPI):
             test_endpoint (TestClient): FastAPI TestClient of the app to test
         """
         eval_list = self.get_metrics_tests_tests()
-        RED = "\033[91m"
-        BOLD = "\033[1m"
-        END = "\033[0m"
-        YELLOW = "\033[33m"
-        CYAN = "\033[36m"
+        red = "\033[91m"
+        bold = "\033[1m"
+        end = "\033[0m"
+        yellow = "\033[33m"
+        cyan = "\033[36m"
 
         run_evals = [ev for ev in eval_list if ev["metric_id"] == metric] if metric else eval_list
 
-        print(f"⏳️ Running tests for {BOLD}{len(run_evals)}{END} metric/subject/score combinations")
+        print(f"⏳️ Running tests for {bold}{len(run_evals)}{end} metric/subject/score combinations")
 
         # Test POST metrics evaluation request
-        for eval in run_evals:
-            if metric and metric != eval["metric_id"]:
+        for evl in run_evals:
+            if metric and metric != evl["metric_id"]:
                 continue
             print(
-                f"Testing {YELLOW}{eval['subject']}{END} with {CYAN}{eval['metric_id']}{END} (expect {BOLD + str(eval['score']) + END})"
+                f"Testing {yellow}{evl['subject']}{end} with {cyan}{evl['metric_id']}{end} (expect {bold + str(evl['score']) + end})"
             )
             r = test_endpoint.post(
-                f"/tests/{eval['metric_id']}",
-                json={"subject": eval["subject"]},
+                f"/tests/{evl['metric_id']}",
+                json={"subject": evl["subject"]},
                 headers={"Accept": "application/json"},
             )
             assert r.status_code == 200
             res = r.json()
             # Check score:
             score = int(res[0]["http://semanticscience.org/resource/SIO_000300"][0]["@value"])
-            if score != eval["score"]:
+            if score != evl["score"]:
                 print(
-                    f"❌ Wrong score: got {RED}{score}{END} instead of {RED}{eval['score']}{END} for {BOLD}{eval['subject']}{END} with the metric test {BOLD}{eval['metric_id']}{END}"
+                    f"❌ Wrong score: got {red}{score}{end} instead of {red}{evl['score']}{end} for {bold}{evl['subject']}{end} with the metric test {bold}{evl['metric_id']}{end}"
                 )
-            assert score == eval["score"]
+            assert score == evl["score"]
 
         # Test get YAML
         metrics_id_to_test = set()
-        for eval in eval_list:
-            metrics_id_to_test.add(eval["metric_id"])
+        for evl in eval_list:
+            metrics_id_to_test.add(evl["metric_id"])
         for metric_id in list(metrics_id_to_test):
             r = test_endpoint.get(f"/tests/{metric_id}")
             assert r.status_code == 200
-            api_yaml = yaml.load(r.text, Loader=yaml.FullLoader)
+            api_yaml = yaml.safe_load(r.text, Loader=yaml.FullLoader)
             assert api_yaml["info"]["title"]
             assert api_yaml["info"]["x-applies_to_principle"]
             assert api_yaml["info"]["x-tests_metric"]
@@ -224,5 +224,5 @@ class FairTestAPI(FastAPI):
         assert response.status_code == 200
 
         print(
-            f"✅ Successfully tested a total of {BOLD}{len(run_evals)}{END} FAIR metrics tests/subjects/score combinations"
+            f"✅ Successfully tested a total of {bold}{len(run_evals)}{end} FAIR metrics tests/subjects/score combinations"
         )
