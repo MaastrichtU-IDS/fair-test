@@ -25,10 +25,10 @@ Resolve IRIs, check FAIRness of the returned documents."""
     def evaluate(self, eval: FairTestEvaluation):
         # LOV docs: https://lov.linkeddata.es/dataset/lov/api
         lov_api = "https://lov.linkeddata.es/dataset/lov/api/v2/vocabulary/list"
-        lod_cloudnet = "https://lod-cloud.net/lod-data.json"
+        # lod_cloudnet = "https://lod-cloud.net/lod-data.json"
 
-        # g = eval.retrieve_metadata(eval.subject)
-        g = eval.retrieve_metadata(eval.subject, use_harvester=True)
+        g = eval.retrieve_metadata(eval.subject)
+        # g = eval.retrieve_metadata(eval.subject, use_harvester=True)
         if len(g) == 0:
             eval.failure("No RDF found at the subject URL provided.")
             return eval.response()

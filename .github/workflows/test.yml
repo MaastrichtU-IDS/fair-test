@@ -8,6 +8,8 @@ on:
     - 'pyproject.toml'
     - 'fair_test/**'
     - 'tests/**'
+    - 'docs/**'
+    - 'mkdocs.yml'
     - 'example/metrics/**'
     - '.github/workflows/test.yml'
 
@@ -104,3 +106,26 @@ jobs:
     #   env:
     #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
     #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  docs:
+    needs: [ tests, codeql-analysis ]
+    name: Deploy docs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+
+      - name: Install dependencies
+        run: |
+          pip install ".[doc]"
+
+      - name: Deploy mkdocs on GitHub Pages
+        run: |
+          git pull
+          mkdocs gh-deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

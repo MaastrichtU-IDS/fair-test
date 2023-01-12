@@ -75,7 +75,7 @@ class MetadataHarvester:
             )
             return []
 
-        if use_harvester == True:
+        if use_harvester is True:
             # Check the harvester response:
             # curl -X POST -d '{"subject": "https://doi.org/10.1594/PANGAEA.908011"}' https://w3id.org/FAIR_Tests/tests/harvester
             try:

@@ -8,36 +8,8 @@ on:
 jobs:
 
   tests:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.7, 3.8, 3.9, '3.10']
-
-    steps:
-
-      - uses: actions/checkout@v3
-
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - uses: actions/cache@v3
-        id: cache
-        with:
-          path: ${{ env.pythonLocation }}
-          key: ${{ runner.os }}-python-${{ env.pythonLocation }}-${{ hashFiles('pyproject.toml') }}-test-v02
-
-      - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: pip install -e ".[test]"
-
-      # - name: Lint
-      #   run: bash scripts/lint.sh
-
-      - name: Test
-        run: bash scripts/test.sh
-
+    uses: MaastrichtU-IDS/fair-test/.github/workflows/test.yml@main
+    secrets: inherit
 
   publish:
     needs: [ tests ]
