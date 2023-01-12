@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Dict, List, Optional
 
 import yaml
 from fastapi import HTTPException
@@ -58,10 +58,8 @@ class FairTest(BaseModel):
     metric_readme_url: Optional[str]
 
     default_subject: str = settings.DEFAULT_SUBJECT
-    topics = []
-    test_test = {}
-    # topics: List[str] = []
-    # test_test: Dict[str, int] = {}
+    topics: List[str] = []
+    test_test: Dict[str, int] = {}
 
     author: str = settings.CONTACT_ORCID
     contact_url: str = settings.CONTACT_URL

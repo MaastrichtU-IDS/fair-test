@@ -70,7 +70,7 @@ class MetadataHarvester:
             g (Graph): A RDFLib Graph with the RDF found at the given URL
         """
         original_url = url
-        url = self.get_url(url)
+        url = self.get_url(url)  # type: ignore
         if not url:
             self.logs.warn(
                 f"The resource {original_url} could not be converted to a valid URL, hence no metadata could be retrieved"
@@ -336,7 +336,7 @@ class MetadataHarvester:
             "comment": self.comment,
         }
         if self.rdf:
-            dic["rdf"] = json.load(self.rdf.serialize(format="json-ld"))
+            dic["rdf"] = json.load(self.rdf.serialize(format="json-ld"))  # type: ignore
         return dic
 
     # def __post_init__(self):

@@ -200,7 +200,7 @@ class FairTestAPI(FastAPI):
         for metric_id in list(metrics_id_to_test):
             r = test_endpoint.get(f"/tests/{metric_id}")
             assert r.status_code == 200
-            api_yaml = yaml.safe_load(r.text, Loader=yaml.FullLoader)
+            api_yaml = yaml.safe_load(r.text)
             assert api_yaml["info"]["title"]
             assert api_yaml["info"]["x-applies_to_principle"]
             assert api_yaml["info"]["x-tests_metric"]

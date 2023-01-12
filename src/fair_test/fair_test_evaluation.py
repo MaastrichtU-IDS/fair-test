@@ -187,7 +187,7 @@ class FairTestEvaluation(BaseModel):
         resource_properties = {}
         resource_linked_to = {}
 
-        for alt_uri in alt_uris:
+        for alt_uri in alt_uris:  # type: ignore
             uri_ref = URIRef(str(alt_uri))
             # Search with the subject URI as triple subject
             for s, p, o in g.triples((uri_ref, None, None)):

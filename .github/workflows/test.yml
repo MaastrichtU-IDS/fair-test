@@ -74,8 +74,9 @@ jobs:
       if: steps.cache.outputs.cache-hit != 'true'
       run: pip install -e ".[test]"
 
-    # - name: Check
-    #   run: bash scripts/check.sh
+    - name: Check
+      run: bash scripts/check.sh
+
     # - name: Test
     #   run: bash scripts/test.sh
     # - name: Upload coverage

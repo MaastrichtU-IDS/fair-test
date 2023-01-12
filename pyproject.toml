@@ -59,7 +59,6 @@ dependencies = [
     "idutils",
 ]
 
-
 [project.optional-dependencies]
 test = [
     "pytest >=7.1.3,<8.0.0",
@@ -69,8 +68,6 @@ test = [
     "mypy ==0.971",
     "black ==22.8.0",
     "isort >=5.0.6,<6.0.0",
-    # "flake8 >=3.8.3,<6.0.0",
-    # "Flake8-pyproject >=1.1.0.post0",
     "httpx",
 ]
 doc = [
@@ -120,19 +117,13 @@ check = "./scripts/check.sh"
 docs = "./scripts/docs-serve.sh"
 test = "./scripts/test.sh {args}"
 
-
-
+# hatch run test:all
 [tool.hatch.envs.test]
 features = [
   "test",
 ]
-
 [tool.hatch.envs.test.scripts]
 all = "./scripts/test.sh"
-# cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=src --cov=tests"
-# no-cov = "cov --no-cov"
-
-
 [[tool.hatch.envs.test.matrix]]
 python = ["37", "38", "39", "310", "311"]
 
