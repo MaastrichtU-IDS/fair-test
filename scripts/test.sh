@@ -3,4 +3,4 @@
 set -e
 set -x
 
-pytest -s --cov=fair_test --cov=tests --cov-report=term-missing:skip-covered --cov-report=xml tests ${@}
+pytest -s --cov=src --cov=tests --cov-report=term-missing:skip-covered --cov-report=xml tests ${@}

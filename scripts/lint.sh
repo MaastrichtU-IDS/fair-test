@@ -3,7 +3,7 @@
 set -e
 set -x
 
-mypy fair_test
-flake8 fair_test example tests
-black fair_test example tests --check
-isort fair_test example tests --check-only
+mypy src
+flake8 src example tests
+black src example tests --check
+isort src example tests --check-only
