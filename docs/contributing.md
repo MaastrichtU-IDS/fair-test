@@ -15,6 +15,23 @@ cd fair-test
 
 To install the project for development you can either use [`venv`](https://docs.python.org/3/library/venv.html) to create a virtual environment yourself, or use [`hatch`](https://hatch.pypa.io) to automatically handle virtual environments for you.
 
+=== "hatch"
+
+    Install [Hatch](https://hatch.pypa.io), this will automatically handle virtual environments and make sure all dependencies are installed when you run a script in the project:
+
+    ```bash
+    pip install hatch
+    ```
+
+    ??? note "Optionally you can improve `hatch` terminal completion"
+
+        See the [official documentation](https://hatch.pypa.io/latest/cli/about/#tab-completion) for more details. For ZSH you can run these commands:
+
+        ```bash
+        _HATCH_COMPLETE=zsh_source hatch > ~/.hatch-complete.zsh
+        echo ". ~/.hatch-complete.zsh" >> ~/.zshrc
+        ```
+
 === "venv"
 
     Create the virtual environment in the project folder :
@@ -41,45 +58,7 @@ To install the project for development you can either use [`venv`](https://docs.
     pre-commit install
     ```
 
-=== "hatch"
-
-    Install [Hatch](https://hatch.pypa.io), this will automatically handle virtual environments and make sure all dependencies are installed when you run a script in the project:
-
-    ```bash
-    pip install hatch
-    ```
-
-    ??? note "Optionally you can improve `hatch` terminal completion"
-
-        See the [official documentation](https://hatch.pypa.io/latest/cli/about/#tab-completion) for more details. For ZSH you can run these commands:
-
-        ```bash
-        _HATCH_COMPLETE=zsh_source hatch > ~/.hatch-complete.zsh
-        echo ". ~/.hatch-complete.zsh" >> ~/.zshrc
-        ```
-
-
 ## 🧑‍💻 Development workflow
-
-=== "venv"
-
-    Deploy the FAIR test API defined in the `example` folder to test your changes:
-
-    ```bash
-    ./scripts/dev.sh
-    ```
-
-    The code will be automatically formatted when you commit your changes using `pre-commit`. But you can also run the script to format the code yourself:
-
-    ```bash
-    ./scripts/format.sh
-    ```
-
-    Or check the code for errors:
-
-    ```bash
-    ./scripts/lint.sh
-    ```
 
 === "hatch"
 
@@ -99,6 +78,26 @@ To install the project for development you can either use [`venv`](https://docs.
 
     ```bash
     hatch run lint
+    ```
+
+=== "venv"
+
+    Deploy the FAIR test API defined in the `example` folder to test your changes:
+
+    ```bash
+    ./scripts/dev.sh
+    ```
+
+    The code will be automatically formatted when you commit your changes using `pre-commit`. But you can also run the script to format the code yourself:
+
+    ```bash
+    ./scripts/format.sh
+    ```
+
+    Or check the code for errors:
+
+    ```bash
+    ./scripts/lint.sh
     ```
 
 
@@ -131,20 +130,6 @@ Tests are automatically run by a GitHub Actions workflow when new code is pushed
     ```
 
 
-=== "venv"
-
-	Run the tests locally:
-
-	```bash
-	./scripts/test.sh
-	```
-
-	You can also run the tests only for a specific metric test:
-
-	```bash
-	./scripts/test.sh --metric a1-metadata-protocol
-	```
-
 === "hatch"
 
 	Run the tests locally:
@@ -159,6 +144,19 @@ Tests are automatically run by a GitHub Actions workflow when new code is pushed
 	hatch run test --metric a1-metadata-protocol
 	```
 
+=== "venv"
+
+	Run the tests locally:
+
+	```bash
+	./scripts/test.sh
+	```
+
+	You can also run the tests only for a specific metric test:
+
+	```bash
+	./scripts/test.sh --metric a1-metadata-protocol
+	```
 
 ## 📖 Generate docs
 
@@ -168,16 +166,16 @@ The documentation (this website) is automatically generated from the markdown fi
 
 Serve the docs on [http://localhost:8008](http://localhost:8008){:target="_blank"}
 
-=== "venv"
-
-    ```bash
-    ./scripts/docs-serve.sh
-    ```
-
 === "hatch"
 
     ```bash
     hatch run docs
+    ```
+
+=== "venv"
+
+    ```bash
+    ./scripts/docs-serve.sh
     ```
 
 
@@ -189,53 +187,3 @@ Serve the docs on [http://localhost:8008](http://localhost:8008){:target="_blank
 2. Push to GitHub
 3. Create a new release on GitHub
 4. A GitHub Action workflow will automatically publish the new version to PyPI
-
-<!--
-
-## 🐣 Hatch development workflow
-
-Install [Hatch](https://hatch.pypa.io), this will automatically handle virtual environments and make sure all dependencies are installed when you run a script in the project:
-
-```bash
-pip install hatch
-```
-
-??? note "Optionally you can improve `hatch` terminal completion"
-
-    See the [official documentation](https://hatch.pypa.io/latest/cli/about/#tab-completion) for more details. For ZSH you can run these commands:
-
-    ```bash
-    _HATCH_COMPLETE=zsh_source hatch > ~/.hatch-complete.zsh
-    echo ". ~/.hatch-complete.zsh" >> ~/.zshrc
-    ```
-
-Deploy the FAIR test API defined in the `example` folder to test your changes:
-
-```bash
-hatch run dev
-```
-
-Format the code automatically:
-
-```bash
-hatch run format
-```
-
-Automatically check the code for errors:
-
-```bash
-hatch run lint
-```
-
-Serve the docs locally:
-
-```bash
-hatch run docs
-```
-
-Run the tests:
-
-```bash
-hatch run test
-```
--->
