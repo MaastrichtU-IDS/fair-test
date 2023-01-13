@@ -71,13 +71,13 @@ To install the project for development you can either use [`venv`](https://docs.
     The code will be automatically formatted when you commit your changes using `pre-commit`. But you can also run the script to format the code yourself:
 
     ```bash
-    hatch run format
+    hatch run fmt
     ```
 
     Or check the code for errors:
 
     ```bash
-    hatch run lint
+    hatch run check
     ```
 
 === "venv"
@@ -97,7 +97,7 @@ To install the project for development you can either use [`venv`](https://docs.
     Or check the code for errors:
 
     ```bash
-    ./scripts/lint.sh
+    ./scripts/check.sh
     ```
 
 
@@ -159,8 +159,6 @@ Tests are automatically run by a GitHub Actions workflow when new code is pushed
 	```
 
 ## 📖 Generate docs
-
-[![Publish docs](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/deploy-docs.yml/badge.svg)](https://github.com/MaastrichtU-IDS/fair-test/actions/workflows/deploy-docs.yml)
 
 The documentation (this website) is automatically generated from the markdown files in the `docs` folder and python docstring comments, and published by a GitHub Actions workflow.
 
