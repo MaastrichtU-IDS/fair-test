@@ -63,7 +63,7 @@ dependencies = [
 test = [
     "pytest >=7.1.3",
     "pytest-cov >=2.12.0",
-    "ruff >=0.0.219",
+    "ruff >=0.0.244",
     "mypy ==0.971",
     "black ==22.8.0",
     "httpx",
@@ -182,7 +182,7 @@ select = [
     "N",
     "PLC",
     "PLE",
-    "PLR",
+    # "PLR", # Magic value used in comparison, consider replacing 200 with a constant variable
     "PLW",
     "Q",
     "RUF",
