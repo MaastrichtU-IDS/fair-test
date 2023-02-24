@@ -1,8 +1,9 @@
 import os
 import time
+from typing import Any
 
 import yaml
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 
@@ -111,9 +112,9 @@ class FairTestAPI(FastAPI):
                 print("❌ No API defined for " + metric.metric_path)
 
         @self.middleware("http")
-        async def add_process_time_header(request: Request, call_next):
+        async def add_process_time_header(request: Request, call_next: Any) -> Response:
             start_time = time.time()
-            response = await call_next(request)
+            response: Response = await call_next(request)
             process_time = time.time() - start_time
             response.headers["X-Process-Time"] = str(process_time)
             return response
