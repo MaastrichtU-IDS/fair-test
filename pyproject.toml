@@ -90,10 +90,8 @@ History = "https://github.com/MaastrichtU-IDS/fair-test/releases"
 Tracker = "https://github.com/MaastrichtU-IDS/fair-test/issues"
 Source = "https://github.com/MaastrichtU-IDS/fair-test"
 
-# HATCH ENVIRONMENTS AND SCRIPTS
-[tool.hatch.version]
-path = "src/fair_test/__init__.py"
 
+# HATCH ENVIRONMENTS AND SCRIPTS
 
 # Envs from hatch https://hatch.pypa.io
 [tool.hatch.envs.default]
@@ -127,6 +125,12 @@ python = ["37", "38", "39", "310", "311"]
 
 
 # TOOLS
+[tool.hatch.build]
+packages = ["src/fair_test"]
+
+[tool.hatch.version]
+path = "src/fair_test/__init__.py"
+
 
 [tool.coverage.run]
 branch = true
