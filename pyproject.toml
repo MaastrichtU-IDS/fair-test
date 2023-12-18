@@ -125,7 +125,7 @@ python = ["37", "38", "39", "310", "311"]
 
 
 # TOOLS
-[tool.hatch.build]
+[tool.hatch.build.targets.wheel]
 packages = ["src/fair_test"]
 
 [tool.hatch.version]
